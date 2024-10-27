@@ -12,30 +12,50 @@ const SettingsMenu = () => {
   const styles = useMemo(
     () =>
       StyleSheet.create({
+        settingsButton: {
+          fontSize: 24,
+        },
         modalOverlay: {
           flex: 1,
-          backgroundColor: '#000',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
           justifyContent: 'center',
           alignItems: 'center',
         },
         modalContent: {
-          width: '80%',
+          width: '100%',
+          maxWidth: 450,
           backgroundColor: colors.accent,
           color: colors.textPrimary,
-          padding: 16,
+          padding: 24,
           borderRadius: 8,
         },
         title: {
           fontSize: 18,
           marginBottom: 12,
           color: colors.textPrimary,
+          fontWeight: 'bold'
+        },
+        optionRowsContainer: {
+          marginBottom: 12,
         },
         optionRow: {
+          width: '100%',
+          maxWidth: '90%',
           flexDirection: 'row',
           justifyContent: 'space-between',
+          alignSelf: 'center',
           alignItems: 'center',
           marginBottom: 16,
+          paddingBottom: 6,
+          borderBottomColor: colors.border,
+          borderBottomWidth: 1,
+          borderStyle: 'dotted'
         },
+        buttonText: {
+          color: colors.textPrimary,
+          textAlign: 'center',
+          fontWeight: 'bold'
+        }
       }),
     [colors]
   );
@@ -43,18 +63,24 @@ const SettingsMenu = () => {
   return (
     <View>
       <TouchableOpacity onPress={toggleModal}>
-        <Text style={{ fontSize: 24 }}>⚙️</Text>
+        <Text style={styles.settingsButton}>⚙️</Text>
       </TouchableOpacity>
 
-      <Modal visible={modalVisible} animationType="slide" onRequestClose={toggleModal} transparent>
+      <Modal visible={modalVisible} onRequestClose={toggleModal} transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.title}>Settings</Text>
-            <View style={styles.optionRow}>
-              <Text style={{ color: colors.textPrimary }}>Dark Mode</Text>
-              <Switch value={darkMode} onValueChange={toggleDarkMode} />
+            
+            <View style={styles.optionRowsContainer}>
+              <View style={styles.optionRow}>
+                <Text style={{ color: colors.textPrimary }}>Dark Mode</Text>
+                <Switch value={darkMode} onValueChange={toggleDarkMode} />
+              </View>
             </View>
-            <Button title="Close" onPress={toggleModal} />
+
+            <TouchableOpacity onPress={toggleModal} style={{ backgroundColor: colors.background, paddingVertical: 8 }}>
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>

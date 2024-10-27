@@ -1,5 +1,6 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
 import BottomDrawer from '@/components/BottomDrawer';
+import TopDrawer from '@/components/TopDrawer';
 import JsonViewer from '@/components/JsonViewer';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
@@ -21,6 +22,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
+      <TopDrawer />
       <JsonViewer />
       <BottomDrawer />
     </SafeAreaView>

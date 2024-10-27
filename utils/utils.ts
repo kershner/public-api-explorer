@@ -18,7 +18,7 @@ export async function checkUrl(url: string) {
 
   try {
     setLoading(true);
-    const response = await fetch(url, { method: 'GET' });
+    const response = await fetchWithTimeout(url, { method: 'GET' });
     
     if (response.ok) {
       const data = await response.json();
@@ -47,3 +47,23 @@ export function debounce<Func extends (...args: Parameters<Func>) => ReturnType<
     timeoutId = setTimeout(() => func(...args), delay);
   };
 }
+
+const fetchWithTimeout = async (
+  url: string,
+  options: RequestInit = {},
+  timeout: number = 5000
+): Promise<Response> => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timer);
+    return response;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new Error(`Fetch request timed out after ${timeout}ms`);
+    }
+    throw error;
+  }
+};

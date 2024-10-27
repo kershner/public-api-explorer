@@ -15,21 +15,25 @@ const JsonViewer: React.FC = () => {
       StyleSheet.create({
         container: {
           flex: 1,
-          padding: 16,
+          paddingHorizontal: 16,
+          paddingBottom: 16,
         },
         noData: {
           fontSize: 16,
           textAlign: 'center',
           marginTop: 20,
         },
+        spinner: {
+          marginVertical: 16,
+        }
       }),
     [colors]
   );
-  
+
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.textPrimary} />
+        <ActivityIndicator style={styles.spinner} size="large" color={colors.textPrimary} />
       </View>
     );
   }

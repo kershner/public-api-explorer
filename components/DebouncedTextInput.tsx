@@ -8,6 +8,7 @@ const DebouncedTextInput: React.FC = () => {
   const setInputValue = useStore((state) => state.setInputValue);
   const error = useStore((state) => state.error);
   const setCurrentUrl = useStore((state) => state.setCurrentUrl);
+  const setJsonData = useStore((state) => state.setJsonData);
   const debounceTime = 500  // ms
   const colors = useStore((state) => state.colors);
 
@@ -16,7 +17,7 @@ const DebouncedTextInput: React.FC = () => {
       StyleSheet.create({
         input: {
           borderWidth: 2,
-          borderColor: colors.border,
+          borderColor: colors.textPrimary,
           borderRadius: 5,
           padding: 10,
           fontSize: 26,
@@ -24,6 +25,7 @@ const DebouncedTextInput: React.FC = () => {
           backgroundColor: colors.background,
         },
         error: {
+          paddingVertical: 6,
           color: colors.error
         }
       }),
@@ -32,10 +34,6 @@ const DebouncedTextInput: React.FC = () => {
 
   const debouncedOnValueChange = useCallback(
     debounce((value: string) => {
-      if (!value) {
-        return;
-      }
-
       if (isUrl(value)) {
         checkUrl(value).then((isValid) => {
           if (isValid) {
@@ -43,7 +41,12 @@ const DebouncedTextInput: React.FC = () => {
           }
         });
       } else {
-        setError('Enter a valid HTTPS URL.')
+        if (!value) {
+          setCurrentUrl('');
+          setJsonData(null);
+        } else {
+          setError('Enter a valid HTTPS URL.')
+        }
       }
     }, debounceTime),
     [setCurrentUrl]

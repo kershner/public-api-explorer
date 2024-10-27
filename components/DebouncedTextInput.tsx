@@ -1,7 +1,6 @@
 import { isUrl, checkUrl, setError, debounce } from '@/utils/utils';
 import { TextInput, Text, View, StyleSheet } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
-import { colors, styles } from '@/constants/styles';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useStore } from '@/store/useStore';
 
 const DebouncedTextInput: React.FC = () => {
@@ -10,6 +9,26 @@ const DebouncedTextInput: React.FC = () => {
   const error = useStore((state) => state.error);
   const setCurrentUrl = useStore((state) => state.setCurrentUrl);
   const debounceTime = 500  // ms
+  const colors = useStore((state) => state.colors);
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        input: {
+          borderWidth: 2,
+          borderColor: colors.border,
+          borderRadius: 5,
+          padding: 10,
+          fontSize: 26,
+          color: colors.textPrimary,
+          backgroundColor: colors.background,
+        },
+        error: {
+          color: colors.error
+        }
+      }),
+    [colors]
+  );
 
   const debouncedOnValueChange = useCallback(
     debounce((value: string) => {
@@ -44,7 +63,7 @@ const DebouncedTextInput: React.FC = () => {
     <View>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <TextInput
-        style={inputStyles.input}
+        style={styles.input}
         placeholder="Enter a public API endpoint..."
         keyboardType="url"
         value={inputValue}
@@ -54,17 +73,5 @@ const DebouncedTextInput: React.FC = () => {
     </View>
   );
 };
-
-const inputStyles = StyleSheet.create({
-  input: {
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 26,
-    color: colors.textPrimary,
-    backgroundColor: colors.background,
-  },
-});
 
 export default DebouncedTextInput;

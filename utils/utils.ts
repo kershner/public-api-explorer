@@ -4,6 +4,8 @@ export const isHtml = (value: string): boolean => typeof value === 'string' && /
 export const isUrl = (value: string): boolean => typeof value === 'string' && /^(https?:\/\/[^\s/$.?#].[^\s]*)$/i.test(value);
 export const isImageUrl = (value: string): boolean => typeof value === 'string' && /\.(jpeg|jpg|gif|png|svg)$/i.test(value);
 
+export const shuffleArray = <T>(array: T[]): T[] => array.sort(() => Math.random() - 0.5);
+
 export const setError = (errorMsg: string) => {
   const { setError, setLoading } = useStore.getState();
   setError(errorMsg);

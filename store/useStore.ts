@@ -1,8 +1,19 @@
+import { darkModeColors, lightModeColors } from '@/constants/constants';
 import { create } from 'zustand';
+
+export interface ThemeColors {
+  background: string;
+  accent: string;
+  border: string;
+  textPrimary: string;
+  textSecondary: string;
+  linkText: string;
+  error: string;
+}
 
 interface State {
   loading: boolean;
-  setLoading: (url: boolean) => void;
+  setLoading: (loading: boolean) => void;
   currentUrl: string;
   setCurrentUrl: (url: string) => void;
   inputValue: string;
@@ -12,12 +23,15 @@ interface State {
   jsonData: unknown;
   setJsonData: (data: unknown) => void;
   firstEntryOpen: boolean;
-  setFirstEntryOpen: (url: boolean) => void;
+  setFirstEntryOpen: (open: boolean) => void;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  colors: ThemeColors;
 }
 
 export const useStore = create<State>((set) => ({
   loading: false,
-  setLoading: (loading) => set({ loading: loading }),
+  setLoading: (loading) => set({ loading }),
   currentUrl: '',
   setCurrentUrl: (url) => set({ currentUrl: url }),
   inputValue: '',
@@ -25,7 +39,18 @@ export const useStore = create<State>((set) => ({
   error: '',
   setError: (errorMsg) => set({ error: errorMsg }),
   jsonData: null,
-  setJsonData: (jsonData) => set({ jsonData: jsonData }),
+  setJsonData: (jsonData) => set({ jsonData }),
   firstEntryOpen: false,
   setFirstEntryOpen: (open) => set({ firstEntryOpen: open }),
+  darkMode: true,
+  toggleDarkMode: () => {
+    set((state) => {
+      const newDarkMode = !state.darkMode;
+      return {
+        darkMode: newDarkMode,
+        colors: newDarkMode ? darkModeColors : lightModeColors
+      };
+    });
+  },
+  colors: darkModeColors,
 }));

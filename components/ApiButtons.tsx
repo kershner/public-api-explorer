@@ -1,5 +1,6 @@
 import { View, ScrollView, StyleSheet, PanResponder } from 'react-native';
 import FetchButton from '@/components/FetchButton';
+import { shuffleArray } from '@/utils/utils';
 import React, { useRef } from 'react';
 
 interface PublicApi {
@@ -43,6 +44,7 @@ const apiList: PublicApi[] = [
   { url: 'http://universities.hipolabs.com/search?country=turkey', description: 'Universities', category: 'Data' },
   { url: 'https://picsum.photos/v2/list?page=2&limit=100', description: 'Lorem Picsum', category: 'Photos' },
 ];
+const randomizedApiList = shuffleArray(apiList);
 
 const ApiButtons: React.FC = () => {
   const scrollRef = useRef<ScrollView | null>(null);
@@ -79,7 +81,7 @@ const ApiButtons: React.FC = () => {
         horizontal
         showsHorizontalScrollIndicator={false} >
         <View style={apiButtonsStyles.container}>
-          {apiList.map((api) => (
+          {randomizedApiList.map((api) => (
             <FetchButton key={api.url} url={api.url} title={api.description} />
           ))}
         </View>

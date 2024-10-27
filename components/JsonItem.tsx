@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
+import React, { useMemo, useState } from 'react';
 import RenderValue from '@/components/RenderValue';
-import { colors } from '@/constants/styles';
-import React, { useState } from 'react';
+import { useStore } from '@/store/useStore';
 
 interface JsonItemProps {
   label: string;
@@ -12,6 +12,56 @@ interface JsonItemProps {
 const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
   const [isOpen, setIsOpen] = useState(level === 0);
   const hasNestedData = typeof value === 'object' && value !== null;
+  const colors = useStore((state) => state.colors);
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        itemContainer: {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+        },
+        levelIndicator: {
+          borderLeftWidth: 1,
+          borderColor: colors.border,
+        },
+        row: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 4,
+          width: '100%',
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          borderStyle: 'dotted',
+        },
+        key: {
+          fontWeight: '600',
+          fontSize: 16,
+          textAlign: 'left',
+          width: 150,
+          color: colors.textPrimary,
+        },
+        nestedRow: {
+          backgroundColor: colors.accent,
+          borderRadius: 6,
+          padding: 8,
+          marginVertical: 4,
+          borderBottomWidth: 0
+        },
+        keyInClickableRow: {
+          width: '100%',
+        },
+        valueContainer: {
+          marginLeft: 8,
+          flexShrink: 1,
+        },
+        nested: {
+          paddingLeft: 24,
+          width: '100%',
+        },
+      }),
+    [colors]
+  );
 
   const renderNestedItems = () => {
     if (!hasNestedData || !isOpen) return null;
@@ -20,7 +70,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
 
     return Platform.select({
       web: (
-        <View style={jsonItemStyles.nested}>
+        <View style={styles.nested}>
           {nestedData.map((item, index) => (
             <JsonItem key={`${level}-${index}`} label={item.key} value={item.value} level={level + 1} />
           ))}
@@ -31,7 +81,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
           data={nestedData}
           renderItem={({ item }) => <JsonItem label={item.key} value={item.value} level={level + 1} />}
           keyExtractor={(item, index) => `${level}-${index}`}
-          style={jsonItemStyles.nested}
+          style={styles.nested}
           initialNumToRender={10}
           removeClippedSubviews={false}
         />
@@ -40,66 +90,21 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
   };
 
   return (
-    <View style={jsonItemStyles.itemContainer}>
-      <View style={jsonItemStyles.levelIndicator} />
+    <View style={styles.itemContainer}>
+      <View style={styles.levelIndicator} />
       <TouchableOpacity
         onPress={() => hasNestedData && setIsOpen(!isOpen)}
         disabled={!hasNestedData}
-        style={[jsonItemStyles.row, hasNestedData && jsonItemStyles.nestedRow]}>
+        style={[styles.row, hasNestedData && styles.nestedRow]}>
 
-        <Text style={[jsonItemStyles.key, hasNestedData && jsonItemStyles.keyInClickableRow]}>
+        <Text style={[styles.key, hasNestedData && styles.keyInClickableRow]}>
           {hasNestedData ? (isOpen ? '▼ ' : '▶ ') : ''}{label}:
         </Text>
-        {!hasNestedData && <View style={jsonItemStyles.valueContainer}>{RenderValue(value)}</View>}
+        {!hasNestedData && <View style={styles.valueContainer}>{RenderValue(value)}</View>}
       </TouchableOpacity>
       {renderNestedItems()}
     </View>
   );
 };
-
-const jsonItemStyles = StyleSheet.create({
-  itemContainer: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  levelIndicator: {
-    borderLeftWidth: 1,
-    borderColor: colors.border,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 4,
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    borderStyle: 'dotted',
-  },
-  key: {
-    fontWeight: '600',
-    fontSize: 16,
-    textAlign: 'left',
-    width: 150,
-    color: colors.textPrimary,
-  },
-  nestedRow: {
-    backgroundColor: colors.accent,
-    borderRadius: 6,
-    padding: 8,
-    marginVertical: 4,
-    borderBottomWidth: 0
-  },
-  keyInClickableRow: {
-    width: '100%',
-  },
-  valueContainer: {
-    marginLeft: 8,
-    flexShrink: 1,
-  },
-  nested: {
-    paddingLeft: 24,
-    width: '100%',
-  },
-});
 
 export default JsonItem;

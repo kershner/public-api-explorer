@@ -1,12 +1,13 @@
-import { View, TouchableOpacity, Modal, Text, Switch, Button, StyleSheet } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import { View, TouchableOpacity, Modal, Text, Switch, StyleSheet } from 'react-native';
 import { useStore } from '@/store/useStore';
+import React, { useMemo } from 'react';
 
 const SettingsMenu = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const modalOpen = useStore((state) => state.modalOpen);
+  const setModalOpen = useStore((state) => state.setModalOpen);
+  const toggleModal = () => setModalOpen(!modalOpen);
   const darkMode = useStore((state) => state.darkMode);
   const toggleDarkMode = useStore((state) => state.toggleDarkMode);
-  const toggleModal = () => setModalVisible(!modalVisible);
   const colors = useStore((state) => state.colors);
 
   const styles = useMemo(
@@ -66,7 +67,7 @@ const SettingsMenu = () => {
         <Text style={styles.settingsButton}>⚙️</Text>
       </TouchableOpacity>
 
-      <Modal visible={modalVisible} onRequestClose={toggleModal} transparent>
+      <Modal visible={modalOpen} onRequestClose={toggleModal} transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.title}>Settings</Text>

@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, Platform, Text, StyleSheet, View, ActivityIndicator } from 'react-native';
+import { FlatList, ScrollView, Platform, StyleSheet, View, ActivityIndicator } from 'react-native';
 import JsonItem from '@/components/JsonItem';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
@@ -14,14 +14,18 @@ const JsonViewer: React.FC = () => {
     () =>
       StyleSheet.create({
         container: {
-          flex: 1,
+          flexGrow: 1,
           paddingHorizontal: 16,
           paddingBottom: 16,
         },
         noData: {
-          fontSize: 16,
-          textAlign: 'center',
-          marginTop: 20,
+          flexGrow: 0,
+          height: '30%'
+        },
+        spinnerWrapper: {
+          flexGrow: 1,
+          flexDirection: 'row',
+          alignSelf: 'center',
         },
         spinner: {
           marginVertical: 16,
@@ -32,15 +36,15 @@ const JsonViewer: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator style={styles.spinner} size="large" color={colors.textPrimary} />
+      <View style={styles.spinnerWrapper}>
+        <ActivityIndicator style={styles.spinner} size={100} color={colors.textPrimary} />
       </View>
     );
   }
 
   return Platform.select({
     web: (
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container, currentUrl ? null : styles.noData]}>
         {content.map((item, index) => (
           <JsonItem key={index.toString()} label={item.key} value={item.value} />
         ))}
@@ -48,11 +52,10 @@ const JsonViewer: React.FC = () => {
     ),
     default: (
       <FlatList
-        style={styles.container}
+        style={[styles.container, currentUrl ? null : styles.noData]}
         data={content}
         renderItem={({ item }) => <JsonItem label={item.key} value={item.value} />}
         keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={<Text style={styles.noData}>No data available</Text>}
       />
     ),
   });

@@ -22,11 +22,11 @@ interface State {
   setError: (value: string) => void;
   jsonData: unknown;
   setJsonData: (data: unknown) => void;
-  firstEntryOpen: boolean;
-  setFirstEntryOpen: (open: boolean) => void;
   darkMode: boolean;
   toggleDarkMode: () => void;
   colors: ThemeColors;
+  modalOpen: boolean;
+  setModalOpen: (open: boolean) => void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -40,8 +40,6 @@ export const useStore = create<State>((set) => ({
   setError: (errorMsg) => set({ error: errorMsg }),
   jsonData: null,
   setJsonData: (jsonData) => set({ jsonData }),
-  firstEntryOpen: false,
-  setFirstEntryOpen: (open) => set({ firstEntryOpen: open }),
   darkMode: true,
   toggleDarkMode: () => {
     set((state) => {
@@ -53,4 +51,6 @@ export const useStore = create<State>((set) => ({
     });
   },
   colors: darkModeColors,
+  modalOpen: false,
+  setModalOpen: (modalOpen) => set({ modalOpen }),
 }));

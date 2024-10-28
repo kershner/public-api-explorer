@@ -1,11 +1,14 @@
 
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import SettingsMenu from '@/components/SettingsMenu';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
 
 const TopDrawer: React.FC = () => {
   const colors = useStore((state) => state.colors);
+  const modalOpen = useStore((state) => state.modalOpen);
+  const setModalOpen = useStore((state) => state.setModalOpen);
+  const toggleModal = () => setModalOpen(!modalOpen);
   
   const styles = useMemo(
     () =>
@@ -34,7 +37,10 @@ const TopDrawer: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
-        <Text style={styles.title}>public api explorer</Text>
+        <Pressable onPress={toggleModal}>
+          <Text style={styles.title}>public api explorer</Text>
+        </Pressable>
+
         <SettingsMenu />
       </View>
     </View>

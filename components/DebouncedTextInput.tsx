@@ -1,7 +1,7 @@
 import { TextInput, Text, View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { isUrl, checkUrl, setError, debounce } from '@/utils/utils';
-import { useNavigationState } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo } from 'react';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { useStore } from '@/store/useStore';
 
 const DebouncedTextInput: React.FC = () => {
@@ -13,7 +13,7 @@ const DebouncedTextInput: React.FC = () => {
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
-  const isRoot = useNavigationState((state) => state.index === 0);
+  const isRoot = useIsRootScreen();
 
   const styles = useMemo(
     () =>

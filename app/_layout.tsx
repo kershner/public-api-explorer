@@ -63,7 +63,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
-      <Stack
+      <Stack initialRouteName="index"
         screenOptions={{
           contentStyle: styles.stackContainer,
           headerStyle: styles.headerContainer,

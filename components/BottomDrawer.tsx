@@ -1,18 +1,18 @@
 
 import DebouncedTextInput from '@/components/DebouncedTextInput';
-import { useNavigationState } from '@react-navigation/native';
-import ApiButtons from '@/components/ApiButtons';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
+import PublicApiCards from '@/components/PublicApiCards';
 import { View, StyleSheet } from 'react-native';
 import React from 'react';
 
 const BottomDrawer: React.FC = () => {
-  const isRoot = useNavigationState((state) => state.index === 0);
+  const isRoot = useIsRootScreen();
   const styles = getStyles(isRoot);
 
   return (
     <View style={styles.container}>
       <DebouncedTextInput />
-      <ApiButtons />
+      <PublicApiCards />
     </View>
   );
 };

@@ -1,4 +1,3 @@
-import JsonViewer from '@/components/JsonViewer';
 import { useStore } from '@/store/useStore';
 import React, { useEffect } from 'react';
 import { useRouter } from "expo-router";
@@ -20,7 +19,7 @@ const HomeScreen: React.FC = () => {
     }
   }, [currentUrl]);
 
-  return <JsonViewer />;
+  return null;
 };
 
 export default HomeScreen;

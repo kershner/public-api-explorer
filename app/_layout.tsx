@@ -90,12 +90,6 @@ export default function RootLayout() {
             title: APP_TITLE,
           }}
         />
-        <Stack.Screen
-          name="JsonViewerScreen"
-          options={{
-            title: APP_TITLE,
-          }}
-        />
       </Stack>
       <BottomDrawer />
       <SettingsMenu />

@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useNavigationState } from '@react-navigation/native';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
 
@@ -12,6 +13,7 @@ const FetchButton: React.FC<FetchButtonProps> = ({ url, title }) => {
   const setInputValue = useStore((state) => state.setInputValue);
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
+  const isRoot = useNavigationState((state) => state.index === 0);
 
   const styles = useMemo(
     () =>
@@ -22,12 +24,15 @@ const FetchButton: React.FC<FetchButtonProps> = ({ url, title }) => {
           paddingHorizontal: 15,
           marginHorizontal: 5,
           borderRadius: 5,
+          ...(isRoot && { 
+            marginBottom: 8,
+          }),
         },
         text: {
           color: colors.textPrimary,
         },
       }),
-    [colors]
+    [colors, isRoot]
   );
 
   const handlePress = () => {

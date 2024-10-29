@@ -1,5 +1,5 @@
 import { isUrl, checkUrl, setError, debounce } from '@/utils/utils';
-import { TextInput, Text, View, StyleSheet, Pressable } from 'react-native';
+import { TextInput, Text, View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useStore } from '@/store/useStore';
 
@@ -11,6 +11,7 @@ const DebouncedTextInput: React.FC = () => {
   const setJsonData = useStore((state) => state.setJsonData);
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
+  const loading = useStore((state) => state.loading);
 
   const styles = useMemo(
     () =>
@@ -96,10 +97,13 @@ const DebouncedTextInput: React.FC = () => {
           onChangeText={handleChangeText}
           placeholderTextColor={colors.textPrimary}
         />
-        {inputValue ? (
+        {inputValue && !loading ? (
           <Pressable onPress={handleClearInput} style={styles.clearButton}>
             <Text style={styles.clearButtonText}>X</Text>
           </Pressable>
+        ) : null}
+        {loading ? (
+          <ActivityIndicator size={50} color={colors.textPrimary} />
         ) : null}
       </View>
     </View>

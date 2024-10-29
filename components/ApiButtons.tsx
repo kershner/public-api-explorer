@@ -1,4 +1,5 @@
 import { View, ScrollView, StyleSheet, PanResponder } from 'react-native';
+import { useNavigationState } from '@react-navigation/native';
 import FetchButton from '@/components/FetchButton';
 import { shuffleArray } from '@/utils/utils';
 import React, { useRef } from 'react';
@@ -49,6 +50,8 @@ const randomizedApiList = shuffleArray(apiList);
 const ApiButtons: React.FC = () => {
   const scrollRef = useRef<ScrollView | null>(null);
   const scrollStartX = useRef(0);
+  const isRoot = useNavigationState((state) => state.index === 0);
+  const styles = getStyles(isRoot);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -77,10 +80,11 @@ const ApiButtons: React.FC = () => {
   return (
     <View {...panResponder.panHandlers}>
       <ScrollView
+        contentContainerStyle={styles.scrollViewContainer}
         ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false} >
-        <View style={apiButtonsStyles.container}>
+        <View style={styles.container}>
           {randomizedApiList.map((api) => (
             <FetchButton key={api.url} url={api.url} title={api.description} />
           ))}
@@ -90,11 +94,19 @@ const ApiButtons: React.FC = () => {
   );
 };
 
-const apiButtonsStyles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    paddingVertical: 10
-  },
-});
+const getStyles = (isRoot: boolean) =>
+  StyleSheet.create({
+    scrollViewContainer: {
+      width: '100%',
+    },
+    container: {
+      flexDirection: 'row',
+      paddingVertical: 10,
+      ...(isRoot && { 
+        flexWrap: 'wrap',
+        width: '100%',
+      }),
+    },
+  });
 
 export default ApiButtons;

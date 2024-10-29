@@ -20,50 +20,52 @@ const PublicApiCards: React.FC = () => {
     ? randomizedApiList
     : randomizedApiList.filter(api => api.category === selectedCategory);
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        outerContainer: {
-          flex: 1,
-        },
-        innerContainer: {
-          flexDirection: isRoot ? 'column' : 'row',
-          alignItems: 'center'
-        },
-        pickerContainer: {
-          marginVertical: 8,
-          marginRight: isRoot ? 0 : 8,
-          borderRadius: 4,
-          borderWidth: 2,
-          borderColor: colors.textPrimary,
-          overflow: 'hidden',
-          height: 40,
-          width: isRoot ? 200 : 100,
-        },
-        picker: {
-          backgroundColor: colors.background,
-          color: colors.textPrimary,
-          paddingHorizontal: 12,
-          paddingVertical: 8,
-          borderWidth: 0,
-        },
-        scrollViewContainer: {
-          width: '100%',
-          ...(isRoot && { flexGrow: 1 }),
-        },
-        container: {
-          flexDirection: 'row',
-          flexWrap: isRoot ? 'wrap' : 'nowrap',
-          paddingVertical: 10,
-          alignItems: 'flex-start',
-          justifyContent: isRoot ? 'center' : 'flex-start',
-          ...(isRoot && {
+    const styles = useMemo(
+      () =>
+        StyleSheet.create({
+          outerContainer: {
+            flex: 1,
+          },
+          innerContainer: {
+            flexDirection: isRoot ? 'column' : 'row',
+            alignItems: 'center',
+            ...(isRoot && { flex: 1 }),
+          },
+          pickerContainer: {
+            marginVertical: 8,
+            marginRight: isRoot ? 0 : 8,
+            borderRadius: 4,
+            borderWidth: 2,
+            borderColor: colors.textPrimary,
+            overflow: 'hidden',
+            height: 40,
+            width: isRoot ? 200 : 100,
+          },
+          picker: {
+            backgroundColor: colors.background,
+            color: colors.textPrimary,
+            paddingHorizontal: 12,
+            paddingVertical: 8,
+            borderWidth: 0,
+          },
+          scrollViewContainer: {
             width: '100%',
-          }),
-        },
-      }),
-    [colors, isRoot]
-  );
+            ...(isRoot && { flexGrow: 1 }),
+          },
+          container: {
+            flexDirection: 'row',
+            flexWrap: isRoot ? 'wrap' : 'nowrap',
+            paddingVertical: 10,
+            alignItems: 'flex-start',
+            justifyContent: isRoot ? 'center' : 'flex-start',
+            ...(isRoot && {
+              width: '100%',
+            }),
+          },
+        }),
+      [colors, isRoot]
+    );
+    
 
   const panResponder = useRef(
     PanResponder.create({

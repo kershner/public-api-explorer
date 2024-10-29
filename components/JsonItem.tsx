@@ -1,5 +1,8 @@
-import { View, Text, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import NestedJsonItems from '@/components/NestedJsonItems';
+import React, { useMemo, useState, useRef } from 'react';
+import PopoverMenu from '@/components/PopoverMenu';
 import RenderValue from '@/components/RenderValue';
 import { useStore } from '@/store/useStore';
 
@@ -11,83 +14,59 @@ interface JsonItemProps {
 
 const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
   const [isOpen, setIsOpen] = useState(level === 0);
-  const hasNestedData = typeof value === 'object' && value !== null;
+  const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const colors = useStore((state) => state.colors);
+  const hasNestedData = typeof value === 'object' && value !== null;
+  const buttonRef = useRef(null);
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        itemContainer: {
-          flexDirection: 'column',
-          alignItems: 'flex-start',
+        itemContainer: { 
+          flexDirection: 'column', 
+          alignItems: 'flex-start' 
         },
-        levelIndicator: {
-          borderLeftWidth: 1,
-          borderColor: colors.border,
+        levelIndicator: { 
+          borderLeftWidth: 1, 
+          borderColor: 
+          colors.border 
         },
         row: {
           flexDirection: 'row',
           alignItems: 'center',
           padding: 4,
           width: '100%',
-          borderBottomWidth: 1,
+          borderBottomWidth: hasNestedData ? 0 : 1,
           borderBottomColor: colors.border,
           borderStyle: 'dotted',
         },
-        key: {
-          fontWeight: '600',
-          fontSize: 16,
-          textAlign: 'left',
-          width: 150,
-          color: colors.textPrimary,
+        key: { 
+          fontWeight: '600', 
+          fontSize: 16, 
+          textAlign: 'left', 
+          width: 150, 
+          color: colors.textPrimary 
         },
-        nestedRow: {
-          backgroundColor: colors.accent,
-          borderRadius: 6,
-          padding: 8,
-          marginVertical: 4,
-          borderBottomWidth: 0
+        nestedRow: { 
+          backgroundColor: colors.accent, 
+          borderRadius: 6, 
+          padding: 8, 
+          marginVertical: 4 
         },
-        keyInClickableRow: {
-          width: '100%',
+        keyInClickableRow: { 
+          width: '100%' 
         },
-        valueContainer: {
-          marginLeft: 8,
-          flexShrink: 1,
+        valueContainer: { 
+          marginLeft: 8, 
+          flexShrink: 1 
         },
-        nested: {
-          paddingLeft: 24,
-          width: '100%',
+        menuButton: { 
+          marginLeft: 
+          'auto' 
         },
       }),
     [colors]
   );
-
-  const renderNestedItems = () => {
-    if (!hasNestedData || !isOpen) return null;
-    
-    const nestedData = Object.entries(value).map(([key, nestedValue]) => ({ key, value: nestedValue }));
-
-    return Platform.select({
-      web: (
-        <View style={styles.nested}>
-          {nestedData.map((item, index) => (
-            <JsonItem key={`${level}-${index}`} label={item.key} value={item.value} level={level + 1} />
-          ))}
-        </View>
-      ),
-      default: (
-        <FlatList
-          data={nestedData}
-          renderItem={({ item }) => <JsonItem label={item.key} value={item.value} level={level + 1} />}
-          keyExtractor={(item, index) => `${level}-${index}`}
-          style={styles.nested}
-          initialNumToRender={10}
-          removeClippedSubviews={false}
-        />
-      ),
-    });
-  };
 
   return (
     <View style={styles.itemContainer}>
@@ -96,13 +75,30 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
         onPress={() => hasNestedData && setIsOpen(!isOpen)}
         disabled={!hasNestedData}
         style={[styles.row, hasNestedData && styles.nestedRow]}>
-
+        
         <Text style={[styles.key, hasNestedData && styles.keyInClickableRow]}>
           {hasNestedData ? (isOpen ? '▼ ' : '▶ ') : ''}{label}:
         </Text>
         {!hasNestedData && <View style={styles.valueContainer}>{RenderValue(value)}</View>}
+        {hasNestedData && (
+          <TouchableOpacity
+            ref={buttonRef}
+            onPress={() => setIsPopoverVisible(true)}
+            style={styles.menuButton}
+          >
+            <Icon name="more-vert" size={24} color={colors.textPrimary} />
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
-      {renderNestedItems()}
+      
+      {hasNestedData && isOpen && <NestedJsonItems data={value} level={level} />}
+
+      <PopoverMenu
+        isVisible={isPopoverVisible}
+        fromRef={buttonRef}
+        onClose={() => setIsPopoverVisible(false)}
+        value={value}
+      />
     </View>
   );
 };

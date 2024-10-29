@@ -5,13 +5,13 @@ import { publicApis } from '@/data/PublicApis';
 import { shuffleArray } from '@/utils/utils';
 import React, { useRef } from 'react';
 
+const randomizedApiList = shuffleArray(publicApis);
 
 const PublicApiCards: React.FC = () => {
   const scrollRef = useRef<ScrollView | null>(null);
   const scrollStartX = useRef(0);
   const isRoot = useIsRootScreen();
   const styles = getStyles(isRoot);
-  const randomizedApiList = shuffleArray(publicApis);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -48,7 +48,7 @@ const PublicApiCards: React.FC = () => {
       >
         <View style={styles.container}>
           {randomizedApiList.map((api, index) => (
-            <PublicApiCard key={index} api={api} />
+            <PublicApiCard key={index} api={api} index={index} />
           ))}
         </View>
       </ScrollView>
@@ -67,12 +67,14 @@ const getStyles = (isRoot: boolean) =>
     },
     container: {
       flexDirection: 'row',
+      flexWrap: isRoot ? 'wrap' : 'nowrap',
       paddingVertical: 10,
-      ...(isRoot && { 
-        flexWrap: 'wrap',
+      alignItems: 'flex-start',
+      justifyContent: isRoot ? 'center' : 'flex-start',
+      ...(isRoot && {
         width: '100%',
       }),
     },
   });
-
+  
 export default PublicApiCards;

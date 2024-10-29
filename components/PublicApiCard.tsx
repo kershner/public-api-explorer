@@ -6,9 +6,10 @@ import React, { useMemo } from 'react';
 
 type PublicApiCardProps = {
   api: PublicApi;
+  index: number;
 };
 
-const PublicApiCard: React.FC<PublicApiCardProps> = ({ api }) => {
+const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
   const inputValue = useStore((state) => state.inputValue);
   const setInputValue = useStore((state) => state.setInputValue);
   const setLoading = useStore((state) => state.setLoading);
@@ -22,29 +23,49 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api }) => {
           backgroundColor: colors.accent,
           borderRadius: 8,
           marginHorizontal: 4,
-          marginBottom: 8
+          marginBottom: isRoot ? 8 : 0,
+          alignItems: 'flex-start',
+          flexShrink: 1,
+          maxWidth: isRoot ? 150 : undefined,
         },
         content: {
           paddingVertical: 8,
           paddingHorizontal: 16,
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          alignSelf: 'stretch',
         },
         title: {
           fontSize: 16,
           fontWeight: 'bold',
           marginBottom: 4,
           color: colors.textPrimary,
+          textAlign: 'left',
         },
         description: {
           fontSize: 14,
           color: colors.textPrimary,
           marginBottom: 6,
+          flexWrap: 'wrap',
+          ...(!isRoot && { display: 'none' }),
         },
-        category: {
+        tagContainer: {
+          backgroundColor: colors.background,
+          borderRadius: 15,
+          paddingVertical: 4,
+          paddingHorizontal: 10,
+          alignSelf: 'flex-start',
+          marginTop: 6,
+          flexWrap: 'wrap',
+          ...(!isRoot && { display: 'none' }),
+        },
+        tag: {
           fontSize: 12,
           color: colors.textPrimary,
+          fontWeight: '600',
         },
       }),
-    [colors, isRoot]
+    [colors, isRoot, index]
   );
 
   const handlePress = () => {
@@ -59,7 +80,9 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api }) => {
       <View style={styles.content}>
         <Text style={styles.title}>{api.title}</Text>
         <Text style={styles.description}>{api.description}</Text>
-        <Text style={styles.category}>{api.category}</Text>
+        <View style={styles.tagContainer}>
+          <Text style={styles.tag}>{api.category}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );

@@ -1,5 +1,6 @@
-import { isUrl, checkUrl, setError, debounce } from '@/utils/utils';
 import { TextInput, Text, View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { isUrl, checkUrl, setError, debounce } from '@/utils/utils';
+import { useNavigationState } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useStore } from '@/store/useStore';
 
@@ -12,6 +13,7 @@ const DebouncedTextInput: React.FC = () => {
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
+  const isRoot = useNavigationState((state) => state.index === 0);
 
   const styles = useMemo(
     () =>
@@ -45,8 +47,16 @@ const DebouncedTextInput: React.FC = () => {
           paddingVertical: 6,
           color: colors.error,
         },
+        inputTitle: {
+          textAlign: 'center',
+          fontSize: 48,
+          fontWeight: 'bold',
+          marginVertical: 8,
+          color: colors.textPrimary,
+          ...(!isRoot && { display: 'none' }),
+        }
       }),
-    [colors]
+    [colors, isRoot]
   );
 
   const debouncedOnValueChange = useCallback(
@@ -87,6 +97,7 @@ const DebouncedTextInput: React.FC = () => {
 
   return (
     <View>
+      <Text style={styles.inputTitle}>Dive into some open data:</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <View style={styles.inputContainer}>
         <TextInput

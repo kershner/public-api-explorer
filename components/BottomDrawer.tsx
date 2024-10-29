@@ -22,7 +22,9 @@ const getStyles = (isRoot: boolean) =>
     container: {
       paddingHorizontal: 10,
       paddingTop: 10,
-      ...(isRoot && { flex: 1 }),
+      ...(isRoot && { 
+        flex: 4,
+      }),
     },
   });
 

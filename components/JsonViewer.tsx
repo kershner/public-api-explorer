@@ -21,10 +21,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, currentUrl }) => {
           paddingHorizontal: 16,
           paddingBottom: 16,
         },
-        noData: {
-          flexGrow: 0,
-          height: '30%'
-        },
         spinnerWrapper: {
           flexGrow: 1,
           flexDirection: 'row',
@@ -47,7 +43,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, currentUrl }) => {
 
   return Platform.select({
     web: (
-      <ScrollView style={[styles.container, currentUrl ? null : styles.noData]}>
+      <ScrollView style={styles.container}>
         {content.map((item, index) => (
           <JsonItem key={index.toString()} label={item.key as string} value={item.value} />
         ))}
@@ -55,7 +51,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, currentUrl }) => {
     ),
     default: (
       <FlatList
-        style={[styles.container, currentUrl ? null : styles.noData]}
+        style={styles.container}
         data={content}
         renderItem={({ item }) => <JsonItem label={item.key as string} value={item.value} />}
         keyExtractor={(item, index) => index.toString()}

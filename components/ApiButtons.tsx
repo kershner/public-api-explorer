@@ -78,12 +78,14 @@ const ApiButtons: React.FC = () => {
   ).current;
 
   return (
-    <View {...panResponder.panHandlers}>
+    <View style={styles.outerContainer} {...(!isRoot ? panResponder.panHandlers : {})}>
       <ScrollView
         contentContainerStyle={styles.scrollViewContainer}
         ref={scrollRef}
-        horizontal
-        showsHorizontalScrollIndicator={false} >
+        horizontal={!isRoot}
+        showsHorizontalScrollIndicator={!isRoot}
+        showsVerticalScrollIndicator={isRoot}
+      >
         <View style={styles.container}>
           {randomizedApiList.map((api) => (
             <FetchButton key={api.url} url={api.url} title={api.description} />
@@ -96,8 +98,12 @@ const ApiButtons: React.FC = () => {
 
 const getStyles = (isRoot: boolean) =>
   StyleSheet.create({
+    outerContainer: {
+      flex: 1,
+    },
     scrollViewContainer: {
       width: '100%',
+      ...(isRoot && { flexGrow: 1 }),
     },
     container: {
       flexDirection: 'row',

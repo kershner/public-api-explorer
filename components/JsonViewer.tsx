@@ -3,12 +3,15 @@ import JsonItem from '@/components/JsonItem';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
 
-const JsonViewer: React.FC = () => {
-  const currentUrl = useStore((state) => state.currentUrl);
+interface JsonViewerProps {
+  jsonData?: unknown;
+  currentUrl?: string;
+}
+
+const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, currentUrl }) => {
   const loading = useStore((state) => state.loading);
-  const jsonData = useStore((state) => state.jsonData);
-  const content = jsonData ? [{ key: currentUrl, value: jsonData }] : [];
   const colors = useStore((state) => state.colors);
+  const content = jsonData ? [{ key: currentUrl, value: jsonData }] : [];
 
   const styles = useMemo(
     () =>
@@ -46,7 +49,7 @@ const JsonViewer: React.FC = () => {
     web: (
       <ScrollView style={[styles.container, currentUrl ? null : styles.noData]}>
         {content.map((item, index) => (
-          <JsonItem key={index.toString()} label={item.key} value={item.value} />
+          <JsonItem key={index.toString()} label={item.key as string} value={item.value} />
         ))}
       </ScrollView>
     ),
@@ -54,7 +57,7 @@ const JsonViewer: React.FC = () => {
       <FlatList
         style={[styles.container, currentUrl ? null : styles.noData]}
         data={content}
-        renderItem={({ item }) => <JsonItem label={item.key} value={item.value} />}
+        renderItem={({ item }) => <JsonItem label={item.key as string} value={item.value} />}
         keyExtractor={(item, index) => index.toString()}
       />
     ),

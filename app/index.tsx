@@ -1,32 +1,26 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
-import BottomDrawer from '@/components/BottomDrawer';
-import TopDrawer from '@/components/TopDrawer';
 import JsonViewer from '@/components/JsonViewer';
 import { useStore } from '@/store/useStore';
-import React, { useMemo } from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from "expo-router";
 
 const HomeScreen: React.FC = () => {
-  const colors = useStore((state) => state.colors);
+  const jsonData = useStore((state) => state.jsonData);
+  const currentUrl = useStore((state) => state.currentUrl);
+  const router = useRouter();
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        globalContainer: {
-          flex: 1,
-          padding: 16,
-          backgroundColor: colors.background,
+  useEffect(() => {
+    if (jsonData && currentUrl) {
+      router.push({
+        pathname: "JsonViewerScreen",
+        params: { 
+          jsonData: JSON.stringify(jsonData), 
+          currentUrl
         },
-      }),
-    [colors]
-  );
+      });
+    }
+  }, [currentUrl]);
 
-  return (
-    <SafeAreaView style={styles.globalContainer}>
-      <TopDrawer />
-      <JsonViewer />
-      <BottomDrawer />
-    </SafeAreaView>
-  );
+  return <JsonViewer />;
 };
 
 export default HomeScreen;

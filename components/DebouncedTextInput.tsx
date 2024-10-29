@@ -80,6 +80,7 @@ const DebouncedTextInput: React.FC = () => {
   const handleClearInput = () => {
     setInputValue('');
     setCurrentUrl('');
+    setError('');
     setJsonData(null);
   };
 

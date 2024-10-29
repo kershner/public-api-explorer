@@ -1,6 +1,7 @@
-import { View, TouchableOpacity, Modal, Text, Switch, StyleSheet } from 'react-native';
+import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 
 const SettingsMenu = () => {
   const modalOpen = useStore((state) => state.modalOpen);
@@ -13,79 +14,59 @@ const SettingsMenu = () => {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        settingsButton: {
-          fontSize: 24,
-        },
         modalOverlay: {
           flex: 1,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          justifyContent: 'center',
-          alignItems: 'center',
+          backgroundColor: colors.background,
         },
-        modalContent: {
-          width: '100%',
-          maxWidth: 450,
-          backgroundColor: colors.accent,
-          color: colors.textPrimary,
-          padding: 24,
-          borderRadius: 8,
-        },
-        title: {
-          fontSize: 18,
-          marginBottom: 12,
-          color: colors.textPrimary,
-          fontWeight: 'bold'
-        },
-        optionRowsContainer: {
-          marginBottom: 12,
-        },
-        optionRow: {
-          width: '100%',
-          maxWidth: '90%',
+        header: {
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignSelf: 'center',
           alignItems: 'center',
-          marginBottom: 16,
-          paddingBottom: 6,
+          justifyContent: 'space-between',
+          paddingHorizontal: 16,
+          paddingVertical: 12,
           borderBottomColor: colors.border,
           borderBottomWidth: 1,
-          borderStyle: 'dotted'
         },
-        buttonText: {
+        title: {
+          fontSize: 20,
+          fontWeight: 'bold',
           color: colors.textPrimary,
-          textAlign: 'center',
-          fontWeight: 'bold'
-        }
+        },
+        optionRowsContainer: {
+          padding: 16,
+        },
+        optionRow: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 12,
+          borderBottomColor: colors.border,
+          borderBottomWidth: 1,
+        },
       }),
     [colors]
   );
 
   return (
-    <View>
-      <TouchableOpacity onPress={toggleModal}>
-        <Text style={styles.settingsButton}>⚙️</Text>
-      </TouchableOpacity>
+    <Modal visible={modalOpen} onRequestClose={toggleModal}>
+      <View style={styles.modalOverlay}>
+        {/* Header with Close Button */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Settings</Text>
+          <TouchableOpacity onPress={toggleModal}>
+            <Ionicons name="close" size={24} color={colors.textPrimary} />
+          </TouchableOpacity>
+        </View>
 
-      <Modal visible={modalOpen} onRequestClose={toggleModal} transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.title}>Settings</Text>
-            
-            <View style={styles.optionRowsContainer}>
-              <View style={styles.optionRow}>
-                <Text style={{ color: colors.textPrimary }}>Dark Mode</Text>
-                <Switch value={darkMode} onValueChange={toggleDarkMode} />
-              </View>
-            </View>
-
-            <TouchableOpacity onPress={toggleModal} style={{ backgroundColor: colors.background, paddingVertical: 8 }}>
-              <Text style={styles.buttonText}>Close</Text>
-            </TouchableOpacity>
+        {/* Options */}
+        <View style={styles.optionRowsContainer}>
+          <View style={styles.optionRow}>
+            <Text style={{ color: colors.textPrimary }}>Dark Mode</Text>
+            <Switch value={darkMode} onValueChange={toggleDarkMode} />
           </View>
         </View>
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 };
 

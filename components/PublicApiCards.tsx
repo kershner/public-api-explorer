@@ -25,7 +25,6 @@ const PublicApiCards: React.FC = () => {
         StyleSheet.create({
           outerContainer: {
             flex: 1,
-            alignItems: isRoot ? 'flex-start' : undefined,
           },
           innerContainer: {
             flexDirection: isRoot ? 'column' : 'row-reverse',

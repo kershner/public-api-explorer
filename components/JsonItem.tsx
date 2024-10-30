@@ -97,6 +97,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
         fromRef={buttonRef}
         onClose={() => setIsPopoverVisible(false)}
         value={value}
+        label={label}
       />
     </View>
   );

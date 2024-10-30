@@ -1,54 +1,22 @@
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, Dimensions } from 'react-native';
-import React, { useMemo, useState, useEffect } from 'react';
+import { downloadJson } from '@/utils/downloads/downloadJson';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { downloadCsv as exportCsv } from '@/utils/utils';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { useStore } from '@/store/useStore';
+import React, { useMemo } from 'react';
 
 interface PopoverMenuProps {
   isVisible: boolean;
   fromRef: React.RefObject<View>;
   onClose: () => void;
-  value: string | number | boolean | object | null;
+  value: object;
+  label: string;
 }
 
-const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, value }) => {
+const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, value, label }) => {
   const colors = useStore((state) => state.colors);
-  const currentUrl = useStore((state) => state.currentUrl);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = React.useState({ top: 0, left: 0 });
   const screenWidth = Dimensions.get('window').width;
-
-  useEffect(() => {
-    if (isVisible && fromRef.current) {
-      fromRef.current.measure((x, y, width, height, pageX, pageY) => {
-        const popoverWidth = 200;
-        const adjustedLeft = pageX + width / 2 + popoverWidth > screenWidth 
-          ? screenWidth - popoverWidth
-          : pageX + width / 2;
-
-        setPosition({ top: pageY + height, left: adjustedLeft });
-      });
-    }
-  }, [isVisible, fromRef, screenWidth]);
-  
-  const handleDownloadCsv = async () => {
-    if (value === null || typeof value !== 'object') {
-      console.error('Error: value must be a non-null object or an array of objects to export as CSV.');
-      return;
-    }
-  
-    // If `value` is a single object, wrap it in an array; otherwise, assume it's an array of objects
-    const dataToExport = Array.isArray(value) ? value : [value];
-    const urlWithoutScheme = currentUrl.replace(/^https?:\/\//, "");
-    const filename = `${urlWithoutScheme}_data.csv`;
-
-    console.log(value);
-  
-    // try {
-    //   await exportCsv(dataToExport, filename);
-    // } catch (error) {
-    //   console.error('Error downloading CSV:', error);
-    // }
-  };
 
   const styles = useMemo(
     () =>
@@ -92,6 +60,36 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
     [colors, position]
   );
 
+  React.useEffect(() => {
+    if (isVisible && fromRef.current) {
+      fromRef.current.measure((x, y, width, height, pageX, pageY) => {
+        const popoverWidth = 200;
+        const adjustedLeft = pageX + width / 2 + popoverWidth > screenWidth
+          ? screenWidth - popoverWidth
+          : pageX + width / 2;
+
+        setPosition({ top: pageY + height, left: adjustedLeft });
+      });
+    }
+  }, [isVisible, fromRef, screenWidth]);
+
+  // Copy JSON to clipboard
+  const handleCopyJson = () => {
+    Clipboard.setString(JSON.stringify(value, null, 2));
+    console.log('JSON copied to clipboard');
+  };
+
+  // Download JSON file
+  const handleDownloadJson = async () => {
+    const filename = `${label}.json`;
+    try {
+      await downloadJson(value, filename);
+      console.log('JSON file downloaded');
+    } catch (error) {
+      console.error('Error downloading JSON:', error);
+    }
+  };
+
   return (
     <Modal
       transparent
@@ -103,9 +101,13 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
 
       <View style={styles.popoverStyle}>
         <View style={styles.popoverContent}>
-          <TouchableOpacity onPress={handleDownloadCsv} style={styles.button}>
+          <TouchableOpacity onPress={handleCopyJson} style={styles.button}>
+            <Icon name="content-copy" size={20} color={colors.textPrimary} />
+            <Text style={styles.buttonText}>Copy JSON</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDownloadJson} style={styles.button}>
             <Icon name="file-download" size={20} color={colors.textPrimary} />
-            <Text style={styles.buttonText}>Download CSV</Text>
+            <Text style={styles.buttonText}>Download JSON</Text>
           </TouchableOpacity>
         </View>
       </View>

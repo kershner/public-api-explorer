@@ -25,10 +25,11 @@ const PublicApiCards: React.FC = () => {
         StyleSheet.create({
           outerContainer: {
             flex: 1,
+            alignItems: isRoot ? 'flex-start' : undefined,
           },
           innerContainer: {
             flexDirection: isRoot ? 'column' : 'row-reverse',
-            alignItems: 'flex-end',
+            alignItems: isRoot ? 'flex-end': 'center',
             ...(isRoot && { flex: 1 }),
           },
           pickerContainer: {
@@ -39,7 +40,7 @@ const PublicApiCards: React.FC = () => {
             borderWidth: 2,
             borderColor: colors.textPrimary,
             overflow: 'hidden',
-            width: isRoot ? 200 : 100,
+            width: 100,
           },
           picker: {
             backgroundColor: colors.background,
@@ -55,7 +56,6 @@ const PublicApiCards: React.FC = () => {
           container: {
             flexDirection: 'row',
             flexWrap: isRoot ? 'wrap' : 'nowrap',
-            paddingVertical: 10,
             alignItems: 'flex-start',
             justifyContent: isRoot ? 'center' : 'flex-start',
             ...(isRoot && {
@@ -65,7 +65,6 @@ const PublicApiCards: React.FC = () => {
         }),
       [colors, isRoot]
     );
-    
 
   const panResponder = useRef(
     PanResponder.create({

@@ -14,7 +14,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
     () =>
       StyleSheet.create({
         nestedList: { 
-          paddingLeft: 24, 
+          paddingLeft: 8,
           width: '100%' 
         },
       }),

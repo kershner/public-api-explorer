@@ -18,7 +18,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, currentUrl }) => {
       StyleSheet.create({
         container: {
           flexGrow: 1,
-          paddingHorizontal: 16,
+          paddingHorizontal: 8,
           paddingBottom: 16,
         },
         spinnerWrapper: {

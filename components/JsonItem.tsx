@@ -28,8 +28,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
         },
         levelIndicator: { 
           borderLeftWidth: 1, 
-          borderColor: 
-          colors.border 
+          borderColor: colors.border 
         },
         row: {
           flexDirection: 'row',

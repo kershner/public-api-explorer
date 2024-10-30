@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, Dimensions } from 'react-native';
+import React, { useMemo, useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useStore } from '@/store/useStore';
-import React, { useMemo } from 'react';
 
 interface PopoverMenuProps {
   isVisible: boolean;
@@ -13,6 +12,25 @@ interface PopoverMenuProps {
 
 const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, value }) => {
   const colors = useStore((state) => state.colors);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const screenWidth = Dimensions.get('window').width;
+
+  useEffect(() => {
+    // Measure position of fromRef element if popover is visible
+    if (isVisible && fromRef.current) {
+      fromRef.current.measure((x, y, width, height, pageX, pageY) => {
+        const popoverWidth = 200;
+        // Adjust left position to keep popover within screen bounds
+        const adjustedLeft = pageX + width / 2 + popoverWidth > screenWidth 
+          ? screenWidth - popoverWidth
+          : pageX + width / 2;
+  
+        // Set popover position based on measurement
+        setPosition({ top: pageY + height, left: adjustedLeft });
+      });
+    }
+  }, [isVisible, fromRef, screenWidth]);
+  
 
   const handleLogData = () => {
     console.log(value);
@@ -21,14 +39,26 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        popoverContent: {
-          padding: 8,
-          backgroundColor: colors.background,
+        modalOverlay: {
+          flex: 1,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        popoverStyle: {
+          position: 'absolute',
+          top: position.top,
+          left: position.left,
+          backgroundColor: colors.textPrimary,
           borderColor: colors.textPrimary,
           borderWidth: 2,
           borderRadius: 8,
+          overflow: 'hidden',
+        },
+        popoverContent: {
+          borderRadius: 6,
+          padding: 8,
+          backgroundColor: colors.background,
           alignItems: 'flex-start',
-          minWidth: 145
+          minWidth: 145,
         },
         button: {
           flexDirection: 'row',
@@ -46,29 +76,33 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
           flexShrink: 1,
         },
       }),
-    [colors]
+    [colors, position]
   );
 
   return (
-    <Popover
-      isVisible={isVisible}
-      from={fromRef}
+    <Modal
+      transparent
+      visible={isVisible}
       onRequestClose={onClose}
-      placement={PopoverPlacement.BOTTOM}
-      popoverStyle={{ backgroundColor: colors.textPrimary }}
+      animationType="none"
     >
-      <View style={styles.popoverContent}>
-        <TouchableOpacity onPress={handleLogData} style={styles.button}>
-          <Icon name="info" size={20} color={colors.textPrimary} />
-          <Text style={styles.buttonText}>Log Data</Text>
-        </TouchableOpacity>
-        {/* Additional menu options */}
-        <TouchableOpacity onPress={() => console.log('clicked settings')} style={styles.button}>
-          <Icon name="settings" size={20} color={colors.textPrimary} />
-          <Text style={styles.buttonText}>Settings</Text>
-        </TouchableOpacity>
+      <Pressable style={styles.modalOverlay} onPress={onClose}>
+        {/* Empty Pressable overlay to close the modal */}
+      </Pressable>
+
+      <View style={styles.popoverStyle}>
+        <View style={styles.popoverContent}>
+          <TouchableOpacity onPress={handleLogData} style={styles.button}>
+            <Icon name="info" size={20} color={colors.textPrimary} />
+            <Text style={styles.buttonText}>Log Data</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log('clicked settings')} style={styles.button}>
+            <Icon name="settings" size={20} color={colors.textPrimary} />
+            <Text style={styles.buttonText}>Settings</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </Popover>
+    </Modal>
   );
 };
 

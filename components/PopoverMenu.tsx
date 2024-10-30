@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, Dimensions } from 'react-native';
 import React, { useMemo, useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { downloadCsv as exportCsv } from '@/utils/utils';
 import { useStore } from '@/store/useStore';
 
 interface PopoverMenuProps {
@@ -12,28 +13,41 @@ interface PopoverMenuProps {
 
 const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, value }) => {
   const colors = useStore((state) => state.colors);
+  const currentUrl = useStore((state) => state.currentUrl);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const screenWidth = Dimensions.get('window').width;
 
   useEffect(() => {
-    // Measure position of fromRef element if popover is visible
     if (isVisible && fromRef.current) {
       fromRef.current.measure((x, y, width, height, pageX, pageY) => {
         const popoverWidth = 200;
-        // Adjust left position to keep popover within screen bounds
         const adjustedLeft = pageX + width / 2 + popoverWidth > screenWidth 
           ? screenWidth - popoverWidth
           : pageX + width / 2;
-  
-        // Set popover position based on measurement
+
         setPosition({ top: pageY + height, left: adjustedLeft });
       });
     }
   }, [isVisible, fromRef, screenWidth]);
   
+  const handleDownloadCsv = async () => {
+    if (value === null || typeof value !== 'object') {
+      console.error('Error: value must be a non-null object or an array of objects to export as CSV.');
+      return;
+    }
+  
+    // If `value` is a single object, wrap it in an array; otherwise, assume it's an array of objects
+    const dataToExport = Array.isArray(value) ? value : [value];
+    const urlWithoutScheme = currentUrl.replace(/^https?:\/\//, "");
+    const filename = `${urlWithoutScheme}_data.csv`;
 
-  const handleLogData = () => {
     console.log(value);
+  
+    // try {
+    //   await exportCsv(dataToExport, filename);
+    // } catch (error) {
+    //   console.error('Error downloading CSV:', error);
+    // }
   };
 
   const styles = useMemo(
@@ -58,7 +72,6 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
           padding: 8,
           backgroundColor: colors.background,
           alignItems: 'flex-start',
-          minWidth: 145,
         },
         button: {
           flexDirection: 'row',
@@ -86,19 +99,13 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
       onRequestClose={onClose}
       animationType="none"
     >
-      <Pressable style={styles.modalOverlay} onPress={onClose}>
-        {/* Empty Pressable overlay to close the modal */}
-      </Pressable>
+      <Pressable style={styles.modalOverlay} onPress={onClose} />
 
       <View style={styles.popoverStyle}>
         <View style={styles.popoverContent}>
-          <TouchableOpacity onPress={handleLogData} style={styles.button}>
-            <Icon name="info" size={20} color={colors.textPrimary} />
-            <Text style={styles.buttonText}>Log Data</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log('clicked settings')} style={styles.button}>
-            <Icon name="settings" size={20} color={colors.textPrimary} />
-            <Text style={styles.buttonText}>Settings</Text>
+          <TouchableOpacity onPress={handleDownloadCsv} style={styles.button}>
+            <Icon name="file-download" size={20} color={colors.textPrimary} />
+            <Text style={styles.buttonText}>Download CSV</Text>
           </TouchableOpacity>
         </View>
       </View>

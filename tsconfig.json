@@ -3,10 +3,9 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "strict": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*", "./*.web", "./*.native"]
     }
   },
   "include": [

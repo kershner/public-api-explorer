@@ -3,6 +3,7 @@ import { downloadJson } from '@/utils/downloads/downloadJson';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useStore } from '@/store/useStore';
+import { showAlert } from '@/utils/utils';
 import React, { useMemo } from 'react';
 
 interface PopoverMenuProps {
@@ -76,7 +77,8 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
   // Copy JSON to clipboard
   const handleCopyJson = () => {
     Clipboard.setString(JSON.stringify(value, null, 2));
-    console.log('JSON copied to clipboard');
+    showAlert('JSON copied to clipboard');
+    onClose();
   };
 
   // Download JSON file
@@ -84,9 +86,10 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
     const filename = `${label}.json`;
     try {
       await downloadJson(value, filename);
-      console.log('JSON file downloaded');
+      onClose();
     } catch (error) {
-      console.error('Error downloading JSON:', error);
+      const message = error instanceof Error ? error.message : String(error);
+      showAlert(message);
     }
   };
 
@@ -105,6 +108,7 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
             <Icon name="content-copy" size={20} color={colors.textPrimary} />
             <Text style={styles.buttonText}>Copy JSON</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={handleDownloadJson} style={styles.button}>
             <Icon name="file-download" size={20} color={colors.textPrimary} />
             <Text style={styles.buttonText}>Download JSON</Text>

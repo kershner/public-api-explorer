@@ -1,3 +1,4 @@
+import { Alert, Platform } from 'react-native';
 import { useStore } from '@/store/useStore';
 
 // General utility functions
@@ -77,3 +78,11 @@ const fetchWithTimeout = async (
 export { downloadJson } from '@/utils/downloads/downloadJson';
 
 export { copyToClipboard } from '@/utils/clipboard/copyToClipboard';
+
+export const showAlert = (message: string) => {
+  if (Platform.OS === 'web') {
+    window.alert(message);
+  } else {
+    Alert.alert('Alert', message);
+  }
+};

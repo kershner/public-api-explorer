@@ -1,8 +1,8 @@
+import JsonItemPopoverMenu from '@/components/PopoverMenu/JsonItemPopoverMenu';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import NestedJsonItems from '@/components/NestedJsonItems';
 import React, { useMemo, useState, useRef } from 'react';
-import PopoverMenu from '@/components/PopoverMenu';
 import RenderValue from '@/components/RenderValue';
 import { useStore } from '@/store/useStore';
 
@@ -78,7 +78,11 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
         <Text style={[styles.key, hasNestedData && styles.keyInClickableRow]}>
           {hasNestedData ? (isOpen ? '▼ ' : '▶ ') : ''}{label}:
         </Text>
-        {!hasNestedData && <View style={styles.valueContainer}>{RenderValue(value)}</View>}
+        {!hasNestedData && (
+          <View style={styles.valueContainer}>
+            <RenderValue value={value} label={label} />
+          </View>
+        )}
         {hasNestedData && (
           <TouchableOpacity
             ref={buttonRef}
@@ -92,7 +96,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
       
       {hasNestedData && isOpen && <NestedJsonItems data={value} level={level} />}
 
-      <PopoverMenu
+      <JsonItemPopoverMenu
         isVisible={isPopoverVisible}
         fromRef={buttonRef}
         onClose={() => setIsPopoverVisible(false)}

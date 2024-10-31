@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import FloatingIconGrid from '@/components/FloatingIconGrid';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
 import SettingsMenu from '@/components/SettingsMenu';
@@ -94,6 +94,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      
       <BottomDrawer />
       <SettingsMenu />
     </SafeAreaView>

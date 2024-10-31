@@ -1,15 +1,22 @@
-import { View, Text, Image, TouchableOpacity, Linking, Dimensions, StyleSheet } from 'react-native';
-import {isHtml, isUrl, isImageUrl} from '@/utils/utils'
+import { Text, Image, TouchableOpacity, Linking, Dimensions, StyleSheet } from 'react-native';
+import RenderValuePopoverMenu from '@/components/PopoverMenu/RenderValuePopoverMenu';
+import { isHtml, isUrl, isImageUrl } from '@/utils/utils';
+import React, { useMemo, useState, useRef } from 'react';
 import RenderHtml from 'react-native-render-html';
 import { useStore } from '@/store/useStore';
-import React, { useMemo } from 'react';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-// Main function to render different types of values
-const RenderValue = (value: string | number | boolean | object | null) => {
+interface RenderValueProps {
+  value: string | number | boolean | object | null;
+  label: string;
+}
+
+const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
   const colors = useStore((state) => state.colors);
-  
+  const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+  const valueRef = useRef(null); // Reference for positioning popover
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -32,37 +39,83 @@ const RenderValue = (value: string | number | boolean | object | null) => {
     [colors]
   );
 
+  const handlePress = () => {
+    setIsPopoverVisible(true);
+  };
+
   if (typeof value === 'string') {
     if (isHtml(value)) {
       return (
-        <View style={styles.value}>
-          <RenderHtml contentWidth={screenWidth} source={{ html: value }} tagsStyles={{body: { color: colors.textPrimary }}} />
-        </View>
+        <TouchableOpacity onPress={handlePress} ref={valueRef} style={styles.value}>
+          <RenderHtml contentWidth={screenWidth} source={{ html: value }} tagsStyles={{ body: { color: colors.textPrimary } }} />
+          <RenderValuePopoverMenu
+            isVisible={isPopoverVisible}
+            fromRef={valueRef}
+            onClose={() => setIsPopoverVisible(false)}
+            label={label}
+            value={value}
+          />
+        </TouchableOpacity>
       );
     }
     if (isImageUrl(value)) {
       return (
-        <TouchableOpacity onPress={() => Linking.openURL(value)}>
+        <TouchableOpacity onPress={() => { Linking.openURL(value); handlePress(); }} ref={valueRef}>
           <Image
             source={{ uri: value }}
             style={styles.image}
             resizeMode="contain"
+          />
+          <RenderValuePopoverMenu
+            isVisible={isPopoverVisible}
+            fromRef={valueRef}
+            onClose={() => setIsPopoverVisible(false)}
+            label={label}
+            value={value}
           />
         </TouchableOpacity>
       );
     }
     if (isUrl(value)) {
       return (
-        <TouchableOpacity onPress={() => Linking.openURL(value)}>
+        <TouchableOpacity onPress={() => { Linking.openURL(value); handlePress(); }} ref={valueRef}>
           <Text style={[styles.value, styles.link]}>{value}</Text>
+          <RenderValuePopoverMenu
+            isVisible={isPopoverVisible}
+            fromRef={valueRef}
+            onClose={() => setIsPopoverVisible(false)}
+            label={label}
+            value={value}
+          />
         </TouchableOpacity>
       );
     }
-    return <Text style={styles.value}>{value}</Text>;
+    return (
+      <TouchableOpacity onPress={handlePress} ref={valueRef}>
+        <Text style={styles.value}>{value}</Text>
+        <RenderValuePopoverMenu
+          isVisible={isPopoverVisible}
+          fromRef={valueRef}
+          onClose={() => setIsPopoverVisible(false)}
+          label={label}
+          value={value}
+        />
+      </TouchableOpacity>
+    );
   }
-  
-  // For numbers, booleans, and other types, convert to string
-  return <Text style={styles.value}>{String(value)}</Text>;
+
+  return (
+    <TouchableOpacity onPress={handlePress} ref={valueRef}>
+      <Text style={styles.value}>{String(value)}</Text>
+      <RenderValuePopoverMenu
+        isVisible={isPopoverVisible}
+        fromRef={valueRef}
+        onClose={() => setIsPopoverVisible(false)}
+        label={label}
+        value={value}
+      />
+    </TouchableOpacity>
+  );
 };
 
 export default RenderValue;

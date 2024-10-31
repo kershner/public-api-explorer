@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import JsonViewer from "@/components/JsonViewer";
+import JsonViewer from "@/components/JsonViewer/JsonViewer";
 import React from "react";
 
 const JsonViewerScreen: React.FC = () => {

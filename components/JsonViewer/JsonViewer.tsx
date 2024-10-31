@@ -1,5 +1,5 @@
 import { FlatList, ScrollView, Platform, StyleSheet, View, ActivityIndicator } from 'react-native';
-import JsonItem from '@/components/JsonItem';
+import JsonItem from '@/components/JsonViewer/JsonItem';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
 

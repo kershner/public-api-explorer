@@ -1,6 +1,6 @@
 
+import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
 import DebouncedTextInput from '@/components/DebouncedTextInput';
-import PublicApiCards from '@/components/PublicApiCards';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { View, StyleSheet } from 'react-native';
 import { useStore } from '@/store/useStore';

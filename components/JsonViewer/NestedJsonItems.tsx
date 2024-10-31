@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet } from 'react-native';
-import JsonItem from '@/components/JsonItem';
+import JsonItem from '@/components/JsonViewer/JsonItem';
 import React, { useMemo } from 'react';
 
 interface NestedItemsProps {

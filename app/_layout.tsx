@@ -1,4 +1,5 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import FloatingIconGrid from '@/components/FloatingIconGrid';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
@@ -63,27 +64,29 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
+      <FloatingIconGrid />
+      
       <Stack initialRouteName="index"
-        screenOptions={{
-          contentStyle: styles.stackContainer,
-          headerStyle: styles.headerContainer,
-          headerTitleStyle: styles.headerTitleText,
-          headerBackTitleStyle: styles.headerBack,
-          headerTintColor: colors.textPrimary,
-          headerTitle: () => (
-            <TouchableOpacity onPress={goHomeAndClearStack}>
-              <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <View style={styles.menuButtonWrapper}>
-              <TouchableOpacity onPress={() => setModalOpen(true)}>
-                <FontAwesome name="bars" size={28} color={colors.textPrimary} />
+          screenOptions={{
+            contentStyle: styles.stackContainer,
+            headerStyle: styles.headerContainer,
+            headerTitleStyle: styles.headerTitleText,
+            headerBackTitleStyle: styles.headerBack,
+            headerTintColor: colors.textPrimary,
+            headerTitle: () => (
+              <TouchableOpacity onPress={goHomeAndClearStack}>
+                <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
               </TouchableOpacity>
-            </View>
-          ),
-        }}
-      >
+            ),
+            headerRight: () => (
+              <View style={styles.menuButtonWrapper}>
+                <TouchableOpacity onPress={() => setModalOpen(true)}>
+                  <FontAwesome name="bars" size={28} color={colors.textPrimary} />
+                </TouchableOpacity>
+              </View>
+            ),
+          }}
+        >
         <Stack.Screen
           name="index"
           options={{

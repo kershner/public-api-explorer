@@ -8,7 +8,7 @@ interface IconGridProps {
   iconSize?: number;
 }
 
-const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 35 }) => {
+const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
   const colors = useStore((state) => state.colors);
   const { width, height } = Dimensions.get('window');
   const numColumns = Math.floor(width / iconSize);
@@ -29,7 +29,7 @@ const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 35 }) => {
           top: 0,
         },
         icon: {
-          margin: 16,
+          margin: 18,
           color: colors.accent,
           opacity: 0.5
         },

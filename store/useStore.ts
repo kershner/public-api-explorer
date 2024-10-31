@@ -27,9 +27,12 @@ interface State {
   colors: ThemeColors;
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
+  jsonDataMap: Record<string, unknown>;
+  setJsonDataForUrl: (url: string, data: unknown) => void;
+  getJsonDataForUrl: (url: string) => unknown;
 }
 
-export const useStore = create<State>((set) => ({
+export const useStore = create<State>((set, get) => ({
   loading: false,
   setLoading: (loading) => set({ loading }),
   currentUrl: '',
@@ -53,4 +56,11 @@ export const useStore = create<State>((set) => ({
   colors: darkModeColors,
   modalOpen: false,
   setModalOpen: (modalOpen) => set({ modalOpen }),
+  
+  jsonDataMap: {},
+  setJsonDataForUrl: (url, data) =>
+    set((state) => ({
+      jsonDataMap: { ...state.jsonDataMap, [url]: data },
+    })),
+  getJsonDataForUrl: (url) => get().jsonDataMap[url],
 }));

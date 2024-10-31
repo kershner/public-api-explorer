@@ -91,7 +91,7 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
       );
     }
     return (
-      <TouchableOpacity onPress={handlePress} ref={valueRef}>
+      <TouchableOpacity onPress={handlePress} ref={valueRef}>      
         <Text style={styles.value}>{value}</Text>
         <RenderValuePopoverMenu
           isVisible={isPopoverVisible}
@@ -106,7 +106,7 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
 
   return (
     <TouchableOpacity onPress={handlePress} ref={valueRef}>
-      <Text style={styles.value}>{String(value)}</Text>
+      <Text style={styles.value}>{value != null ? String(value) : ''}</Text>
       <RenderValuePopoverMenu
         isVisible={isPopoverVisible}
         fromRef={valueRef}

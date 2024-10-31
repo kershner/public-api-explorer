@@ -1,22 +1,58 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
+import React, { useMemo, useEffect, useState } from 'react';
 import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
 import SettingsMenu from '@/components/SettingsMenu';
-import { Stack, useNavigation  } from 'expo-router';
+import { Stack, useNavigation } from 'expo-router';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
-import React, { useMemo } from 'react';
+import * as Linking from 'expo-linking';
+import { Platform } from 'react-native';
 
 export default function RootLayout() {
   const colors = useStore((state) => state.colors);
   const setModalOpen = useStore((state) => state.setModalOpen);
   const setInputValue = useStore((state) => state.setInputValue);
   const setCurrentUrl = useStore((state) => state.setCurrentUrl);
-  const setJsonData = useStore((state) => state.setJsonData);
+  const setJsonDataForUrl = useStore((state) => state.setJsonDataForUrl);
   const setError = useStore((state) => state.setError);
   const navigation = useNavigation();
+  const [initialRoute] = useState<'index' | 'JsonViewer'>('index');
+
+  useEffect(() => {
+    const handleInitialUrl = async () => {
+      let currentUrl = '';
+
+      if (Platform.OS === 'web') {
+        const queryParams = new URLSearchParams(window.location.search);
+        currentUrl = queryParams.get('currentUrl') || '';
+      } else {
+        const initialUrl = await Linking.getInitialURL();
+        if (initialUrl) {
+          const { queryParams } = Linking.parse(initialUrl) as { queryParams: Record<string, string> };
+          currentUrl = queryParams.currentUrl || '';
+        }
+      }
+
+      if (currentUrl) {
+        console.log('currentUrl passed in: ', currentUrl);
+      }
+    };
+
+    handleInitialUrl();
+
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      const { queryParams } = Linking.parse(url) as { queryParams: Record<string, string> };
+      const currentUrl = queryParams.currentUrl || '';
+      if (currentUrl) {
+        console.log('currentUrl passed in: ', currentUrl);
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   const styles = useMemo(
     () =>
@@ -52,8 +88,8 @@ export default function RootLayout() {
     setInputValue('');
     setCurrentUrl('');
     setError('');
-    setJsonData(null);
-    
+    setJsonDataForUrl('', null);
+
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -66,7 +102,7 @@ export default function RootLayout() {
     <SafeAreaView style={styles.globalContainer}>
       <FloatingIconGrid />
       
-      <Stack initialRouteName="index"
+      <Stack initialRouteName={initialRoute}
           screenOptions={{
             contentStyle: styles.stackContainer,
             headerStyle: styles.headerContainer,
@@ -91,6 +127,12 @@ export default function RootLayout() {
           name="index"
           options={{
             title: APP_TITLE,
+          }}
+        />
+        <Stack.Screen
+          name="JsonViewer"
+          options={{
+            title: "JSON Viewer",
           }}
         />
       </Stack>

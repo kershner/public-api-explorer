@@ -11,7 +11,7 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     if (jsonData && url) {
       setJsonDataForUrl(url, jsonData);
-      router.push({ pathname: "json", params: { url } });
+      router.push({ pathname: "view", params: { url } });
     }
   }, [url]);
 

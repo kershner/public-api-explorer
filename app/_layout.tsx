@@ -1,11 +1,11 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { Stack, useNavigation, useLocalSearchParams } from 'expo-router';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import React, { useMemo, useEffect, useState } from 'react';
 import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
 import SettingsMenu from '@/components/SettingsMenu';
-import { Stack, useNavigation } from 'expo-router';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';
@@ -19,16 +19,17 @@ export default function RootLayout() {
   const setJsonDataForUrl = useStore((state) => state.setJsonDataForUrl);
   const setError = useStore((state) => state.setError);
   const navigation = useNavigation();
+  const searchParams = useLocalSearchParams<{ url?: string }>();
   const [initialRoute] = useState<'index' | 'JsonViewer'>('index');
 
   useEffect(() => {
     const handleInitialUrl = async () => {
-      let url = '';
+      let url = searchParams.url || '';
 
-      if (Platform.OS === 'web') {
+      if (!url && Platform.OS === 'web') {
         const queryParams = new URLSearchParams(window.location.search);
         url = queryParams.get('url') || '';
-      } else {
+      } else if (!url) {
         const initialUrl = await Linking.getInitialURL();
         if (initialUrl) {
           const { queryParams } = Linking.parse(initialUrl) as { queryParams: Record<string, string> };
@@ -48,11 +49,12 @@ export default function RootLayout() {
       const queryUrl = queryParams.url || '';
       if (queryUrl) {
         console.log('url passed in: ', queryUrl);
+        setInputValue(queryUrl);
       }
     });
 
     return () => subscription.remove();
-  }, []);
+  }, [searchParams]);
 
   const styles = useMemo(
     () =>
@@ -100,8 +102,6 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
-      {/* <FloatingIconGrid /> */}
-      
       <Stack initialRouteName={initialRoute}
           screenOptions={{
             contentStyle: styles.stackContainer,
@@ -130,13 +130,13 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="json"
+          name="view"
           options={{
             title: "JSON Viewer",
           }}
         />
       </Stack>
-      
+
       <BottomDrawer />
       <SettingsMenu />
     </SafeAreaView>

@@ -8,6 +8,7 @@ import BottomDrawer from '@/components/BottomDrawer';
 import SettingsMenu from '@/components/SettingsMenu';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
+import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
 
@@ -17,12 +18,24 @@ export default function RootLayout() {
   const setInputValue = useStore((state) => state.setInputValue);
   const setUrl = useStore((state) => state.setUrl);
   const setJsonDataForUrl = useStore((state) => state.setJsonDataForUrl);
+  const jsonData = useStore((state) => state.jsonData);
   const setError = useStore((state) => state.setError);
   const navigation = useNavigation();
   const searchParams = useLocalSearchParams<{ url?: string }>();
-  const [initialRoute] = useState<'index' | 'JsonViewer'>('index');
+  const router = useRouter();
+  const [initialRoute] = useState<'index' | 'view'>('index');
 
   useEffect(() => {
+    const handleUrlNavigation = async (url: string) => {
+      setInputValue(url);
+      setUrl(url);
+
+      if (jsonData) {
+        setJsonDataForUrl(url, jsonData);
+        router.push({ pathname: "view", params: { url } });
+      }
+    };
+
     const handleInitialUrl = async () => {
       let url = searchParams.url || '';
 
@@ -39,6 +52,7 @@ export default function RootLayout() {
 
       if (url) {
         console.log('url passed in: ', url);
+        handleUrlNavigation(url);
       }
     };
 
@@ -49,12 +63,12 @@ export default function RootLayout() {
       const queryUrl = queryParams.url || '';
       if (queryUrl) {
         console.log('url passed in: ', queryUrl);
-        setInputValue(queryUrl);
+        handleUrlNavigation(queryUrl);
       }
     });
 
     return () => subscription.remove();
-  }, [searchParams]);
+  }, [searchParams, jsonData]);
 
   const styles = useMemo(
     () =>

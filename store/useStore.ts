@@ -14,8 +14,8 @@ export interface ThemeColors {
 interface State {
   loading: boolean;
   setLoading: (loading: boolean) => void;
-  currentUrl: string;
-  setCurrentUrl: (url: string) => void;
+  url: string;
+  setUrl: (url: string) => void;
   inputValue: string;
   setInputValue: (value: string) => void;
   error: string;
@@ -35,8 +35,8 @@ interface State {
 export const useStore = create<State>((set, get) => ({
   loading: false,
   setLoading: (loading) => set({ loading }),
-  currentUrl: '',
-  setCurrentUrl: (url) => set({ currentUrl: url }),
+  url: '',
+  setUrl: (url) => set({ url: url }),
   inputValue: '',
   setInputValue: (value) => set({ inputValue: value }),
   error: '',

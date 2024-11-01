@@ -4,16 +4,16 @@ import { useRouter } from "expo-router";
 
 const HomeScreen: React.FC = () => {
   const jsonData = useStore((state) => state.jsonData);
-  const currentUrl = useStore((state) => state.currentUrl);
+  const url = useStore((state) => state.url);
   const setJsonDataForUrl = useStore((state) => state.setJsonDataForUrl);
   const router = useRouter();
 
   useEffect(() => {
-    if (jsonData && currentUrl) {
-      setJsonDataForUrl(currentUrl, jsonData);
-      router.push({ pathname: "JsonViewer", params: { currentUrl } });
+    if (jsonData && url) {
+      setJsonDataForUrl(url, jsonData);
+      router.push({ pathname: "json", params: { url } });
     }
-  }, [currentUrl]);
+  }, [url]);
 
   return null;
 };

@@ -15,7 +15,7 @@ export default function RootLayout() {
   const colors = useStore((state) => state.colors);
   const setModalOpen = useStore((state) => state.setModalOpen);
   const setInputValue = useStore((state) => state.setInputValue);
-  const setCurrentUrl = useStore((state) => state.setCurrentUrl);
+  const setUrl = useStore((state) => state.setUrl);
   const setJsonDataForUrl = useStore((state) => state.setJsonDataForUrl);
   const setError = useStore((state) => state.setError);
   const navigation = useNavigation();
@@ -23,21 +23,21 @@ export default function RootLayout() {
 
   useEffect(() => {
     const handleInitialUrl = async () => {
-      let currentUrl = '';
+      let url = '';
 
       if (Platform.OS === 'web') {
         const queryParams = new URLSearchParams(window.location.search);
-        currentUrl = queryParams.get('currentUrl') || '';
+        url = queryParams.get('url') || '';
       } else {
         const initialUrl = await Linking.getInitialURL();
         if (initialUrl) {
           const { queryParams } = Linking.parse(initialUrl) as { queryParams: Record<string, string> };
-          currentUrl = queryParams.currentUrl || '';
+          url = queryParams.url || '';
         }
       }
 
-      if (currentUrl) {
-        console.log('currentUrl passed in: ', currentUrl);
+      if (url) {
+        console.log('url passed in: ', url);
       }
     };
 
@@ -45,9 +45,9 @@ export default function RootLayout() {
 
     const subscription = Linking.addEventListener('url', ({ url }) => {
       const { queryParams } = Linking.parse(url) as { queryParams: Record<string, string> };
-      const currentUrl = queryParams.currentUrl || '';
-      if (currentUrl) {
-        console.log('currentUrl passed in: ', currentUrl);
+      const queryUrl = queryParams.url || '';
+      if (queryUrl) {
+        console.log('url passed in: ', queryUrl);
       }
     });
 
@@ -86,7 +86,7 @@ export default function RootLayout() {
 
   const goHomeAndClearStack = () => {
     setInputValue('');
-    setCurrentUrl('');
+    setUrl('');
     setError('');
     setJsonDataForUrl('', null);
 
@@ -100,7 +100,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
-      <FloatingIconGrid />
+      {/* <FloatingIconGrid /> */}
       
       <Stack initialRouteName={initialRoute}
           screenOptions={{
@@ -130,7 +130,7 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="JsonViewer"
+          name="json"
           options={{
             title: "JSON Viewer",
           }}

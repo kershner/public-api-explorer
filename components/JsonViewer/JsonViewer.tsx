@@ -5,13 +5,13 @@ import React, { useMemo } from 'react';
 
 interface JsonViewerProps {
   jsonData?: unknown;
-  currentUrl?: string;
+  url?: string;
 }
 
-const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, currentUrl }) => {
+const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url }) => {
   const loading = useStore((state) => state.loading);
   const colors = useStore((state) => state.colors);
-  const content = jsonData ? [{ key: currentUrl, value: jsonData }] : [];
+  const content = jsonData ? [{ key: url, value: jsonData }] : [];
 
   const styles = useMemo(
     () =>

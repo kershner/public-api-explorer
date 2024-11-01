@@ -8,7 +8,7 @@ const DebouncedTextInput: React.FC = () => {
   const inputValue = useStore((state) => state.inputValue);
   const setInputValue = useStore((state) => state.setInputValue);
   const error = useStore((state) => state.error);
-  const setCurrentUrl = useStore((state) => state.setCurrentUrl);
+  const setUrl = useStore((state) => state.setUrl);
   const setJsonData = useStore((state) => state.setJsonData);
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
@@ -64,19 +64,19 @@ const DebouncedTextInput: React.FC = () => {
       if (isUrl(value)) {
         checkUrl(value).then((isValid) => {
           if (isValid) {
-            setCurrentUrl(value);
+            setUrl(value);
           }
         });
       } else {
         if (!value) {
-          setCurrentUrl('');
+          setUrl('');
           setJsonData(null);
         } else {
           setError('Enter a valid HTTPS URL.');
         }
       }
     }, debounceTime),
-    [setCurrentUrl]
+    [setUrl]
   );
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const DebouncedTextInput: React.FC = () => {
 
   const handleClearInput = () => {
     setInputValue('');
-    setCurrentUrl('');
+    setUrl('');
     setError('');
     setJsonData(null);
   };

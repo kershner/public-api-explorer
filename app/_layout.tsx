@@ -55,6 +55,7 @@ export default function RootLayout() {
     () =>
       StyleSheet.create({
         globalContainer: { flex: 1, padding: 16, backgroundColor: colors.background },
+        stackWrapper: {flex: 1, position: 'relative', zIndex: 1},
         stackContainer: { backgroundColor: colors.background},
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
@@ -72,31 +73,33 @@ export default function RootLayout() {
   return (
     <SafeAreaView style={styles.globalContainer}>
 
-      <Stack
-        initialRouteName="view"
-        screenOptions={{
-          contentStyle: styles.stackContainer,
-          headerStyle: styles.headerContainer,
-          headerTitleStyle: styles.headerTitleText,
-          headerBackTitleStyle: styles.headerBack,
-          headerTintColor: colors.textPrimary,
-          headerTitle: () => (
-            <TouchableOpacity onPress={goHomeAndClearStack}>
-              <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <View style={styles.menuButtonWrapper}>
-              <TouchableOpacity onPress={() => useStore.setState({ modalOpen: true })}>
-                <FontAwesome name="bars" size={28} color={colors.textPrimary} />
+      <View style={styles.stackWrapper}>
+        <Stack
+          initialRouteName="view"
+          screenOptions={{
+            contentStyle: styles.stackContainer,
+            headerStyle: styles.headerContainer,
+            headerTitleStyle: styles.headerTitleText,
+            headerBackTitleStyle: styles.headerBack,
+            headerTintColor: colors.textPrimary,
+            headerTitle: () => (
+              <TouchableOpacity onPress={goHomeAndClearStack}>
+                <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
               </TouchableOpacity>
-            </View>
-          ),
-        }}
-      >
-        <Stack.Screen name="index" options={{ title: APP_TITLE }} />
-        <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
-      </Stack>
+            ),
+            headerRight: () => (
+              <View style={styles.menuButtonWrapper}>
+                <TouchableOpacity onPress={() => useStore.setState({ modalOpen: true })}>
+                  <FontAwesome name="bars" size={28} color={colors.textPrimary} />
+                </TouchableOpacity>
+              </View>
+            ),
+          }}
+        >
+          <Stack.Screen name="index" options={{ title: APP_TITLE }} />
+          <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
+        </Stack>
+      </View>
       
       <FloatingIconGrid />
 

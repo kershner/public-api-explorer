@@ -22,7 +22,6 @@ const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
     () =>
       StyleSheet.create({
         container: {
-          pointerEvents: 'none',
           flexDirection: 'row',
           flexWrap: 'wrap',
           justifyContent: 'center',

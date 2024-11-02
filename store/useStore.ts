@@ -35,28 +35,31 @@ interface State {
 export const useStore = create<State>((set, get) => ({
   loading: false,
   setLoading: (loading) => set({ loading }),
+
   url: '',
-  setUrl: (url) => set({ url: url }),
+  setUrl: (url) => set({ url }),
+
   inputValue: '',
   setInputValue: (value) => set({ inputValue: value }),
+
   error: '',
-  setError: (errorMsg) => set({ error: errorMsg }),
+  setError: (error) => set({ error }),
+
   jsonData: null,
-  setJsonData: (jsonData) => set({ jsonData }),
+  setJsonData: (data) => set({ jsonData: data }),
+
   darkMode: true,
-  toggleDarkMode: () => {
-    set((state) => {
-      const newDarkMode = !state.darkMode;
-      return {
-        darkMode: newDarkMode,
-        colors: newDarkMode ? darkModeColors : lightModeColors
-      };
-    });
-  },
+  toggleDarkMode: () =>
+    set((state) => ({
+      darkMode: !state.darkMode,
+      colors: state.darkMode ? lightModeColors : darkModeColors,
+    })),
+
   colors: darkModeColors,
+
   modalOpen: false,
-  setModalOpen: (modalOpen) => set({ modalOpen }),
-  
+  setModalOpen: (open) => set({ modalOpen: open }),
+
   jsonDataMap: {},
   setJsonDataForUrl: (url, data) =>
     set((state) => ({

@@ -1,38 +1,31 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import { Stack, useNavigation, useLocalSearchParams } from 'expo-router';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FloatingIconGrid from '@/components/FloatingIconGrid';
-import React, { useMemo, useEffect, useState } from 'react';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import React, { useMemo, useEffect, useRef } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
 import SettingsMenu from '@/components/SettingsMenu';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
-import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
 
 export default function RootLayout() {
   const colors = useStore((state) => state.colors);
-  const setModalOpen = useStore((state) => state.setModalOpen);
-  const setInputValue = useStore((state) => state.setInputValue);
-  const setUrl = useStore((state) => state.setUrl);
-  const setJsonDataForUrl = useStore((state) => state.setJsonDataForUrl);
-  const jsonData = useStore((state) => state.jsonData);
-  const setError = useStore((state) => state.setError);
   const navigation = useNavigation();
   const searchParams = useLocalSearchParams<{ url?: string }>();
-  const router = useRouter();
-  const [initialRoute] = useState<'index' | 'view'>('index');
+  const initialUrlHandledRef = useRef(new Set());
+  const hookShouldRunRef = useRef(true);
 
   useEffect(() => {
-    const handleUrlNavigation = async (url: string) => {
-      setInputValue(url);
-      setUrl(url);
+    if (!hookShouldRunRef.current) return;
 
-      if (jsonData) {
-        setJsonDataForUrl(url, jsonData);
-        router.push({ pathname: "view", params: { url } });
+    const handleUrlNavigation = (url: string) => {
+      if (!initialUrlHandledRef.current.has(url)) {
+        initialUrlHandledRef.current.add(url);
+        useStore.setState({ inputValue: url, url });
+        hookShouldRunRef.current = false;
       }
     };
 
@@ -50,107 +43,58 @@ export default function RootLayout() {
         }
       }
 
-      if (url) {
-        console.log('url passed in: ', url);
-        handleUrlNavigation(url);
-      }
+      if (url) handleUrlNavigation(url);
+      else hookShouldRunRef.current = false;
     };
 
     handleInitialUrl();
-
-    const subscription = Linking.addEventListener('url', ({ url }) => {
-      const { queryParams } = Linking.parse(url) as { queryParams: Record<string, string> };
-      const queryUrl = queryParams.url || '';
-      if (queryUrl) {
-        console.log('url passed in: ', queryUrl);
-        handleUrlNavigation(queryUrl);
-      }
-    });
-
-    return () => subscription.remove();
-  }, [searchParams, jsonData]);
+  }, [searchParams]);
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        globalContainer: {
-          flex: 1,
-          padding: 16,
-          backgroundColor: colors.background,
-        },
-        stackContainer: {
-          backgroundColor: colors.background,
-        },
-        headerContainer: {
-          backgroundColor: colors.background,
-        },
-        headerTitleText: {
-          fontSize: 20,
-          fontWeight: "bold",
-          color: colors.textPrimary,
-        },
-        headerBack: {
-          fontSize: 16,
-          color: colors.textPrimary,
-        },
-        menuButtonWrapper: {
-          paddingRight: 16,
-        },
+        globalContainer: { flex: 1, padding: 16, backgroundColor: colors.background },
+        stackContainer: { backgroundColor: colors.background },
+        headerContainer: { backgroundColor: colors.background },
+        headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
+        headerBack: { fontSize: 16, color: colors.textPrimary },
+        menuButtonWrapper: { paddingRight: 16 },
       }),
     [colors]
   );
 
   const goHomeAndClearStack = () => {
-    setInputValue('');
-    setUrl('');
-    setError('');
-    setJsonDataForUrl('', null);
-
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "index" }],
-      })
-    );
+    useStore.setState({ inputValue: '', url: '', error: '', jsonDataMap: {} });
+    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "index" }] }));
   };
 
   return (
     <SafeAreaView style={styles.globalContainer}>
-      <Stack initialRouteName={initialRoute}
-          screenOptions={{
-            contentStyle: styles.stackContainer,
-            headerStyle: styles.headerContainer,
-            headerTitleStyle: styles.headerTitleText,
-            headerBackTitleStyle: styles.headerBack,
-            headerTintColor: colors.textPrimary,
-            headerTitle: () => (
-              <TouchableOpacity onPress={goHomeAndClearStack}>
-                <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
+      <Stack
+        initialRouteName="view"
+        screenOptions={{
+          contentStyle: styles.stackContainer,
+          headerStyle: styles.headerContainer,
+          headerTitleStyle: styles.headerTitleText,
+          headerBackTitleStyle: styles.headerBack,
+          headerTintColor: colors.textPrimary,
+          headerTitle: () => (
+            <TouchableOpacity onPress={goHomeAndClearStack}>
+              <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <View style={styles.menuButtonWrapper}>
+              <TouchableOpacity onPress={() => useStore.setState({ modalOpen: true })}>
+                <FontAwesome name="bars" size={28} color={colors.textPrimary} />
               </TouchableOpacity>
-            ),
-            headerRight: () => (
-              <View style={styles.menuButtonWrapper}>
-                <TouchableOpacity onPress={() => setModalOpen(true)}>
-                  <FontAwesome name="bars" size={28} color={colors.textPrimary} />
-                </TouchableOpacity>
-              </View>
-            ),
-          }}
-        >
-        <Stack.Screen
-          name="index"
-          options={{
-            title: APP_TITLE,
-          }}
-        />
-        <Stack.Screen
-          name="view"
-          options={{
-            title: "JSON Viewer",
-          }}
-        />
+            </View>
+          ),
+        }}
+      >
+        <Stack.Screen name="index" options={{ title: APP_TITLE }} />
+        <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
       </Stack>
-
       <BottomDrawer />
       <SettingsMenu />
     </SafeAreaView>

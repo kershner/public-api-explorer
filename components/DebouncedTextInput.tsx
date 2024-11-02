@@ -1,15 +1,13 @@
 import { TextInput, Text, View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
-import { isUrl, checkUrl, setError, debounce } from '@/utils/utils';
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { isUrl, checkUrl, debounce } from '@/utils/utils';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { useStore } from '@/store/useStore';
 
 const DebouncedTextInput: React.FC = () => {
   const inputValue = useStore((state) => state.inputValue);
-  const setInputValue = useStore((state) => state.setInputValue);
   const error = useStore((state) => state.error);
   const setUrl = useStore((state) => state.setUrl);
-  const setJsonData = useStore((state) => state.setJsonData);
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
@@ -64,15 +62,14 @@ const DebouncedTextInput: React.FC = () => {
       if (isUrl(value)) {
         checkUrl(value).then((isValid) => {
           if (isValid) {
-            setUrl(value);
+            useStore.setState({ url: value });
           }
         });
       } else {
         if (!value) {
-          setUrl('');
-          setJsonData(null);
+          useStore.setState({ url: value, jsonData: null });
         } else {
-          setError('Enter a valid HTTPS URL.');
+          useStore.setState({ error: 'Enter a valid HTTPS URL.' });
         }
       }
     }, debounceTime),
@@ -84,15 +81,12 @@ const DebouncedTextInput: React.FC = () => {
   }, [inputValue, debouncedOnValueChange]);
 
   const handleChangeText = (text: string) => {
-    setInputValue(text);
+    useStore.setState({ inputValue: text });
     debouncedOnValueChange(text);
   };
 
   const handleClearInput = () => {
-    setInputValue('');
-    setUrl('');
-    setError('');
-    setJsonData(null);
+    useStore.setState({ inputValue: '', url: '', error: '', jsonData: null })
   };
 
   return (

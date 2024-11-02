@@ -20,25 +20,23 @@ export const setError = (errorMsg: string) => {
 };
 
 export async function checkUrl(url: string) {
-  const { setJsonData, setLoading } = useStore.getState();
   const defaultMsg = 'Network issue or invalid URL.';
 
   try {
-    setLoading(true);
+    useStore.setState({ loading: true });
     const response = await fetchWithTimeout(url, { method: 'GET' });
-    
+
     if (response.ok) {
       const data = await response.json();
-      setError('');
-      setJsonData(data);
-      return true; 
+      useStore.setState({ jsonData: data, loading: false, error: '' });
+      return true;
     } else {
-      setError(`${defaultMsg} Status code: ${response.status}`);
+      useStore.setState({ loading: false, error: `${defaultMsg} Status code: ${response.status}` });
       return false;
     }
   } catch (error) {
     const msg = error instanceof Error ? error.message : defaultMsg;
-    setError(msg);
+    useStore.setState({ loading: false, error: msg });
     return false;
   }
 }

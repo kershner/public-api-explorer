@@ -13,7 +13,7 @@ const HomeScreen: React.FC = () => {
       setJsonDataForUrl(url, jsonData);
       router.push({ pathname: "view", params: { url } });
     }
-  }, [url]);
+  }, [jsonData, url]);
 
   return null;
 };

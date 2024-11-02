@@ -22,6 +22,7 @@ const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
     () =>
       StyleSheet.create({
         container: {
+          pointerEvents: 'none',
           flexDirection: 'row',
           flexWrap: 'wrap',
           justifyContent: 'center',
@@ -31,7 +32,8 @@ const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
         icon: {
           margin: 18,
           color: colors.accent,
-          opacity: 0.5
+          opacity: 0.5,
+          
         },
       }),
     [colors]

@@ -10,6 +10,7 @@ import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
+import FloatingIconGrid from '@/components/FloatingIconGrid';
 
 export default function RootLayout() {
   const colors = useStore((state) => state.colors);
@@ -54,7 +55,7 @@ export default function RootLayout() {
     () =>
       StyleSheet.create({
         globalContainer: { flex: 1, padding: 16, backgroundColor: colors.background },
-        stackContainer: { backgroundColor: colors.background },
+        stackContainer: { backgroundColor: colors.background},
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
         headerBack: { fontSize: 16, color: colors.textPrimary },
@@ -70,6 +71,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
+
       <Stack
         initialRouteName="view"
         screenOptions={{
@@ -95,6 +97,9 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: APP_TITLE }} />
         <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
       </Stack>
+      
+      <FloatingIconGrid />
+
       <BottomDrawer />
       <SettingsMenu />
     </SafeAreaView>

@@ -1,5 +1,6 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +11,6 @@ import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
-import FloatingIconGrid from '@/components/FloatingIconGrid';
 
 export default function RootLayout() {
   const colors = useStore((state) => state.colors);
@@ -54,7 +54,7 @@ export default function RootLayout() {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        globalContainer: { flex: 1, padding: 16, backgroundColor: colors.background },
+        globalContainer: { flex: 1, backgroundColor: colors.background },
         stackWrapper: {flex: 1, position: 'relative', zIndex: 1},
         stackContainer: { backgroundColor: colors.background},
         headerContainer: { backgroundColor: colors.background },
@@ -72,7 +72,6 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={styles.globalContainer}>
-
       <View style={styles.stackWrapper}>
         <Stack
           initialRouteName="view"

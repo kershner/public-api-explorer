@@ -17,7 +17,7 @@ const BottomDrawer: React.FC = () => {
           paddingHorizontal: 10,
           paddingTop: 10,
           ...(isRoot && { 
-            height: '95%',
+            flex: 13
           }),
         },
       }),

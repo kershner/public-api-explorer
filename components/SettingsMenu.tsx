@@ -1,15 +1,49 @@
 import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
-import { useStore } from '@/store/useStore';
-import React, { useMemo } from 'react';
+import ReanimatedColorPicker, { HueSlider } from 'reanimated-color-picker';
+import React, { useMemo, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { useStore } from '@/store/useStore';
 
-const SettingsMenu = () => {
+interface OptionRowProps {
+  label: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+  disabled?: boolean;
+}
+
+interface ColorPickerRowProps {
+  label: string;
+  value: string;
+  onChange: (color: string) => void;
+}
+
+const SettingsMenu: React.FC = () => {
   const modalOpen = useStore((state) => state.modalOpen);
   const setModalOpen = useStore((state) => state.setModalOpen);
-  const toggleModal = () => setModalOpen(!modalOpen);
+  const toggleModal = useCallback(() => setModalOpen(!modalOpen), [modalOpen, setModalOpen]);
+
+  const colors = useStore((state) => state.colors);
   const darkMode = useStore((state) => state.darkMode);
   const toggleDarkMode = useStore((state) => state.toggleDarkMode);
-  const colors = useStore((state) => state.colors);
+
+  const customTheme = useStore((state) => state.customTheme);
+  const toggleCustomTheme = useStore((state) => state.toggleCustomTheme);
+
+  const customBackgroundColor = useStore((state) => state.customBackgroundColor);
+  const setCustomBackgroundColor = useStore((state) => state.setCustomBackgroundColor);
+  const customAccentColor = useStore((state) => state.customAccentColor);
+  const setCustomAccentColor = useStore((state) => state.setCustomAccentColor);
+  const customBorderColor = useStore((state) => state.customBorderColor);
+  const setCustomBorderColor = useStore((state) => state.setCustomBorderColor);
+
+  const colorSettings = useMemo(
+    () => [
+      { label: 'Background Color', value: customBackgroundColor, onChange: setCustomBackgroundColor },
+      { label: 'Accent Color', value: customAccentColor, onChange: setCustomAccentColor },
+      { label: 'Border Color', value: customBorderColor, onChange: setCustomBorderColor },
+    ],
+    [customBackgroundColor, setCustomBackgroundColor, customAccentColor, setCustomAccentColor, customBorderColor, setCustomBorderColor]
+  );
 
   const styles = useMemo(
     () =>
@@ -34,23 +68,48 @@ const SettingsMenu = () => {
         },
         optionRowsContainer: {
           padding: 16,
+          width: '20%',
+          alignSelf: 'center',
         },
         optionRow: {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingVertical: 12,
-          borderBottomColor: colors.border,
-          borderBottomWidth: 1,
+          marginBottom: 16,
+        },
+        colorPicker: {
+          marginTop: 10,
+        },
+        disabledOption: {
+          pointerEvents: 'none',
+          opacity: 0.5,
         },
       }),
     [colors]
   );
 
+  const OptionRow: React.FC<OptionRowProps> = useCallback(
+    ({ label, value, onValueChange, disabled = false }) => (
+      <View style={[styles.optionRow, disabled ? styles.disabledOption : null]}>
+        <Text style={{ color: colors.textPrimary }}>{label}</Text>
+        <Switch value={value} onValueChange={onValueChange} />
+      </View>
+    ),
+    [styles, colors.textPrimary]
+  );
+
+  const ColorPickerRow: React.FC<ColorPickerRowProps> = useCallback(
+    ({ label, value, onChange }) => (
+      <View style={styles.optionRow}>
+        <Text style={{ color: colors.textPrimary }}>{label}</Text>
+        <ReanimatedColorPicker value={value} onChange={(color) => onChange(color.hex)} style={styles.colorPicker}>
+          <HueSlider />
+        </ReanimatedColorPicker>
+      </View>
+    ),
+    [styles, colors.textPrimary]
+  );
+
   return (
     <Modal visible={modalOpen} onRequestClose={toggleModal}>
       <View style={styles.modalOverlay}>
-        {/* Header with Close Button */}
         <View style={styles.header}>
           <Text style={styles.title}>Settings</Text>
           <TouchableOpacity onPress={toggleModal}>
@@ -58,12 +117,13 @@ const SettingsMenu = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Options */}
         <View style={styles.optionRowsContainer}>
-          <View style={styles.optionRow}>
-            <Text style={{ color: colors.textPrimary }}>Dark Mode</Text>
-            <Switch value={darkMode} onValueChange={toggleDarkMode} />
-          </View>
+          <OptionRow label="Dark mode" value={darkMode} onValueChange={toggleDarkMode} disabled={customTheme} />
+          <OptionRow label="Custom theme" value={customTheme} onValueChange={toggleCustomTheme} />
+
+          {colorSettings.map((setting, index) => (
+            <ColorPickerRow key={index} label={setting.label} value={setting.value} onChange={setting.onChange} />
+          ))}
         </View>
       </View>
     </Modal>

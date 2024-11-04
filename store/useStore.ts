@@ -36,17 +36,20 @@ interface State {
   darkMode: boolean;
   toggleDarkMode: () => void;
 
-  customTheme: boolean;
-  toggleCustomTheme: () => void;
-
   customBackgroundColor: string;
   setCustomBackgroundColor: (color: string) => void;
+  customBackgroundColorOn: boolean;
+  toggleCustomBackgroundColorOn: () => void;
 
   customAccentColor: string;
   setCustomAccentColor: (color: string) => void;
+  customAccentColorOn: boolean;
+  toggleCustomAccentColorOn: () => void;
 
   customBorderColor: string;
   setCustomBorderColor: (color: string) => void;
+  customBorderColorOn: boolean;
+  toggleCustomBorderColorOn: () => void;
 
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
@@ -82,63 +85,70 @@ export const useStore = create<State>((set, get) => ({
     set((state) => {
       const newDarkMode = !state.darkMode;
       const baseColors = newDarkMode ? darkModeColors : lightModeColors;
-      const colors = state.customTheme
-        ? {
-            ...baseColors,
-            background: state.customBackgroundColor,
-            accent: state.customAccentColor,
-            border: state.customBorderColor,
-          }
-        : baseColors;
-
+      const colors = {
+        ...baseColors,
+        background: state.customBackgroundColorOn ? state.customBackgroundColor : baseColors.background,
+        accent: state.customAccentColorOn ? state.customAccentColor : baseColors.accent,
+        border: state.customBorderColorOn ? state.customBorderColor : baseColors.border,
+      };
       return { darkMode: newDarkMode, colors };
-    });
-  },
-
-  customTheme: false,
-  toggleCustomTheme: () => {
-    set((state) => {
-      const baseColors = state.darkMode ? darkModeColors : lightModeColors;
-      const colors = !state.customTheme
-        ? {
-            ...baseColors,
-            background: state.customBackgroundColor,
-            accent: state.customAccentColor,
-            border: state.customBorderColor,
-          }
-        : baseColors;
-
-      return { customTheme: !state.customTheme, colors };
     });
   },
 
   customBackgroundColor: '#FF0000',
   setCustomBackgroundColor: (color) => {
     set((state) => {
-      const colors = state.customTheme
-        ? { ...state.colors, background: color }
-        : state.colors;
-      return { customBackgroundColor: color, colors };
+      if (state.customBackgroundColorOn) {
+        return { customBackgroundColor: color, colors: { ...state.colors, background: color } };
+      }
+      return { customBackgroundColor: color };
+    });
+  },
+  customBackgroundColorOn: false,
+  toggleCustomBackgroundColorOn: () => {
+    set((state) => {
+      const colors = state.customBackgroundColorOn
+        ? { ...state.colors, background: darkModeColors.background }
+        : { ...state.colors, background: state.customBackgroundColor };
+      return { customBackgroundColorOn: !state.customBackgroundColorOn, colors };
     });
   },
 
   customAccentColor: '#FF0000',
   setCustomAccentColor: (color) => {
     set((state) => {
-      const colors = state.customTheme
-        ? { ...state.colors, accent: color }
-        : state.colors;
-      return { customAccentColor: color, colors };
+      if (state.customAccentColorOn) {
+        return { customAccentColor: color, colors: { ...state.colors, accent: color } };
+      }
+      return { customAccentColor: color };
+    });
+  },
+  customAccentColorOn: false,
+  toggleCustomAccentColorOn: () => {
+    set((state) => {
+      const colors = state.customAccentColorOn
+        ? { ...state.colors, accent: darkModeColors.accent }
+        : { ...state.colors, accent: state.customAccentColor };
+      return { customAccentColorOn: !state.customAccentColorOn, colors };
     });
   },
 
   customBorderColor: '#FF0000',
   setCustomBorderColor: (color) => {
     set((state) => {
-      const colors = state.customTheme
-        ? { ...state.colors, border: color }
-        : state.colors;
-      return { customBorderColor: color, colors };
+      if (state.customBorderColorOn) {
+        return { customBorderColor: color, colors: { ...state.colors, border: color } };
+      }
+      return { customBorderColor: color };
+    });
+  },
+  customBorderColorOn: false,
+  toggleCustomBorderColorOn: () => {
+    set((state) => {
+      const colors = state.customBorderColorOn
+        ? { ...state.colors, border: darkModeColors.border }
+        : { ...state.colors, border: state.customBorderColor };
+      return { customBorderColorOn: !state.customBorderColorOn, colors };
     });
   },
 

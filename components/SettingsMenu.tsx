@@ -1,21 +1,85 @@
-import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
-import ReanimatedColorPicker, { HueSlider } from 'reanimated-color-picker';
-import React, { useMemo, useCallback } from 'react';
+import ReanimatedColorPicker, { HueSlider, SaturationSlider, BrightnessSlider } from 'reanimated-color-picker';
+import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import React, { useMemo, useCallback, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useStore } from '@/store/useStore';
 
-interface OptionRowProps {
+interface ColorPickerSectionProps {
   label: string;
-  value: boolean;
-  onValueChange: (value: boolean) => void;
-  disabled?: boolean;
+  colorValue: string;
+  setColorValue: (color: string) => void;
+  customColorOn: boolean;
+  toggleCustomColorOn: () => void;
 }
 
-interface ColorPickerRowProps {
-  label: string;
-  value: string;
-  onChange: (color: string) => void;
-}
+const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
+  label,
+  colorValue,
+  setColorValue,
+  customColorOn,
+  toggleCustomColorOn,
+}) => {
+  const [localColor, setLocalColor] = useState(colorValue);
+  const colors = useStore((state) => state.colors);
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        optionRow: {
+          marginBottom: 16,
+        },
+        colorPicker: {
+          marginTop: 10,
+        },
+        hexInput: {
+          borderWidth: 1,
+          borderColor: colors.border,
+          borderRadius: 4,
+          padding: 8,
+          color: colors.textPrimary,
+          marginTop: 8,
+        },
+      }),
+    [colors]
+  );
+
+  // Handle local and global color updates
+  const handleColorChange = useCallback(
+    (color: string) => {
+      setLocalColor(color);
+      if (customColorOn) setColorValue(color);
+    },
+    [customColorOn, setColorValue]
+  );
+
+  const handleHexInputChange = (color: string) => {
+    setLocalColor(color);
+    if (customColorOn) setColorValue(color);
+  };
+
+  return (
+    <View style={styles.optionRow}>
+      <Text style={{ color: colors.textPrimary }}>{label}</Text>
+      <Switch value={customColorOn} onValueChange={toggleCustomColorOn} />
+      <ReanimatedColorPicker
+        value={localColor}
+        onChange={(color) => handleColorChange(color.hex)}
+        style={styles.colorPicker}
+      >
+        <HueSlider />
+        <SaturationSlider />
+        <BrightnessSlider />
+      </ReanimatedColorPicker>
+      <TextInput
+        style={styles.hexInput}
+        value={localColor}
+        onChangeText={handleHexInputChange}
+        placeholder="#RRGGBB"
+        maxLength={7}
+      />
+    </View>
+  );
+};
 
 const SettingsMenu: React.FC = () => {
   const modalOpen = useStore((state) => state.modalOpen);
@@ -26,24 +90,21 @@ const SettingsMenu: React.FC = () => {
   const darkMode = useStore((state) => state.darkMode);
   const toggleDarkMode = useStore((state) => state.toggleDarkMode);
 
-  const customTheme = useStore((state) => state.customTheme);
-  const toggleCustomTheme = useStore((state) => state.toggleCustomTheme);
-
+  // Zustand store properties for color settings
   const customBackgroundColor = useStore((state) => state.customBackgroundColor);
   const setCustomBackgroundColor = useStore((state) => state.setCustomBackgroundColor);
+  const customBackgroundColorOn = useStore((state) => state.customBackgroundColorOn);
+  const toggleCustomBackgroundColorOn = useStore((state) => state.toggleCustomBackgroundColorOn);
+
   const customAccentColor = useStore((state) => state.customAccentColor);
   const setCustomAccentColor = useStore((state) => state.setCustomAccentColor);
+  const customAccentColorOn = useStore((state) => state.customAccentColorOn);
+  const toggleCustomAccentColorOn = useStore((state) => state.toggleCustomAccentColorOn);
+
   const customBorderColor = useStore((state) => state.customBorderColor);
   const setCustomBorderColor = useStore((state) => state.setCustomBorderColor);
-
-  const colorSettings = useMemo(
-    () => [
-      { label: 'Background Color', value: customBackgroundColor, onChange: setCustomBackgroundColor },
-      { label: 'Accent Color', value: customAccentColor, onChange: setCustomAccentColor },
-      { label: 'Border Color', value: customBorderColor, onChange: setCustomBorderColor },
-    ],
-    [customBackgroundColor, setCustomBackgroundColor, customAccentColor, setCustomAccentColor, customBorderColor, setCustomBorderColor]
-  );
+  const customBorderColorOn = useStore((state) => state.customBorderColorOn);
+  const toggleCustomBorderColorOn = useStore((state) => state.toggleCustomBorderColorOn);
 
   const styles = useMemo(
     () =>
@@ -68,43 +129,14 @@ const SettingsMenu: React.FC = () => {
         },
         optionRowsContainer: {
           padding: 16,
-          width: '20%',
+          width: 400,
           alignSelf: 'center',
         },
         optionRow: {
           marginBottom: 16,
-        },
-        colorPicker: {
-          marginTop: 10,
-        },
-        disabledOption: {
-          pointerEvents: 'none',
-          opacity: 0.5,
-        },
+        }
       }),
     [colors]
-  );
-
-  const OptionRow: React.FC<OptionRowProps> = useCallback(
-    ({ label, value, onValueChange, disabled = false }) => (
-      <View style={[styles.optionRow, disabled ? styles.disabledOption : null]}>
-        <Text style={{ color: colors.textPrimary }}>{label}</Text>
-        <Switch value={value} onValueChange={onValueChange} />
-      </View>
-    ),
-    [styles, colors.textPrimary]
-  );
-
-  const ColorPickerRow: React.FC<ColorPickerRowProps> = useCallback(
-    ({ label, value, onChange }) => (
-      <View style={styles.optionRow}>
-        <Text style={{ color: colors.textPrimary }}>{label}</Text>
-        <ReanimatedColorPicker value={value} onChange={(color) => onChange(color.hex)} style={styles.colorPicker}>
-          <HueSlider />
-        </ReanimatedColorPicker>
-      </View>
-    ),
-    [styles, colors.textPrimary]
   );
 
   return (
@@ -118,12 +150,35 @@ const SettingsMenu: React.FC = () => {
         </View>
 
         <View style={styles.optionRowsContainer}>
-          <OptionRow label="Dark mode" value={darkMode} onValueChange={toggleDarkMode} disabled={customTheme} />
-          <OptionRow label="Custom theme" value={customTheme} onValueChange={toggleCustomTheme} />
+          <View style={styles.optionRow}>
+            <Text style={{ color: colors.textPrimary }}>Dark mode</Text>
+            <Switch value={darkMode} onValueChange={toggleDarkMode} />
+          </View>
 
-          {colorSettings.map((setting, index) => (
-            <ColorPickerRow key={index} label={setting.label} value={setting.value} onChange={setting.onChange} />
-          ))}
+          {/* Color Picker Sections */}
+          <ColorPickerSection
+            label="Custom background color"
+            colorValue={customBackgroundColor}
+            setColorValue={setCustomBackgroundColor}
+            customColorOn={customBackgroundColorOn}
+            toggleCustomColorOn={toggleCustomBackgroundColorOn}
+          />
+
+          <ColorPickerSection
+            label="Custom accent color"
+            colorValue={customAccentColor}
+            setColorValue={setCustomAccentColor}
+            customColorOn={customAccentColorOn}
+            toggleCustomColorOn={toggleCustomAccentColorOn}
+          />
+
+          <ColorPickerSection
+            label="Custom border color"
+            colorValue={customBorderColor}
+            setColorValue={setCustomBorderColor}
+            customColorOn={customBorderColorOn}
+            toggleCustomColorOn={toggleCustomBorderColorOn}
+          />
         </View>
       </View>
     </Modal>

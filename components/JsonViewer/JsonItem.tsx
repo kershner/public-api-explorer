@@ -1,9 +1,9 @@
 import JsonItemPopoverMenu from '@/components/PopoverMenu/JsonItemPopoverMenu';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import NestedJsonItems from '@/components/JsonViewer/NestedJsonItems';
-import React, { useMemo, useState, useRef } from 'react';
 import RenderValue from '@/components/JsonViewer/RenderValue';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, { useMemo, useState, useRef } from 'react';
 import { useStore } from '@/store/useStore';
 
 interface JsonItemProps {
@@ -28,7 +28,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
         },
         levelIndicator: { 
           borderLeftWidth: 1, 
-          borderColor: colors.border 
+          borderColor: colors.textPrimary
         },
         row: {
           flexDirection: 'row',
@@ -36,7 +36,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
           padding: 4,
           width: '100%',
           borderBottomWidth: hasNestedData ? 0 : 1,
-          borderBottomColor: colors.border,
+          borderBottomColor: colors.accent,
           borderStyle: 'dotted',
         },
         key: { 

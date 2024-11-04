@@ -1,85 +1,8 @@
-import ReanimatedColorPicker, { HueSlider, SaturationSlider, BrightnessSlider } from 'reanimated-color-picker';
-import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import React, { useMemo, useCallback, useState } from 'react';
+import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
+import ColorPickerSection from '@/components/SettingsMenu/ColorPickerSection';
+import React, { useMemo, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useStore } from '@/store/useStore';
-
-interface ColorPickerSectionProps {
-  label: string;
-  colorValue: string;
-  setColorValue: (color: string) => void;
-  customColorOn: boolean;
-  toggleCustomColorOn: () => void;
-}
-
-const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
-  label,
-  colorValue,
-  setColorValue,
-  customColorOn,
-  toggleCustomColorOn,
-}) => {
-  const [localColor, setLocalColor] = useState(colorValue);
-  const colors = useStore((state) => state.colors);
-
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        optionRow: {
-          marginBottom: 16,
-        },
-        colorPicker: {
-          marginTop: 10,
-        },
-        hexInput: {
-          borderWidth: 1,
-          borderColor: colors.border,
-          borderRadius: 4,
-          padding: 8,
-          color: colors.textPrimary,
-          marginTop: 8,
-        },
-      }),
-    [colors]
-  );
-
-  // Handle local and global color updates
-  const handleColorChange = useCallback(
-    (color: string) => {
-      setLocalColor(color);
-      if (customColorOn) setColorValue(color);
-    },
-    [customColorOn, setColorValue]
-  );
-
-  const handleHexInputChange = (color: string) => {
-    setLocalColor(color);
-    if (customColorOn) setColorValue(color);
-  };
-
-  return (
-    <View style={styles.optionRow}>
-      <Text style={{ color: colors.textPrimary }}>{label}</Text>
-      <Switch value={customColorOn} onValueChange={toggleCustomColorOn} />
-      <ReanimatedColorPicker
-        value={localColor}
-        onChange={(color) => handleColorChange(color.hex)}
-        style={styles.colorPicker}
-      >
-        <HueSlider />
-        <SaturationSlider />
-        <BrightnessSlider />
-      </ReanimatedColorPicker>
-      <TextInput
-        style={styles.hexInput}
-        value={localColor}
-        onChangeText={handleHexInputChange}
-        placeholder="#RRGGBB"
-        maxLength={7}
-      />
-    </View>
-  );
-};
 
 const SettingsMenu: React.FC = () => {
   const modalOpen = useStore((state) => state.modalOpen);
@@ -101,11 +24,6 @@ const SettingsMenu: React.FC = () => {
   const customAccentColorOn = useStore((state) => state.customAccentColorOn);
   const toggleCustomAccentColorOn = useStore((state) => state.toggleCustomAccentColorOn);
 
-  const customBorderColor = useStore((state) => state.customBorderColor);
-  const setCustomBorderColor = useStore((state) => state.setCustomBorderColor);
-  const customBorderColorOn = useStore((state) => state.customBorderColorOn);
-  const toggleCustomBorderColorOn = useStore((state) => state.toggleCustomBorderColorOn);
-
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -119,7 +37,7 @@ const SettingsMenu: React.FC = () => {
           justifyContent: 'space-between',
           paddingHorizontal: 16,
           paddingVertical: 12,
-          borderBottomColor: colors.border,
+          borderBottomColor: colors.textPrimary,
           borderBottomWidth: 1,
         },
         title: {
@@ -170,14 +88,6 @@ const SettingsMenu: React.FC = () => {
             setColorValue={setCustomAccentColor}
             customColorOn={customAccentColorOn}
             toggleCustomColorOn={toggleCustomAccentColorOn}
-          />
-
-          <ColorPickerSection
-            label="Custom border color"
-            colorValue={customBorderColor}
-            setColorValue={setCustomBorderColor}
-            customColorOn={customBorderColorOn}
-            toggleCustomColorOn={toggleCustomBorderColorOn}
           />
         </View>
       </View>

@@ -46,11 +46,6 @@ interface State {
   customAccentColorOn: boolean;
   toggleCustomAccentColorOn: () => void;
 
-  customBorderColor: string;
-  setCustomBorderColor: (color: string) => void;
-  customBorderColorOn: boolean;
-  toggleCustomBorderColorOn: () => void;
-
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
 }
@@ -130,25 +125,6 @@ export const useStore = create<State>((set, get) => ({
         ? { ...state.colors, accent: darkModeColors.accent }
         : { ...state.colors, accent: state.customAccentColor };
       return { customAccentColorOn: !state.customAccentColorOn, colors };
-    });
-  },
-
-  customBorderColor: '#FF0000',
-  setCustomBorderColor: (color) => {
-    set((state) => {
-      if (state.customBorderColorOn) {
-        return { customBorderColor: color, colors: { ...state.colors, border: color } };
-      }
-      return { customBorderColor: color };
-    });
-  },
-  customBorderColorOn: false,
-  toggleCustomBorderColorOn: () => {
-    set((state) => {
-      const colors = state.customBorderColorOn
-        ? { ...state.colors, border: darkModeColors.border }
-        : { ...state.colors, border: state.customBorderColor };
-      return { customBorderColorOn: !state.customBorderColorOn, colors };
     });
   },
 

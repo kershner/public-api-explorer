@@ -1,4 +1,5 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -6,7 +7,6 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
-import SettingsMenu from '@/components/SettingsMenu';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';

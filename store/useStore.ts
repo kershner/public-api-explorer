@@ -46,7 +46,6 @@ interface State {
   persistState: () => Promise<void>;
 }
 
-// Default state
 const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState'>> = {
   loading: false,
   url: '',
@@ -63,26 +62,28 @@ const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'set
   colors: darkModeColors,
 };
 
-// Utility function to clean strings and colors
-const cleanString = (value: string | null): string => (value ? value.replace(/^"|"$/g, '') : '');
-const cleanColor = (color: string | null): string => cleanString(color) || '#FFFFFF';
 const isHexString = (color: string): boolean => /^#[0-9A-F]{6}$/i.test(color);
+const cleanColor = (color: string | null): string => (color && isHexString(color) ? color : '#FFFFFF');
 
-// Persist state to AsyncStorage
+// Function to construct the colors object
+const getColors = (darkMode: boolean, customBackgroundColor: string, customBackgroundColorOn: boolean, customAccentColor: string, customAccentColorOn: boolean): ThemeColors => {
+  const baseColors = darkMode ? darkModeColors : lightModeColors;
+  return {
+    ...baseColors,
+    background: customBackgroundColorOn ? cleanColor(customBackgroundColor) : baseColors.background,
+    accent: customAccentColorOn ? cleanColor(customAccentColor) : baseColors.accent,
+  };
+};
+
 const persistData = async (state: Partial<State>) => {
-  const entries: [string, string][] = Object.entries(state).map(([key, value]) => [
-    key,
-    JSON.stringify(value),
-  ]);
+  const entries = Object.entries(state).map(([key, value]) => [key, JSON.stringify(value)]);
   await AsyncStorage.multiSet(entries);
 };
 
-
-// Load state from AsyncStorage
 const loadData = async (keys: string[]) => {
   const persistedData = await AsyncStorage.multiGet(keys);
   return persistedData.reduce((acc, [key, value]) => {
-    if (value !== null) acc[key] = cleanString(value);
+    if (value !== null) acc[key] = value.replace(/^"|"$/g, '');
     return acc;
   }, {} as Record<string, string | null>);
 };
@@ -101,65 +102,48 @@ export const useStore = create<State>((set, get) => ({
   toggleDarkMode: () => {
     set((state) => {
       const newDarkMode = !state.darkMode;
-      const baseColors = newDarkMode ? darkModeColors : lightModeColors;
-      return {
-        darkMode: newDarkMode,
-        colors: {
-          ...baseColors,
-          background: state.customBackgroundColorOn ? state.customBackgroundColor : baseColors.background,
-          accent: state.customAccentColorOn ? state.customAccentColor : baseColors.accent,
-        },
-      };
+      const colors = getColors(newDarkMode, state.customBackgroundColor, state.customBackgroundColorOn, state.customAccentColor, state.customAccentColorOn);
+      persistData({ darkMode: newDarkMode });
+      return { darkMode: newDarkMode, colors };
     });
-    persistData({ darkMode: get().darkMode });
   },
 
   setCustomBackgroundColor: (color) => {
     if (isHexString(color)) {
-      set((state) => ({
-        customBackgroundColor: color,
-        colors: {
-          ...state.colors,
-          background: state.customBackgroundColorOn ? color : state.colors.background,
-        },
-      }));
-      persistData({ customBackgroundColor: color });
+      set((state) => {
+        const colors = getColors(state.darkMode, color, state.customBackgroundColorOn, state.customAccentColor, state.customAccentColorOn);
+        persistData({ customBackgroundColor: color });
+        return { customBackgroundColor: color, colors };
+      });
     }
   },
 
   toggleCustomBackgroundColorOn: () => {
     set((state) => {
-      const background = state.customBackgroundColorOn ? darkModeColors.background : state.customBackgroundColor;
-      return {
-        customBackgroundColorOn: !state.customBackgroundColorOn,
-        colors: { ...state.colors, background },
-      };
+      const newCustomBackgroundColorOn = !state.customBackgroundColorOn;
+      const colors = getColors(state.darkMode, state.customBackgroundColor, newCustomBackgroundColorOn, state.customAccentColor, state.customAccentColorOn);
+      persistData({ customBackgroundColorOn: newCustomBackgroundColorOn });
+      return { customBackgroundColorOn: newCustomBackgroundColorOn, colors };
     });
-    persistData({ customBackgroundColorOn: get().customBackgroundColorOn });
   },
 
   setCustomAccentColor: (color) => {
     if (isHexString(color)) {
-      set((state) => ({
-        customAccentColor: color,
-        colors: {
-          ...state.colors,
-          accent: state.customAccentColorOn ? color : state.colors.accent,
-        },
-      }));
-      persistData({ customAccentColor: color });
+      set((state) => {
+        const colors = getColors(state.darkMode, state.customBackgroundColor, state.customBackgroundColorOn, color, state.customAccentColorOn);
+        persistData({ customAccentColor: color });
+        return { customAccentColor: color, colors };
+      });
     }
   },
 
   toggleCustomAccentColorOn: () => {
     set((state) => {
-      const accent = state.customAccentColorOn ? darkModeColors.accent : state.customAccentColor;
-      return {
-        customAccentColorOn: !state.customAccentColorOn,
-        colors: { ...state.colors, accent },
-      };
+      const newCustomAccentColorOn = !state.customAccentColorOn;
+      const colors = getColors(state.darkMode, state.customBackgroundColor, state.customBackgroundColorOn, state.customAccentColor, newCustomAccentColorOn);
+      persistData({ customAccentColorOn: newCustomAccentColorOn });
+      return { customAccentColorOn: newCustomAccentColorOn, colors };
     });
-    persistData({ customAccentColorOn: get().customAccentColorOn });
   },
 
   setModalOpen: (open) => set({ modalOpen: open }),
@@ -177,20 +161,21 @@ export const useStore = create<State>((set, get) => ({
     const isDarkMode = loadedState.darkMode === 'true';
     const isCustomBackgroundOn = loadedState.customBackgroundColorOn === 'true';
     const isCustomAccentOn = loadedState.customAccentColorOn === 'true';
-    const baseColors = isDarkMode ? darkModeColors : lightModeColors;
 
-    set({
+    set((state) => ({
       darkMode: isDarkMode,
       customBackgroundColor: cleanColor(loadedState.customBackgroundColor),
       customBackgroundColorOn: isCustomBackgroundOn,
       customAccentColor: cleanColor(loadedState.customAccentColor),
       customAccentColorOn: isCustomAccentOn,
-      colors: {
-        ...baseColors,
-        background: isCustomBackgroundOn ? loadedState.customBackgroundColor : baseColors.background,
-        accent: isCustomAccentOn ? loadedState.customAccentColor : baseColors.accent,
-      } as ThemeColors,
-    });
+      colors: getColors(
+        isDarkMode,
+        cleanColor(loadedState.customBackgroundColor),
+        isCustomBackgroundOn,
+        cleanColor(loadedState.customAccentColor),
+        isCustomAccentOn
+      ),
+    }));
   },
 
   persistState: async () => {

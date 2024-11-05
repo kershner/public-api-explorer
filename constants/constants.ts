@@ -3,7 +3,7 @@ import { ThemeColors } from "@/store/useStore";
 export const APP_TITLE = 'public-api-explorer';
 
 export const lightModeColors: ThemeColors = {
-  background: '#FFFFF',
+  background: '#FFFFFF',
   accent: '#D3D3D3',
   border: '#BFBFBF',
   textPrimary: '#121212',

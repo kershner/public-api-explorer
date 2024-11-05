@@ -1,4 +1,4 @@
-import { Text, Image, TouchableOpacity, Linking, Dimensions, StyleSheet } from 'react-native';
+import { Text, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import RenderValuePopoverMenu from '@/components/PopoverMenu/RenderValuePopoverMenu';
 import { isHtml, isUrl, isImageUrl } from '@/utils/utils';
 import React, { useMemo, useState, useRef } from 'react';
@@ -33,10 +33,12 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
           cursor: 'pointer',
           color: colors.linkText,
           textDecorationLine: 'underline',
+          borderWidth: isPopoverVisible ? 2 : 0,
         },
-        image: { 
+        image: {
           width: 100,
           height: 100,
+          borderWidth: isPopoverVisible ? 2 : 0,
         },
       }),
     [colors, isPopoverVisible]
@@ -63,12 +65,8 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
     }
     if (isImageUrl(value)) {
       return (
-        <TouchableOpacity onPress={() => { Linking.openURL(value); handlePress(); }} ref={valueRef}>
-          <Image
-            source={{ uri: value }}
-            style={styles.image}
-            resizeMode="contain"
-          />
+        <TouchableOpacity onPress={handlePress} ref={valueRef}>
+          <Image source={{ uri: value }} style={styles.image} resizeMode="contain" />
           <RenderValuePopoverMenu
             isVisible={isPopoverVisible}
             fromRef={valueRef}
@@ -81,7 +79,7 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
     }
     if (isUrl(value)) {
       return (
-        <TouchableOpacity onPress={() => { Linking.openURL(value); handlePress(); }} ref={valueRef}>
+        <TouchableOpacity onPress={handlePress} ref={valueRef}>
           <Text style={[styles.value, styles.link]}>{value}</Text>
           <RenderValuePopoverMenu
             isVisible={isPopoverVisible}
@@ -94,7 +92,7 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
       );
     }
     return (
-      <TouchableOpacity onPress={handlePress} ref={valueRef}>      
+      <TouchableOpacity onPress={handlePress} ref={valueRef}>
         <Text style={styles.value}>{value}</Text>
         <RenderValuePopoverMenu
           isVisible={isPopoverVisible}

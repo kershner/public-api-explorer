@@ -80,51 +80,56 @@ export const useStore = create<State>((set, get) => ({
     set((state) => {
       const newDarkMode = !state.darkMode;
       const baseColors = newDarkMode ? darkModeColors : lightModeColors;
-      const colors = {
+      const updatedColors = {
         ...baseColors,
         background: state.customBackgroundColorOn ? state.customBackgroundColor : baseColors.background,
         accent: state.customAccentColorOn ? state.customAccentColor : baseColors.accent,
-        border: state.customBorderColorOn ? state.customBorderColor : baseColors.border,
       };
-      return { darkMode: newDarkMode, colors };
+      return { darkMode: newDarkMode, colors: updatedColors };
     });
   },
 
-  customBackgroundColor: '#FF0000',
+  customBackgroundColor: '#FFFFFF',
   setCustomBackgroundColor: (color) => {
     set((state) => {
-      if (state.customBackgroundColorOn) {
-        return { customBackgroundColor: color, colors: { ...state.colors, background: color } };
-      }
-      return { customBackgroundColor: color };
+      const updatedColors = {
+        ...state.colors,
+        background: state.customBackgroundColorOn ? color : state.colors.background,
+      };
+      return { customBackgroundColor: color, colors: updatedColors };
     });
   },
   customBackgroundColorOn: false,
   toggleCustomBackgroundColorOn: () => {
     set((state) => {
-      const colors = state.customBackgroundColorOn
-        ? { ...state.colors, background: darkModeColors.background }
-        : { ...state.colors, background: state.customBackgroundColor };
-      return { customBackgroundColorOn: !state.customBackgroundColorOn, colors };
+      const baseColors = state.darkMode ? darkModeColors : lightModeColors;
+      const updatedColors = {
+        ...state.colors,
+        background: state.customBackgroundColorOn ? baseColors.background : state.customBackgroundColor,
+      };
+      return { customBackgroundColorOn: !state.customBackgroundColorOn, colors: updatedColors };
     });
   },
 
-  customAccentColor: '#FF0000',
+  customAccentColor: '#FFFFFF',
   setCustomAccentColor: (color) => {
     set((state) => {
-      if (state.customAccentColorOn) {
-        return { customAccentColor: color, colors: { ...state.colors, accent: color } };
-      }
-      return { customAccentColor: color };
+      const updatedColors = {
+        ...state.colors,
+        accent: state.customAccentColorOn ? color : state.colors.accent,
+      };
+      return { customAccentColor: color, colors: updatedColors };
     });
   },
   customAccentColorOn: false,
   toggleCustomAccentColorOn: () => {
     set((state) => {
-      const colors = state.customAccentColorOn
-        ? { ...state.colors, accent: darkModeColors.accent }
-        : { ...state.colors, accent: state.customAccentColor };
-      return { customAccentColorOn: !state.customAccentColorOn, colors };
+      const baseColors = state.darkMode ? darkModeColors : lightModeColors;
+      const updatedColors = {
+        ...state.colors,
+        accent: state.customAccentColorOn ? baseColors.accent : state.customAccentColor,
+      };
+      return { customAccentColorOn: !state.customAccentColorOn, colors: updatedColors };
     });
   },
 

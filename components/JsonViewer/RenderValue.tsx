@@ -25,6 +25,9 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
           textAlign: 'left',
           maxWidth: 400,
           color: colors.textPrimary,
+          borderWidth: isPopoverVisible ? 2 : 0,
+          borderColor: colors.textPrimary,
+          borderRadius: 3,
         },
         link: {
           cursor: 'pointer',
@@ -36,7 +39,7 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
           height: 100,
         },
       }),
-    [colors]
+    [colors, isPopoverVisible]
   );
 
   const handlePress = () => {

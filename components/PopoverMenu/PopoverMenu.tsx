@@ -12,14 +12,15 @@ interface PopoverMenuProps {
 const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, children }) => {
   const colors = useStore((state) => state.colors);
   const [position, setPosition] = useState({ top: 0, left: 0 });
-  const screenWidth = Dimensions.get('window').width;
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const popoverWidth = 200;
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
         modalOverlay: {
           flex: 1,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
         },
         popoverStyle: {
           position: 'absolute',
@@ -29,6 +30,7 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
           borderRadius: 8,
           top: position.top,
           left: position.left,
+          width: popoverWidth,
         },
         popoverContent: {
           borderRadius: 6,
@@ -43,14 +45,17 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
   useEffect(() => {
     if (isVisible && fromRef.current) {
       fromRef.current.measure((x, y, width, height, pageX, pageY) => {
-        const popoverWidth = 200;
-        const adjustedLeft = pageX + width / 2 + popoverWidth > screenWidth
-          ? screenWidth - popoverWidth
-          : pageX + width / 2;
-        setPosition({ top: pageY + height, left: adjustedLeft });
+        let left = pageX + width / 2 - popoverWidth / 2;
+        let top = pageY + height;
+
+        // Clamp to keep within screen bounds
+        left = Math.max(0, Math.min(left, screenWidth - popoverWidth));
+        top = Math.max(0, Math.min(top, screenHeight - popoverWidth) + 5);
+
+        setPosition({ top, left });
       });
     }
-  }, [isVisible, fromRef, screenWidth]);
+  }, [isVisible, fromRef, screenWidth, screenHeight]);
 
   return (
     <Modal transparent visible={isVisible} onRequestClose={onClose} animationType="none">

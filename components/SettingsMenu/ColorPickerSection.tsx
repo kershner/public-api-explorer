@@ -1,6 +1,6 @@
 import ReanimatedColorPicker, { HueSlider } from 'reanimated-color-picker';
-import { View, Text, Switch, StyleSheet } from 'react-native';
 import React, { useMemo, useEffect, useState, useRef } from 'react';
+import { View, Text, Switch, StyleSheet } from 'react-native';
 import { useStore } from '@/store/useStore';
 
 interface ColorPickerSectionProps {

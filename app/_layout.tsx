@@ -20,6 +20,13 @@ export default function RootLayout() {
   const hookShouldRunRef = useRef(true);
 
   useEffect(() => {
+    const loadState = async () => {
+      await useStore.getState().loadPersistedState();
+    };
+    loadState();
+  }, []);
+
+  useEffect(() => {
     if (!hookShouldRunRef.current) return;
 
     const handleUrlNavigation = (url: string) => {

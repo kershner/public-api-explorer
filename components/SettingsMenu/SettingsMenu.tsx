@@ -13,7 +13,6 @@ const SettingsMenu: React.FC = () => {
   const darkMode = useStore((state) => state.darkMode);
   const toggleDarkMode = useStore((state) => state.toggleDarkMode);
 
-  // Zustand store properties for color settings
   const customBackgroundColor = useStore((state) => state.customBackgroundColor);
   const setCustomBackgroundColor = useStore((state) => state.setCustomBackgroundColor);
   const customBackgroundColorOn = useStore((state) => state.customBackgroundColorOn);
@@ -23,6 +22,8 @@ const SettingsMenu: React.FC = () => {
   const setCustomAccentColor = useStore((state) => state.setCustomAccentColor);
   const customAccentColorOn = useStore((state) => state.customAccentColorOn);
   const toggleCustomAccentColorOn = useStore((state) => state.toggleCustomAccentColorOn);
+  
+  const defaultState = useStore.getState();
 
   const styles = useMemo(
     () =>
@@ -52,10 +53,37 @@ const SettingsMenu: React.FC = () => {
         },
         optionRow: {
           marginBottom: 16,
-        }
+        },
+        resetButton: {
+          marginTop: 20,
+          padding: 10,
+          backgroundColor: colors.accent,
+          borderRadius: 5,
+          alignItems: 'center',
+        },
+        resetButtonText: {
+          color: colors.textPrimary,
+          fontWeight: 'bold',
+        },
       }),
     [colors]
   );
+
+  const resetSettings = () => {
+    setCustomBackgroundColor(defaultState.customBackgroundColor);
+    setCustomAccentColor(defaultState.customAccentColor);
+    
+    // Reset toggles if they are enabled
+    if (customBackgroundColorOn) {
+      toggleCustomBackgroundColorOn();
+    }
+    if (customAccentColorOn) {
+      toggleCustomAccentColorOn();
+    }
+    if (!darkMode) {
+      toggleDarkMode();
+    }
+  };
 
   return (
     <Modal visible={modalOpen} onRequestClose={toggleModal}>
@@ -73,7 +101,6 @@ const SettingsMenu: React.FC = () => {
             <Switch value={darkMode} onValueChange={toggleDarkMode} />
           </View>
 
-          {/* Color Picker Sections */}
           <ColorPickerSection
             label="Custom background color"
             colorValue={customBackgroundColor}
@@ -89,6 +116,10 @@ const SettingsMenu: React.FC = () => {
             customColorOn={customAccentColorOn}
             toggleCustomColorOn={toggleCustomAccentColorOn}
           />
+
+          <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>
+            <Text style={styles.resetButtonText}>Back to Default</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>

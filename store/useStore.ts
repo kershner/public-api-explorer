@@ -1,4 +1,5 @@
 import { darkModeColors, lightModeColors } from '@/constants/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 
 export interface ThemeColors {
@@ -13,126 +14,242 @@ export interface ThemeColors {
 
 interface State {
   loading: boolean;
-  setLoading: (loading: boolean) => void;
-
   url: string;
-  setUrl: (url: string) => void;
-
   inputValue: string;
-  setInputValue: (value: string) => void;
-
   error: string;
-  setError: (value: string) => void;
-
   jsonData: unknown;
-  setJsonData: (data: unknown) => void;
-
   jsonDataMap: Record<string, unknown>;
+  colors: ThemeColors;
+  darkMode: boolean;
+  customBackgroundColor: string;
+  customBackgroundColorOn: boolean;
+  customAccentColor: string;
+  customAccentColorOn: boolean;
+  modalOpen: boolean;
+
+  setLoading: (loading: boolean) => void;
+  setUrl: (url: string) => void;
+  setInputValue: (value: string) => void;
+  setError: (value: string) => void;
+  setJsonData: (data: unknown) => void;
   setJsonDataForUrl: (url: string, data: unknown) => void;
   getJsonDataForUrl: (url: string) => unknown;
-
-  colors: ThemeColors;
-
-  darkMode: boolean;
   toggleDarkMode: () => void;
-
-  customBackgroundColor: string;
   setCustomBackgroundColor: (color: string) => void;
-  customBackgroundColorOn: boolean;
   toggleCustomBackgroundColorOn: () => void;
-
-  customAccentColor: string;
   setCustomAccentColor: (color: string) => void;
-  customAccentColorOn: boolean;
   toggleCustomAccentColorOn: () => void;
-
-  modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
+  loadPersistedState: () => Promise<void>;
+  persistState: () => Promise<void>;
 }
 
-export const useStore = create<State>((set, get) => ({
+// Initialize default state
+const defaultState: Omit<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState'> = {
   loading: false,
+  url: '',
+  inputValue: '',
+  error: '',
+  jsonData: null,
+  jsonDataMap: {},
+  darkMode: true,
+  customBackgroundColor: '#FFFFFF',
+  customBackgroundColorOn: false,
+  customAccentColor: '#FFFFFF',
+  customAccentColorOn: false,
+  modalOpen: false,
+  colors: darkModeColors, // Default to dark mode colors
+};
+
+// Utility function to clean color strings
+const cleanColor = (color: string | null): string => {
+  return typeof color === 'string' ? color.replace(/['"]+/g, '').trim() : '#FFFFFF';
+};
+
+// Utility function to persist a single key-value pair
+const persistData = async (key: string, value: unknown) => {
+  await AsyncStorage.setItem(key, JSON.stringify(value));
+};
+
+// Utility function to load data from AsyncStorage
+const loadData = async (keys: string[]) => {
+  const persistedData = await AsyncStorage.multiGet(keys);
+  return persistedData.reduce((acc, [key, value]) => {
+    if (value !== null) {
+      acc[key] = value; // Keep the value as a string for now
+    }
+    return acc;
+  }, {} as Record<string, string | null>);
+};
+
+export const useStore = create<State>((set, get) => ({
+  ...defaultState,
+
   setLoading: (loading) => set({ loading }),
 
-  url: '',
-  setUrl: (url) => set({ url }),
+  setUrl: (url) => {
+    set({ url });
+    persistData('url', url);
+  },
 
-  inputValue: '',
-  setInputValue: (value) => set({ inputValue: value }),
+  setInputValue: (value) => {
+    set({ inputValue: value });
+    persistData('inputValue', value);
+  },
 
-  error: '',
-  setError: (error) => set({ error }),
+  setError: (error) => {
+    set({ error });
+    persistData('error', error);
+  },
 
-  jsonData: null,
-  setJsonData: (data) => set({ jsonData: data }),
+  setJsonData: (data) => {
+    set({ jsonData: data });
+    persistData('jsonData', data);
+  },
 
-  jsonDataMap: {},
-  setJsonDataForUrl: (url, data) =>
+  setJsonDataForUrl: (url, data) => {
     set((state) => ({
       jsonDataMap: { ...state.jsonDataMap, [url]: data },
-    })),
+    }));
+    persistData('jsonDataMap', get().jsonDataMap);
+  },
+
   getJsonDataForUrl: (url) => get().jsonDataMap[url],
 
-  colors: darkModeColors,
-
-  darkMode: true,
   toggleDarkMode: () => {
     set((state) => {
       const newDarkMode = !state.darkMode;
       const baseColors = newDarkMode ? darkModeColors : lightModeColors;
-      const updatedColors = {
-        ...baseColors,
-        background: state.customBackgroundColorOn ? state.customBackgroundColor : baseColors.background,
-        accent: state.customAccentColorOn ? state.customAccentColor : baseColors.accent,
+      return {
+        darkMode: newDarkMode,
+        colors: {
+          ...baseColors,
+          background: state.customBackgroundColorOn ? state.customBackgroundColor : baseColors.background,
+          accent: state.customAccentColorOn ? state.customAccentColor : baseColors.accent,
+        },
       };
-      return { darkMode: newDarkMode, colors: updatedColors };
     });
+    persistData('darkMode', get().darkMode);
   },
 
-  customBackgroundColor: '#FFFFFF',
   setCustomBackgroundColor: (color) => {
-    set((state) => {
-      const updatedColors = {
-        ...state.colors,
-        background: state.customBackgroundColorOn ? color : state.colors.background,
-      };
-      return { customBackgroundColor: color, colors: updatedColors };
-    });
+    if (/^#[0-9A-F]{6}$/i.test(color)) { // Validate hex format
+      set((state) => ({
+        customBackgroundColor: color,
+        colors: {
+          ...state.colors,
+          background: state.customBackgroundColorOn ? color : state.colors.background,
+        },
+      }));
+      persistData('customBackgroundColor', color);
+    }
   },
-  customBackgroundColorOn: false,
+
   toggleCustomBackgroundColorOn: () => {
     set((state) => {
-      const baseColors = state.darkMode ? darkModeColors : lightModeColors;
-      const updatedColors = {
-        ...state.colors,
-        background: state.customBackgroundColorOn ? baseColors.background : state.customBackgroundColor,
+      const background = state.customBackgroundColorOn ? darkModeColors.background : state.customBackgroundColor;
+      return {
+        customBackgroundColorOn: !state.customBackgroundColorOn,
+        colors: { ...state.colors, background },
       };
-      return { customBackgroundColorOn: !state.customBackgroundColorOn, colors: updatedColors };
     });
+    persistData('customBackgroundColorOn', get().customBackgroundColorOn);
   },
 
-  customAccentColor: '#FFFFFF',
   setCustomAccentColor: (color) => {
-    set((state) => {
-      const updatedColors = {
-        ...state.colors,
-        accent: state.customAccentColorOn ? color : state.colors.accent,
-      };
-      return { customAccentColor: color, colors: updatedColors };
-    });
+    if (/^#[0-9A-F]{6}$/i.test(color)) { // Validate hex format
+      set((state) => ({
+        customAccentColor: color,
+        colors: {
+          ...state.colors,
+          accent: state.customAccentColorOn ? color : state.colors.accent,
+        },
+      }));
+      persistData('customAccentColor', color);
+    }
   },
-  customAccentColorOn: false,
+
   toggleCustomAccentColorOn: () => {
     set((state) => {
-      const baseColors = state.darkMode ? darkModeColors : lightModeColors;
-      const updatedColors = {
-        ...state.colors,
-        accent: state.customAccentColorOn ? baseColors.accent : state.customAccentColor,
+      const accent = state.customAccentColorOn ? darkModeColors.accent : state.customAccentColor;
+      return {
+        customAccentColorOn: !state.customAccentColorOn,
+        colors: { ...state.colors, accent },
       };
-      return { customAccentColorOn: !state.customAccentColorOn, colors: updatedColors };
     });
+    persistData('customAccentColorOn', get().customAccentColorOn);
   },
 
-  modalOpen: false,
-  setModalOpen: (open) => set({ modalOpen: open }),
+  setModalOpen: (open) => {
+    set({ modalOpen: open });
+    persistData('modalOpen', open);
+  },
+
+  loadPersistedState: async () => {
+    const keys = [
+      'url',
+      'inputValue',
+      'error',
+      'jsonData',
+      'jsonDataMap',
+      'darkMode',
+      'customBackgroundColor',
+      'customBackgroundColorOn',
+      'customAccentColor',
+      'customAccentColorOn',
+      'modalOpen',
+    ];
+
+    const loadedState = await loadData(keys);
+    const isDarkMode = loadedState.darkMode === 'true';
+    const isCustomBackgroundOn = loadedState.customBackgroundColorOn === 'true';
+    const isCustomAccentOn = loadedState.customAccentColorOn === 'true';
+
+    const baseColors = isDarkMode ? darkModeColors : lightModeColors;
+
+    const finalBackgroundColor = isCustomBackgroundOn && loadedState.customBackgroundColor
+      ? cleanColor(loadedState.customBackgroundColor)
+      : baseColors.background;
+
+    const finalAccentColor = isCustomAccentOn && loadedState.customAccentColor
+      ? cleanColor(loadedState.customAccentColor)
+      : baseColors.accent;
+
+    set({
+      url: loadedState.url || '',
+      inputValue: loadedState.inputValue || '',
+      error: loadedState.error || '',
+      jsonData: loadedState.jsonData,
+      jsonDataMap: loadedState.jsonDataMap ? JSON.parse(loadedState.jsonDataMap) : {},
+      darkMode: isDarkMode,
+      customBackgroundColor: cleanColor(loadedState.customBackgroundColor) || '#FFFFFF',
+      customBackgroundColorOn: isCustomBackgroundOn,
+      customAccentColor: cleanColor(loadedState.customAccentColor) || '#FFFFFF',
+      customAccentColorOn: isCustomAccentOn,
+      modalOpen: loadedState.modalOpen === 'true',
+      colors: {
+        ...baseColors,
+        background: finalBackgroundColor,
+        accent: finalAccentColor,
+      } as ThemeColors,
+    });
+},
+
+
+  persistState: async () => {
+    const state = get();
+    await AsyncStorage.multiSet([
+      ['url', state.url],
+      ['inputValue', state.inputValue],
+      ['error', state.error],
+      ['jsonData', JSON.stringify(state.jsonData)],
+      ['jsonDataMap', JSON.stringify(state.jsonDataMap)],
+      ['darkMode', JSON.stringify(state.darkMode)],
+      ['customBackgroundColor', state.customBackgroundColor],
+      ['customBackgroundColorOn', JSON.stringify(state.customBackgroundColorOn)],
+      ['customAccentColor', state.customAccentColor],
+      ['customAccentColorOn', JSON.stringify(state.customAccentColorOn)],
+      ['modalOpen', JSON.stringify(state.modalOpen)],
+    ]);
+  },
 }));

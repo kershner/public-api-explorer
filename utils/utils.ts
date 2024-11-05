@@ -89,6 +89,3 @@ export const printState = () => {
   const state = useStore.getState();
   console.log(JSON.stringify(state, null, 2));
 };
-
-export const isHexString = (color: string): boolean => /^#[0-9A-F]{6}$/i.test(color);
-

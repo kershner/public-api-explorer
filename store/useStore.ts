@@ -1,5 +1,4 @@
 import { darkModeColors, lightModeColors } from '@/constants/constants';
-import { isHexString } from '@/utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 
@@ -67,6 +66,7 @@ const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'set
 // Utility function to clean strings and colors
 const cleanString = (value: string | null): string => (value ? value.replace(/^"|"$/g, '') : '');
 const cleanColor = (color: string | null): string => cleanString(color) || '#FFFFFF';
+const isHexString = (color: string): boolean => /^#[0-9A-F]{6}$/i.test(color);
 
 // Persist state to AsyncStorage
 const persistData = async (state: Partial<State>) => {

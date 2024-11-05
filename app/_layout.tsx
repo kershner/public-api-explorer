@@ -63,7 +63,7 @@ export default function RootLayout() {
       StyleSheet.create({
         globalContainer: { flex: 1, backgroundColor: colors.background },
         stackWrapper: {flex: 1, position: 'relative', zIndex: 1},
-        stackContainer: { backgroundColor: colors.background},
+        stackContainer: { backgroundColor: colors.background },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
         headerBack: { fontSize: 16, color: colors.textPrimary },

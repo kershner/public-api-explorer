@@ -50,7 +50,10 @@ const PublicApiCards: React.FC = () => {
           },
           scrollViewContainer: {
             width: '100%',
-            ...(isRoot && { flexGrow: 1 }),
+            justifyContent: isRoot ? undefined : 'flex-end',
+            ...(isRoot && {
+              flexGrow: 1
+            })
           },
           container: {
             flexDirection: 'row',
@@ -102,8 +105,10 @@ const PublicApiCards: React.FC = () => {
             style={styles.picker}
           >
             <Picker.Item label="All" value="All" />
-            {[...new Set(publicApis.map(api => api.category))].map(category => (
-              <Picker.Item key={category} label={category} value={category} />
+            {[...new Set(publicApis.map(api => api.category))]
+              .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically
+              .map(category => (
+                <Picker.Item key={category} label={category} value={category} />
             ))}
           </Picker>
         </View>

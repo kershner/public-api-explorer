@@ -115,30 +115,28 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       } else if (typeof data === 'object' && data !== null) {
         const originalObject: Record<string, unknown> = { ...data };
         let matchFound = false;
-
+    
         for (const [key, value] of Object.entries(data)) {
           const keyLower = key.toLowerCase();
           const valueString = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' 
             ? String(value).toLowerCase() 
             : "";
-
+    
           const valueMatches = searchLower 
             ? keyLower.includes(searchLower) || valueString.includes(searchLower) 
             : true;
-
+    
           if (valueMatches) {
             matchFound = true;
-            expandedKeys.add(key);
           } else if (typeof value === 'object' && value !== null) {
             const nestedMatch = applyFilters(value);
             if (nestedMatch) {
               matchFound = true;
               originalObject[key] = nestedMatch;
-              expandedKeys.add(key);
             }
           }
         }
-
+    
         return matchFound ? originalObject : null;
       }
       return null;

@@ -21,8 +21,8 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    setIsOpen(level === 0 && expandAll);
-  }, [expandAll, level]);
+    setIsOpen(expandAll);
+  }, [expandAll]);
 
   const styles = useMemo(() => 
     StyleSheet.create({

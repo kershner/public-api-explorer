@@ -104,12 +104,15 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
         for (const [key, value] of Object.entries(data)) {
           const keyLower = key.toLowerCase();
-          const valueString =
-            typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
-              ? String(value).toLowerCase()
-              : "";
+          let valueString = "";
 
-          const valueMatches = !searchLower || keyLower.includes(searchLower) || valueString.includes(searchLower);
+          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            valueString = String(value).toLowerCase();
+          }
+
+          const valueMatches = searchLower
+            ? keyLower.includes(searchLower) || valueString.includes(searchLower)
+            : true;
 
           if (valueMatches) {
             matchFound = true;
@@ -122,6 +125,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
           }
         }
 
+        // If a match is found and a key is selected, return only the selected key-value pair
         if (matchFound) {
           if (selectedKey && selectedKey in fullObject) {
             return { [selectedKey]: fullObject[selectedKey] };
@@ -134,11 +138,8 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       return null;
     };
 
-    const filteredData = applyFilters(jsonData);
-    if (filteredJson !== filteredData) {
-      setFilteredJson(filteredData);
-    }
-  }, [jsonData, selectedKey, debouncedSearchText, filteredJson]);
+    setFilteredJson(applyFilters(jsonData));
+  }, [jsonData, selectedKey, debouncedSearchText]);
 
   if (loading) {
     return (
@@ -160,7 +161,9 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   const renderContent = () => {
     if (Array.isArray(filteredJson)) {
-      return filteredJson.map((item, index) => renderJsonItems({ key: index.toString(), value: item }, index));
+      return filteredJson.map((item, index) =>
+        renderJsonItems({ key: index.toString(), value: item }, index)
+      );
     } else if (filteredJson && typeof filteredJson === 'object') {
       return Object.entries(filteredJson).map(([key, value], index) =>
         renderJsonItems({ key, value }, index)
@@ -193,7 +196,11 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         default: (
           <FlatList
             style={styles.container}
-            data={Array.isArray(filteredJson) ? filteredJson.map((item, index) => ({ key: index.toString(), value: item })) : []}
+            data={
+              Array.isArray(filteredJson)
+                ? filteredJson.map((item, index) => ({ key: index.toString(), value: item }))
+                : []
+            }
             renderItem={({ item, index }) => renderJsonItems(item, index)}
             keyExtractor={(item, index) => index.toString()}
           />

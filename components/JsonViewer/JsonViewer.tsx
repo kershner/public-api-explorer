@@ -31,7 +31,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
           flex: 1,
           height: 40,
           marginRight: 8,
-          borderColor: colors.accent,
+          borderColor: colors.textPrimary,
           borderWidth: 2,
           borderRadius: 4,
           backgroundColor: colors.background,
@@ -40,7 +40,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         input: {
           flex: 3,
           height: 40,
-          borderColor: colors.accent,
+          borderColor: colors.textPrimary,
           borderWidth: 2,
           paddingHorizontal: 10,
           borderRadius: 4,
@@ -97,9 +97,11 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
     const applyFilters = (data: unknown): unknown => {
       if (Array.isArray(data)) {
-        return data.map((item) => applyFilters(item)).filter((item) => item !== null);
+        // Filter each item in the array and remove any that are null
+        const filteredArray = data.map((item) => applyFilters(item)).filter((item) => item !== null);
+        return filteredArray.length > 0 ? filteredArray : null;
       } else if (typeof data === 'object' && data !== null) {
-        const fullObject: Record<string, unknown> = { ...data };
+        const filteredObject: Record<string, unknown> = {};
         let matchFound = false;
 
         for (const [key, value] of Object.entries(data)) {
@@ -116,21 +118,22 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
           if (valueMatches) {
             matchFound = true;
+            filteredObject[key] = value;
           } else if (typeof value === 'object' && value !== null) {
+            // Recursively filter nested objects
             const nestedMatch = applyFilters(value);
             if (nestedMatch) {
               matchFound = true;
-              fullObject[key] = nestedMatch;
+              filteredObject[key] = nestedMatch;
             }
           }
         }
 
-        // If a match is found and a key is selected, return only the selected key-value pair
         if (matchFound) {
-          if (selectedKey && selectedKey in fullObject) {
-            return { [selectedKey]: fullObject[selectedKey] };
+          if (selectedKey && selectedKey in filteredObject) {
+            return { [selectedKey]: filteredObject[selectedKey] };
           }
-          return fullObject;
+          return filteredObject;
         }
 
         return null;

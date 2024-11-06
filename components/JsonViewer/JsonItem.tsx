@@ -14,28 +14,26 @@ interface JsonItemProps {
 }
 
 const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll = false }) => {
-  const [isOpen, setIsOpen] = useState(level === 0);
+  const [isOpen, setIsOpen] = useState(level === 0 && expandAll);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const colors = useStore((state) => state.colors);
   const hasNestedData = typeof value === 'object' && value !== null;
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    if (expandAll) {
-      setIsOpen(true); // Expand all nested items if expandAll is true
-    }
+    setIsOpen(expandAll);
   }, [expandAll]);
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        itemContainer: { 
-          flexDirection: 'column', 
-          alignItems: 'flex-start' 
+        itemContainer: {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
         },
-        levelIndicator: { 
-          borderLeftWidth: 1, 
-          borderColor: colors.textPrimary
+        levelIndicator: {
+          borderLeftWidth: 1,
+          borderColor: colors.textPrimary,
         },
         row: {
           flexDirection: 'row',
@@ -46,28 +44,28 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
           borderBottomColor: colors.accent,
           borderStyle: 'dotted',
         },
-        key: { 
-          fontWeight: '600', 
-          fontSize: 16, 
-          textAlign: 'left', 
-          width: 150, 
-          color: colors.textPrimary 
+        key: {
+          fontWeight: '600',
+          fontSize: 16,
+          textAlign: 'left',
+          width: 150,
+          color: colors.textPrimary,
         },
-        nestedRow: { 
-          backgroundColor: colors.accent, 
-          borderRadius: 6, 
-          padding: 8, 
-          marginVertical: 4 
+        nestedRow: {
+          backgroundColor: colors.accent,
+          borderRadius: 6,
+          padding: 8,
+          marginVertical: 4,
         },
-        keyInClickableRow: { 
-          width: '100%' 
+        keyInClickableRow: {
+          width: '100%',
         },
-        valueContainer: { 
-          marginLeft: 8, 
-          flexShrink: 1 
+        valueContainer: {
+          marginLeft: 8,
+          flexShrink: 1,
         },
-        menuButton: { 
-          marginLeft: 'auto' 
+        menuButton: {
+          marginLeft: 'auto',
         },
       }),
     [colors]
@@ -99,7 +97,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
           </TouchableOpacity>
         )}
       </TouchableOpacity>
-      
+
       {hasNestedData && isOpen && <NestedJsonItems data={value} level={level + 1} expandAll={expandAll} />}
 
       <JsonItemPopoverMenu

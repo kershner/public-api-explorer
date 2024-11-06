@@ -5,18 +5,17 @@ import React, { useMemo } from 'react';
 interface NestedItemsProps {
   data: object;
   level: number;
-  expandAll?: boolean;
 }
 
-const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level, expandAll = false }) => {
+const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
   const nestedData = Object.entries(data).map(([key, value]) => ({ key, value }));
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        nestedList: { 
+        nestedList: {
           paddingLeft: 8,
-          width: '100%' 
+          width: '100%',
         },
       }),
     []
@@ -26,7 +25,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level, expandAll = 
     <FlatList
       data={nestedData}
       renderItem={({ item }) => (
-        <JsonItem label={item.key} value={item.value} level={level} expandAll={expandAll} />
+        <JsonItem label={item.key} value={item.value} level={level} expandAll={false} />
       )}
       keyExtractor={(item, index) => `${level}-${index}`}
       style={styles.nestedList}

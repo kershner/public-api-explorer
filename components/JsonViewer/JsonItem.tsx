@@ -3,21 +3,28 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import NestedJsonItems from '@/components/JsonViewer/NestedJsonItems';
 import RenderValue from '@/components/JsonViewer/RenderValue';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
 
 interface JsonItemProps {
   label: string;
   value: string | number | boolean | object | null;
   level?: number;
+  expandAll?: boolean;
 }
 
-const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
+const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll = false }) => {
   const [isOpen, setIsOpen] = useState(level === 0);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const colors = useStore((state) => state.colors);
   const hasNestedData = typeof value === 'object' && value !== null;
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    if (expandAll) {
+      setIsOpen(true); // Expand all nested items if expandAll is true
+    }
+  }, [expandAll]);
 
   const styles = useMemo(
     () =>
@@ -60,8 +67,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
           flexShrink: 1 
         },
         menuButton: { 
-          marginLeft: 
-          'auto' 
+          marginLeft: 'auto' 
         },
       }),
     [colors]
@@ -73,8 +79,8 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
       <TouchableOpacity
         onPress={() => hasNestedData && setIsOpen(!isOpen)}
         disabled={!hasNestedData}
-        style={[styles.row, hasNestedData && styles.nestedRow]}>
-        
+        style={[styles.row, hasNestedData && styles.nestedRow]}
+      >
         <Text style={[styles.key, hasNestedData && styles.keyInClickableRow]}>
           {hasNestedData ? (isOpen ? '▼ ' : '▶ ') : ''}{label}:
         </Text>
@@ -94,7 +100,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0 }) => {
         )}
       </TouchableOpacity>
       
-      {hasNestedData && isOpen && <NestedJsonItems data={value} level={level} />}
+      {hasNestedData && isOpen && <NestedJsonItems data={value} level={level + 1} expandAll={expandAll} />}
 
       <JsonItemPopoverMenu
         isVisible={isPopoverVisible}

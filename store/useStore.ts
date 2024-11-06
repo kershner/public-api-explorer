@@ -15,6 +15,7 @@ export interface ThemeColors {
 }
 
 interface State {
+  initialLoad: boolean;
   loading: boolean;
   url: string;
   inputValue: string;
@@ -47,6 +48,7 @@ interface State {
 }
 
 const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState'>> = {
+  initialLoad: true,
   loading: false,
   url: '',
   inputValue: '',
@@ -175,6 +177,7 @@ export const useStore = create<State>((set, get) => ({
         cleanColor(loadedState.customAccentColor),
         isCustomAccentOn
       ),
+      initialLoad: false,
     }));
   },
 

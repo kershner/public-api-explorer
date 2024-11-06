@@ -1,19 +1,22 @@
-import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator } from 'react-native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useEffect, useRef } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { CommonActions } from "@react-navigation/native";
 import BottomDrawer from '@/components/BottomDrawer';
+import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
-import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
+import * as Linking from 'expo-linking';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colors = useStore((state) => state.colors);
+  const initialLoad = useStore((state) => state.initialLoad);
   const navigation = useNavigation();
   const searchParams = useLocalSearchParams<{ url?: string }>();
   const initialUrlHandledRef = useRef(new Set());
@@ -22,12 +25,13 @@ export default function RootLayout() {
   useEffect(() => {
     const loadState = async () => {
       await useStore.getState().loadPersistedState();
+      SplashScreen.hideAsync();
     };
     loadState();
   }, []);
 
   useEffect(() => {
-    if (!hookShouldRunRef.current) return;
+    if (initialLoad || !hookShouldRunRef.current) return;
 
     const handleUrlNavigation = (url: string) => {
       if (!initialUrlHandledRef.current.has(url)) {
@@ -56,18 +60,25 @@ export default function RootLayout() {
     };
 
     handleInitialUrl();
-  }, [searchParams]);
+  }, [searchParams, initialLoad]);
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
         globalContainer: { flex: 1, backgroundColor: colors.background },
-        stackWrapper: {flex: 1, position: 'relative', zIndex: 1},
+        stackWrapper: { flex: 1, position: 'relative', zIndex: 1 },
         stackContainer: { backgroundColor: colors.background },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
         headerBack: { fontSize: 16, color: colors.textPrimary },
         menuButtonWrapper: { paddingRight: 16 },
+        loadingContainer: { 
+          ...StyleSheet.absoluteFillObject, 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          backgroundColor: colors.background, 
+          zIndex: 2 
+        },
       }),
     [colors]
   );
@@ -106,11 +117,18 @@ export default function RootLayout() {
           <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
         </Stack>
       </View>
-      
+
       <FloatingIconGrid />
 
       <BottomDrawer />
       <SettingsMenu />
+
+      {initialLoad && (
+        <SafeAreaView style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.textPrimary} />
+          <Text>Loading...</Text>
+        </SafeAreaView>
+      )}
     </SafeAreaView>
   );
 }

@@ -54,9 +54,9 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         bottom: 20,
         right: 70,
         backgroundColor: colors.background,
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: colors.textPrimary,
-        borderRadius: 5,
+        borderRadius: 6,
         padding: 10,
       },
       backToTopButtonText: {

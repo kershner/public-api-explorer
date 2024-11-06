@@ -17,7 +17,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
   const [filteredJson, setFilteredJson] = useState<unknown>(jsonData);
-  const [shouldExpand, setShouldExpand] = useState<{ [key: string]: boolean }>({});
 
   const styles = useMemo(
     () =>
@@ -76,7 +75,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   const handleFilterChange = useCallback((itemValue: string) => {
     setSelectedKey(itemValue);
-    setShouldExpand({});
   }, []);
 
   useEffect(() => {
@@ -92,67 +90,55 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   useEffect(() => {
     if (!jsonData) {
       setFilteredJson(jsonData);
-      setShouldExpand({});
       return;
     }
 
     const searchLower = debouncedSearchText.toLowerCase();
-    const expandKeys: { [key: string]: boolean } = {};
 
     const applyFilters = (data: unknown): unknown => {
       if (Array.isArray(data)) {
-        const filteredArray = data
-          .map((item, index) => {
-            const filteredItem = applyFilters(item);
-            if (filteredItem) {
-              expandKeys[index.toString()] = true;
-              return filteredItem;
-            }
-            return null;
-          })
-          .filter((item) => item !== null);
-
-        return filteredArray.length > 0 ? filteredArray : null;
+        return data.map((item) => applyFilters(item)).filter((item) => item !== null);
       } else if (typeof data === 'object' && data !== null) {
+        const fullObject: Record<string, unknown> = { ...data };
         let matchFound = false;
 
-        const filtered = Object.entries(data as Record<string, unknown>).reduce((acc, [key, value]) => {
+        for (const [key, value] of Object.entries(data)) {
           const keyLower = key.toLowerCase();
-          let valueString = "";
+          const valueString =
+            typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+              ? String(value).toLowerCase()
+              : "";
 
-          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-            valueString = String(value).toLowerCase();
-          }
+          const valueMatches = !searchLower || keyLower.includes(searchLower) || valueString.includes(searchLower);
 
-          const keyMatches = selectedKey ? key === selectedKey : true;
-          const valueMatches = searchLower
-            ? keyLower.includes(searchLower) || valueString.includes(searchLower)
-            : true;
-
-          if (keyMatches && valueMatches) {
+          if (valueMatches) {
             matchFound = true;
-            expandKeys[key] = true;
-            acc[key] = value;
-          } else {
-            const nested = applyFilters(value);
-            if (nested) {
+          } else if (typeof value === 'object' && value !== null) {
+            const nestedMatch = applyFilters(value);
+            if (nestedMatch) {
               matchFound = true;
-              acc[key] = nested;
-              expandKeys[key] = true;
+              fullObject[key] = nestedMatch;
             }
           }
-          return acc;
-        }, {} as Record<string, unknown>);
+        }
 
-        return matchFound ? filtered : null;
+        if (matchFound) {
+          if (selectedKey && selectedKey in fullObject) {
+            return { [selectedKey]: fullObject[selectedKey] };
+          }
+          return fullObject;
+        }
+
+        return null;
       }
-
       return null;
     };
 
-    setFilteredJson(applyFilters(jsonData));
-    setShouldExpand(expandKeys);
-  }, [jsonData, selectedKey, debouncedSearchText]);
+    const filteredData = applyFilters(jsonData);
+    if (filteredJson !== filteredData) {
+      setFilteredJson(filteredData);
+    }
+  }, [jsonData, selectedKey, debouncedSearchText, filteredJson]);
 
   if (loading) {
     return (
@@ -174,9 +160,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   const renderContent = () => {
     if (Array.isArray(filteredJson)) {
-      return filteredJson.map((item, index) =>
-        renderJsonItems({ key: index.toString(), value: item }, index)
-      );
+      return filteredJson.map((item, index) => renderJsonItems({ key: index.toString(), value: item }, index));
     } else if (filteredJson && typeof filteredJson === 'object') {
       return Object.entries(filteredJson).map(([key, value], index) =>
         renderJsonItems({ key, value }, index)
@@ -209,11 +193,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         default: (
           <FlatList
             style={styles.container}
-            data={
-              Array.isArray(filteredJson)
-                ? filteredJson.map((item, index) => ({ key: index.toString(), value: item }))
-                : []
-            }
+            data={Array.isArray(filteredJson) ? filteredJson.map((item, index) => ({ key: index.toString(), value: item })) : []}
             renderItem={({ item, index }) => renderJsonItems(item, index)}
             keyExtractor={(item, index) => index.toString()}
           />

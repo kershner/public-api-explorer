@@ -17,38 +17,37 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
   const [filteredJson, setFilteredJson] = useState<unknown>(jsonData);
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        wrapper: { flex: 1, padding: 16 },
-        container: { flexGrow: 1 },
-        spinnerWrapper: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-        spinner: { marginVertical: 16 },
-        filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: colors.textPrimary },
-        filterContainer: { flexDirection: 'row', alignItems: 'center', paddingBottom: 16 },
-        picker: {
-          flex: 1,
-          height: 40,
-          marginRight: 8,
-          borderColor: colors.textPrimary,
-          borderWidth: 2,
-          borderRadius: 4,
-          backgroundColor: colors.background,
-          color: colors.textPrimary,
-        },
-        input: {
-          flex: 3,
-          height: 40,
-          borderColor: colors.textPrimary,
-          borderWidth: 2,
-          paddingHorizontal: 10,
-          borderRadius: 4,
-          color: colors.textPrimary,
-          backgroundColor: colors.background,
-        },
-      }),
-    [colors]
+  const styles = useMemo(() => 
+    StyleSheet.create({
+      wrapper: { flex: 1, padding: 16 },
+      container: { flexGrow: 1 },
+      spinnerWrapper: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+      spinner: { marginVertical: 16 },
+      filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: colors.textPrimary },
+      filterContainer: { flexDirection: 'row', alignItems: 'center', paddingBottom: 16 },
+      picker: {
+        flex: 1,
+        height: 40,
+        marginRight: 8,
+        borderColor: colors.textPrimary,
+        borderWidth: 2,
+        borderRadius: 4,
+        backgroundColor: colors.background,
+        color: colors.textPrimary,
+      },
+      input: {
+        flex: 3,
+        height: 40,
+        borderColor: colors.textPrimary,
+        borderWidth: 2,
+        paddingHorizontal: 10,
+        borderRadius: 4,
+        color: colors.textPrimary,
+        backgroundColor: colors.background,
+      },
+    }), [colors]
   );
 
   const extractKeys = useCallback((data: unknown, keys: Set<string>) => {
@@ -81,10 +80,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
     const handler = setTimeout(() => {
       setDebouncedSearchText(searchText.trim());
     }, 300);
-
-    return () => {
-      clearTimeout(handler);
-    };
+    return () => clearTimeout(handler);
   }, [searchText]);
 
   useEffect(() => {
@@ -97,51 +93,74 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
     const applyFilters = (data: unknown): unknown => {
       if (Array.isArray(data)) {
-        // Filter each item in the array and remove any that are null
-        const filteredArray = data.map((item) => applyFilters(item)).filter((item) => item !== null);
-        return filteredArray.length > 0 ? filteredArray : null;
+        const matchedItems = data
+          .map((item) => applyFilters(item))
+          .filter((item) => item !== null);
+        return matchedItems.length > 0 ? matchedItems : null;
       } else if (typeof data === 'object' && data !== null) {
-        const filteredObject: Record<string, unknown> = {};
+        const originalObject: Record<string, unknown> = { ...data };
         let matchFound = false;
 
         for (const [key, value] of Object.entries(data)) {
           const keyLower = key.toLowerCase();
-          let valueString = "";
+          let valueString = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' 
+            ? String(value).toLowerCase() 
+            : "";
 
-          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-            valueString = String(value).toLowerCase();
-          }
-
-          const valueMatches = searchLower
-            ? keyLower.includes(searchLower) || valueString.includes(searchLower)
+          const valueMatches = searchLower 
+            ? keyLower.includes(searchLower) || valueString.includes(searchLower) 
             : true;
 
           if (valueMatches) {
             matchFound = true;
-            filteredObject[key] = value;
+            expandedKeys.add(key);
           } else if (typeof value === 'object' && value !== null) {
-            // Recursively filter nested objects
             const nestedMatch = applyFilters(value);
             if (nestedMatch) {
               matchFound = true;
-              filteredObject[key] = nestedMatch;
+              originalObject[key] = nestedMatch;
+              expandedKeys.add(key);
             }
           }
         }
 
-        if (matchFound) {
-          if (selectedKey && selectedKey in filteredObject) {
-            return { [selectedKey]: filteredObject[selectedKey] };
-          }
-          return filteredObject;
-        }
-
-        return null;
+        return matchFound ? originalObject : null;
       }
       return null;
     };
 
-    setFilteredJson(applyFilters(jsonData));
+    const filteredResult = applyFilters(jsonData);
+
+    if (filteredResult) {
+      if (selectedKey) {
+        const filteredByKey = (data: unknown): unknown => {
+          if (typeof data === 'object' && data !== null) {
+            const result: Record<string, unknown> = {};
+            let keyExists = false;
+
+            for (const [key, value] of Object.entries(data)) {
+              if (key === selectedKey) {
+                result[key] = value;
+                keyExists = true;
+              } else if (typeof value === 'object') {
+                const nestedResult = filteredByKey(value);
+                if (nestedResult) {
+                  result[key] = nestedResult;
+                }
+              }
+            }
+            return keyExists || Object.keys(result).length > 0 ? result : null;
+          }
+          return null;
+        };
+        setFilteredJson(filteredByKey(filteredResult) || filteredResult);
+      } else {
+        setFilteredJson(filteredResult);
+      }
+    } else {
+      setFilteredJson(filteredResult);
+    }
+    setExpandedKeys(new Set(expandedKeys));
   }, [jsonData, selectedKey, debouncedSearchText]);
 
   if (loading) {
@@ -158,7 +177,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       label={item.key}
       value={item.value as string | number | boolean | object | null}
       level={0}
-      expandAll={false}
+      expandAll={expandedKeys.has(item.key)}
     />
   );
 
@@ -185,7 +204,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
             <Picker.Item key={key} label={key} value={key} />
           ))}
         </Picker>
-
         <TextInput
           style={styles.input}
           placeholder="Search..."
@@ -193,17 +211,12 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
           onChangeText={setSearchText}
         />
       </View>
-
       {Platform.select({
         web: <ScrollView style={styles.container}>{renderContent()}</ScrollView>,
         default: (
           <FlatList
             style={styles.container}
-            data={
-              Array.isArray(filteredJson)
-                ? filteredJson.map((item, index) => ({ key: index.toString(), value: item }))
-                : []
-            }
+            data={Array.isArray(filteredJson) ? filteredJson.map((item, index) => ({ key: index.toString(), value: item })) : []}
             renderItem={({ item, index }) => renderJsonItems(item, index)}
             keyExtractor={(item, index) => index.toString()}
           />

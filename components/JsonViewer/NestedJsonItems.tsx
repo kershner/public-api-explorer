@@ -10,15 +10,13 @@ interface NestedItemsProps {
 const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
   const nestedData = Object.entries(data).map(([key, value]) => ({ key, value }));
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        nestedList: {
-          paddingLeft: 8,
-          width: '100%',
-        },
-      }),
-    []
+  const styles = useMemo(() => 
+    StyleSheet.create({
+      nestedList: {
+        paddingLeft: 8,
+        width: '100%',
+      },
+    }), []
   );
 
   return (

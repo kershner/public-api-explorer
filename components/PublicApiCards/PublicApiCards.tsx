@@ -50,7 +50,6 @@ const PublicApiCards: React.FC = () => {
           },
           scrollViewContainer: {
             width: '100%',
-            justifyContent: isRoot ? undefined : 'flex-end',
             ...(isRoot && {
               flexGrow: 1
             })

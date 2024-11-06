@@ -34,11 +34,13 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
           color: colors.linkText,
           textDecorationLine: 'underline',
           borderWidth: isPopoverVisible ? 2 : 0,
+          borderColor: colors.textPrimary,
         },
         image: {
           width: 100,
           height: 100,
           borderWidth: isPopoverVisible ? 2 : 0,
+          borderColor: colors.textPrimary,
         },
       }),
     [colors, isPopoverVisible]

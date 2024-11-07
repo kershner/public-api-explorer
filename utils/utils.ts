@@ -56,7 +56,7 @@ export function debounce<Func extends (...args: Parameters<Func>) => ReturnType<
 const fetchWithTimeout = async (
   url: string,
   options: RequestInit = {},
-  timeout: number = 5000
+  timeout: number
 ): Promise<Response> => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);

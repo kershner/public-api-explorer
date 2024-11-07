@@ -67,7 +67,7 @@ export const publicApis: PublicApi[] = [
   new PublicApi("https://www.federalregister.gov/api/v1/documents.json?per_page=20", "Federal Register", "US government journal.", "Government"),
   new PublicApi("https://www.travel-advisory.info/api?countrycode=AU", "Travel Advisory Data", "Travel safety advisories.", "Travel"),
   new PublicApi("https://api.funtranslations.com/translate/shakespeare.json?text=You%20are%20testing%20this%20api", "Shakespeare Translation Api", "Translates to Shakespearean English.", "Entertainment"),
-  new PublicApi("https://api.tvmaze.com/search/shows?q=the%20simpsons", "Tvmaze", "TV show database.", "Entertainment"),  
+  new PublicApi("https://api.tvmaze.com/search/shows?q=the+simpsons", "Tvmaze", "TV show database.", "Entertainment"),  
   new PublicApi("http://api.citybik.es/v2/networks", "City Bikes", "Bike-sharing data.", "Transportation"),
   new PublicApi("https://api.worldbank.org/v2/country/br?format=json", "World Bank", "Global economic data.", "Economics"),
   new PublicApi("http://api.open-notify.org/iss-now.json", "Open Notify", "ISS location data.", "Space"),

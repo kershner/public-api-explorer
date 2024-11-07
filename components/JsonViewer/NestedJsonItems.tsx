@@ -27,8 +27,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
       )}
       keyExtractor={(item, index) => `${level}-${index}`}
       style={styles.nestedList}
-      initialNumToRender={10}
-      removeClippedSubviews={false}
+      initialNumToRender={nestedData.length}
     />
   );
 };

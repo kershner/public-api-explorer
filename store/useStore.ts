@@ -65,7 +65,7 @@ export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl'
   customAccentColorOn: false,
   backgroundAnimation: true,
   modalOpen: false,
-  requestTimeout: 5000, // Default timeout (in ms)
+  requestTimeout: 5000,
   colors: darkModeColors,
 };
 
@@ -190,7 +190,7 @@ export const useStore = create<State>((set, get) => ({
       customAccentColor: cleanColor(loadedState.customAccentColor),
       customAccentColorOn: isCustomAccentOn,
       backgroundAnimation,
-      requestTimeout: parseInt(loadedState.requestTimeout, 10) || 5000,
+      requestTimeout: parseInt(loadedState.requestTimeout, 10) || defaultState.requestTimeout,
       colors: getColors(
         isDarkMode,
         cleanColor(loadedState.customBackgroundColor),
@@ -224,7 +224,7 @@ if (DEBUG_MODE) {
         diff[key] = { from: previousState[key], to: newState[key] };
       }
     });
-    console.log("State diff:", diff);
-    console.log("Full state:", newState);
+    console.log("State updated:", diff);
+    // console.log("Full state:", newState);
   });
 }

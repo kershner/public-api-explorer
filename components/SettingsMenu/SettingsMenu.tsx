@@ -22,6 +22,9 @@ const SettingsMenu: React.FC = () => {
   const setCustomAccentColor = useStore((state) => state.setCustomAccentColor);
   const customAccentColorOn = useStore((state) => state.customAccentColorOn);
   const toggleCustomAccentColorOn = useStore((state) => state.toggleCustomAccentColorOn);
+
+  const backgroundAnimation = useStore((state) => state.backgroundAnimation);
+  const setBackgroundAnimation = useStore((state) => state.setBackgroundAnimation);
   
   const defaultState = useStore.getState();
 
@@ -116,6 +119,11 @@ const SettingsMenu: React.FC = () => {
             customColorOn={customAccentColorOn}
             toggleCustomColorOn={toggleCustomAccentColorOn}
           />
+
+          <View style={styles.optionRow}>
+            <Text style={{ color: colors.textPrimary }}>Background animation</Text>
+            <Switch value={backgroundAnimation} onValueChange={setBackgroundAnimation} />
+          </View>
 
           <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>
             <Text style={styles.resetButtonText}>Back to Default</Text>

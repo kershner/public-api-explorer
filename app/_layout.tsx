@@ -21,6 +21,7 @@ export default function RootLayout() {
   const searchParams = useLocalSearchParams<{ url?: string }>();
   const initialUrlHandledRef = useRef(new Set());
   const hookShouldRunRef = useRef(true);
+  const backgroundAnimation = useStore((state) => state.backgroundAnimation);
 
   useEffect(() => {
     const loadState = async () => {
@@ -118,7 +119,7 @@ export default function RootLayout() {
         </Stack>
       </View>
 
-      <FloatingIconGrid />
+      { backgroundAnimation && <FloatingIconGrid /> }
 
       <BottomDrawer />
       <SettingsMenu />

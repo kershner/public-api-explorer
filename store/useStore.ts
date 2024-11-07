@@ -28,6 +28,7 @@ interface State {
   customBackgroundColorOn: boolean;
   customAccentColor: string;
   customAccentColorOn: boolean;
+  backgroundAnimation: boolean;
   modalOpen: boolean;
 
   setLoading: (loading: boolean) => void;
@@ -42,12 +43,13 @@ interface State {
   toggleCustomBackgroundColorOn: () => void;
   setCustomAccentColor: (color: string) => void;
   toggleCustomAccentColorOn: () => void;
+  setBackgroundAnimation: (backgroundAnimation: boolean) => void;
   setModalOpen: (open: boolean) => void;
   loadPersistedState: () => Promise<void>;
   persistState: () => Promise<void>;
 }
 
-const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState'>> = {
+const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation' >> = {
   initialLoad: true,
   loading: false,
   url: '',
@@ -60,6 +62,7 @@ const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'set
   customBackgroundColorOn: false,
   customAccentColor: '#FFFFFF',
   customAccentColorOn: false,
+  backgroundAnimation: true,
   modalOpen: false,
   colors: darkModeColors,
 };
@@ -147,6 +150,13 @@ export const useStore = create<State>((set, get) => ({
       return { customAccentColorOn: newCustomAccentColorOn, colors };
     });
   },
+  
+  setBackgroundAnimation: (backgroundAnimation) => {
+    set((state) => {
+      persistData({ backgroundAnimation: backgroundAnimation });
+      return { backgroundAnimation: backgroundAnimation };
+    });
+  },
 
   setModalOpen: (open) => set({ modalOpen: open }),
 
@@ -157,12 +167,14 @@ export const useStore = create<State>((set, get) => ({
       'customBackgroundColorOn',
       'customAccentColor',
       'customAccentColorOn',
+      'backgroundAnimation'
     ];
 
     const loadedState = await loadData(keys);
     const isDarkMode = loadedState.darkMode === 'true';
     const isCustomBackgroundOn = loadedState.customBackgroundColorOn === 'true';
     const isCustomAccentOn = loadedState.customAccentColorOn === 'true';
+    const backgroundAnimation = loadedState.backgroundAnimation === 'true';
 
     set((state) => ({
       darkMode: isDarkMode,
@@ -170,6 +182,7 @@ export const useStore = create<State>((set, get) => ({
       customBackgroundColorOn: isCustomBackgroundOn,
       customAccentColor: cleanColor(loadedState.customAccentColor),
       customAccentColorOn: isCustomAccentOn,
+      backgroundAnimation: backgroundAnimation,
       colors: getColors(
         isDarkMode,
         cleanColor(loadedState.customBackgroundColor),
@@ -189,6 +202,7 @@ export const useStore = create<State>((set, get) => ({
       customBackgroundColorOn: state.customBackgroundColorOn,
       customAccentColor: state.customAccentColor,
       customAccentColorOn: state.customAccentColorOn,
+      backgroundAnimation: state.backgroundAnimation
     });
   },
 }));

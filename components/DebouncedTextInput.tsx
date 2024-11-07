@@ -11,6 +11,7 @@ const DebouncedTextInput: React.FC = () => {
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
+  const requestTimeout = useStore((state) => state.requestTimeout);
   const isRoot = useIsRootScreen();
 
   const styles = useMemo(
@@ -60,7 +61,7 @@ const DebouncedTextInput: React.FC = () => {
   const debouncedOnValueChange = useCallback(
     debounce((value: string) => {
       if (isUrl(value)) {
-        checkUrl(value).then((isValid) => {
+        checkUrl(value, requestTimeout).then((isValid) => {
           if (isValid) {
             useStore.setState({ url: value });
           }

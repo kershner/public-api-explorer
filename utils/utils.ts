@@ -19,12 +19,12 @@ export const setError = (errorMsg: string) => {
   setLoading(false);
 };
 
-export async function checkUrl(url: string) {
+export async function checkUrl(url: string, timeout: number) {
   const defaultMsg = 'Network issue or invalid URL.';
 
   try {
     useStore.setState({ loading: true });
-    const response = await fetchWithTimeout(url, { method: 'GET' });
+    const response = await fetchWithTimeout(url, { method: 'GET' }, timeout);
 
     if (response.ok) {
       const data = await response.json();

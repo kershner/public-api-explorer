@@ -30,7 +30,7 @@ interface State {
   customAccentColorOn: boolean;
   backgroundAnimation: boolean;
   modalOpen: boolean;
-
+  requestTimeout: number; // New property
   setLoading: (loading: boolean) => void;
   setUrl: (url: string) => void;
   setInputValue: (value: string) => void;
@@ -45,11 +45,12 @@ interface State {
   toggleCustomAccentColorOn: () => void;
   setBackgroundAnimation: (backgroundAnimation: boolean) => void;
   setModalOpen: (open: boolean) => void;
+  setRequestTimeout: (timeout: number) => void; // New method
   loadPersistedState: () => Promise<void>;
   persistState: () => Promise<void>;
 }
 
-const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation' >> = {
+export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation' | 'setRequestTimeout'>> = {
   initialLoad: true,
   loading: false,
   url: '',
@@ -64,13 +65,13 @@ const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'set
   customAccentColorOn: false,
   backgroundAnimation: true,
   modalOpen: false,
+  requestTimeout: 5000, // Default timeout (in ms)
   colors: darkModeColors,
 };
 
 const isHexString = (color: string): boolean => /^#[0-9A-F]{6}$/i.test(color);
 const cleanColor = (color: string | null): string => (color && isHexString(color) ? color : '#FFFFFF');
 
-// Function to construct the colors object
 const getColors = (darkMode: boolean, customBackgroundColor: string, customBackgroundColorOn: boolean, customAccentColor: string, customAccentColorOn: boolean): ThemeColors => {
   const baseColors = darkMode ? darkModeColors : lightModeColors;
   return {
@@ -150,15 +151,20 @@ export const useStore = create<State>((set, get) => ({
       return { customAccentColorOn: newCustomAccentColorOn, colors };
     });
   },
-  
+
   setBackgroundAnimation: (backgroundAnimation) => {
     set((state) => {
-      persistData({ backgroundAnimation: backgroundAnimation });
-      return { backgroundAnimation: backgroundAnimation };
+      persistData({ backgroundAnimation });
+      return { backgroundAnimation };
     });
   },
 
   setModalOpen: (open) => set({ modalOpen: open }),
+
+  setRequestTimeout: (timeout) => {
+    set({ requestTimeout: timeout });
+    persistData({ requestTimeout: timeout });
+  },
 
   loadPersistedState: async () => {
     const keys = [
@@ -167,7 +173,8 @@ export const useStore = create<State>((set, get) => ({
       'customBackgroundColorOn',
       'customAccentColor',
       'customAccentColorOn',
-      'backgroundAnimation'
+      'backgroundAnimation',
+      'requestTimeout'
     ];
 
     const loadedState = await loadData(keys);
@@ -175,14 +182,15 @@ export const useStore = create<State>((set, get) => ({
     const isCustomBackgroundOn = loadedState.customBackgroundColorOn === 'true';
     const isCustomAccentOn = loadedState.customAccentColorOn === 'true';
     const backgroundAnimation = loadedState.backgroundAnimation === 'true';
-
+    
     set((state) => ({
       darkMode: isDarkMode,
       customBackgroundColor: cleanColor(loadedState.customBackgroundColor),
       customBackgroundColorOn: isCustomBackgroundOn,
       customAccentColor: cleanColor(loadedState.customAccentColor),
       customAccentColorOn: isCustomAccentOn,
-      backgroundAnimation: backgroundAnimation,
+      backgroundAnimation,
+      requestTimeout: parseInt(loadedState.requestTimeout, 10) || 5000,
       colors: getColors(
         isDarkMode,
         cleanColor(loadedState.customBackgroundColor),
@@ -202,7 +210,8 @@ export const useStore = create<State>((set, get) => ({
       customBackgroundColorOn: state.customBackgroundColorOn,
       customAccentColor: state.customAccentColor,
       customAccentColorOn: state.customAccentColorOn,
-      backgroundAnimation: state.backgroundAnimation
+      backgroundAnimation: state.backgroundAnimation,
+      requestTimeout: state.requestTimeout
     });
   },
 }));

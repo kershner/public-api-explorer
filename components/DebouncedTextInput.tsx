@@ -61,11 +61,7 @@ const DebouncedTextInput: React.FC = () => {
   const debouncedOnValueChange = useCallback(
     debounce((value: string) => {
       if (isUrl(value)) {
-        checkUrl(value, requestTimeout).then((isValid) => {
-          if (isValid) {
-            useStore.setState({ url: value });
-          }
-        });
+        checkUrl(value, requestTimeout);
       } else {
         if (!value) {
           useStore.setState({ url: value, jsonData: null });

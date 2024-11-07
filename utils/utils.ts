@@ -28,7 +28,7 @@ export async function checkUrl(url: string, timeout: number) {
 
     if (response.ok) {
       const data = await response.json();
-      useStore.setState({ jsonData: data, loading: false, error: '' });
+      useStore.setState({ url: url, jsonData: data, loading: false, error: '' });
       return true;
     } else {
       useStore.setState({ loading: false, error: `${defaultMsg} Status code: ${response.status}` });

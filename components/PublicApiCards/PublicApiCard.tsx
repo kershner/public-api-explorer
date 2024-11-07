@@ -69,10 +69,11 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
   );
 
   const handlePress = () => {
-    if (inputValue !== api.url) {
+    setInputValue("");
+    setTimeout(() => {
       setLoading(true);
       setInputValue(api.url);
-    }
+    }, 100);
   };
 
   return (

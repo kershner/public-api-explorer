@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, Platform, StyleSheet, View, ActivityIndicator, TextInput, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Platform, StyleSheet, View, ActivityIndicator, TextInput, Text, TouchableOpacity } from 'react-native';
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import JsonItem from '@/components/JsonViewer/JsonItem';
 import { Picker } from '@react-native-picker/picker';
@@ -19,7 +19,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const [filteredJson, setFilteredJson] = useState<unknown>(jsonData);
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef(null);
 
   const styles = useMemo(() => 
     StyleSheet.create({
@@ -182,39 +182,37 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   };
 
   const scrollToTop = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    scrollViewRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  if (loading) {
-    return (
-      <View style={styles.spinnerWrapper}>
-        <ActivityIndicator style={styles.spinner} size={100} color={colors.textPrimary} />
-      </View>
-    );
-  }
+  const rootData = useMemo(() => {
+    return Array.isArray(filteredJson)
+      ? filteredJson.map((item, index) => ({ key: index.toString(), value: item }))
+      : Object.entries(filteredJson).map(([key, value]) => ({ key, value }));
+  }, [filteredJson]);
 
-  const renderJsonItems = (item: { key: string; value: unknown }, index: number) => (
-    <JsonItem
-      key={index.toString()}
-      label={item.key}
-      value={item.value as string | number | boolean | object | null}
-      level={0}
-      expandAll={expandedKeys.has(item.key)}
+  const renderContent = () => (
+    <FlatList
+      data={rootData}
+      renderItem={({ item, index }) => (
+        <JsonItem
+          key={index.toString()}
+          label={item.key}
+          value={item.value as string | number | boolean | object | null}
+          level={0}
+          expandAll={expandedKeys.has(item.key)}
+        />
+      )}
+      keyExtractor={(item, index) => `root-${index}`}
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
+      ref={scrollViewRef}
+      contentContainerStyle={styles.container}
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      windowSize={5}
     />
   );
-
-  const renderContent = () => {
-    if (Array.isArray(filteredJson)) {
-      return filteredJson.map((item, index) =>
-        renderJsonItems({ key: index.toString(), value: item }, index)
-      );
-    } else if (filteredJson && typeof filteredJson === 'object') {
-      return Object.entries(filteredJson).map(([key, value], index) =>
-        renderJsonItems({ key, value }, index)
-      );
-    }
-    return null;
-  };
 
   return (
     <View style={styles.wrapper}>
@@ -226,7 +224,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
             <Picker.Item key={key} label={key} value={key} />
           ))}
         </Picker>
-
         <TextInput
           style={styles.input}
           placeholder="Search..."
@@ -234,28 +231,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
           onChangeText={setSearchText}
         />
       </View>
-      {Platform.select({
-        web: (
-          <ScrollView
-            style={styles.container}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-            ref={scrollViewRef}
-          >
-            {renderContent()}
-          </ScrollView>
-        ),
-        default: (
-          <FlatList
-            style={styles.container}
-            data={Array.isArray(filteredJson) ? filteredJson.map((item, index) => ({ key: index.toString(), value: item })) : []}
-            renderItem={({ item, index }) => renderJsonItems(item, index)}
-            keyExtractor={(item, index) => index.toString()}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          />
-        ),
-      })}
+      {renderContent()}
       {showBackToTop && (
         <TouchableOpacity style={styles.backToTopButton} onPress={scrollToTop}>
           <Text style={styles.backToTopButtonText}>↑ Top</Text>

@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator } from 'react-native';
 import { useNavigation, CommonActions, useNavigationState } from '@react-navigation/native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useEffect, useRef } from 'react';
 import BottomDrawer from '@/components/BottomDrawer';
 import * as SplashScreen from 'expo-splash-screen';
@@ -32,8 +32,7 @@ export default function RootLayout() {
     if (currentStackLength < prevStackLength.current) {
       const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
       if (currentScreen === 'index') {
-        useStore.setState({ inputValue: '', url: '', error: '', jsonData: {} });
-        router.replace({ pathname: "/" });
+        goHomeAndClearStack();
       }
     }
     

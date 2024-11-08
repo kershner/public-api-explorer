@@ -1,9 +1,9 @@
 import JsonItemPopoverMenu from '@/components/PopoverMenu/JsonItemPopoverMenu';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import NestedJsonItems from '@/components/JsonViewer/NestedJsonItems';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import RenderValue from '@/components/JsonViewer/RenderValue';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
 
 interface JsonItemProps {

@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet } from 'react-native';
 import JsonItem from '@/components/JsonViewer/JsonItem';
+import { FlatList, StyleSheet } from 'react-native';
 import React, { useMemo } from 'react';
 
 interface NestedItemsProps {
@@ -27,7 +27,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
       )}
       keyExtractor={(item, index) => `${level}-${index}`}
       style={styles.nestedList}
-      initialNumToRender={nestedData.length}
+      initialNumToRender={250}
     />
   );
 };

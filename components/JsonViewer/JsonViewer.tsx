@@ -191,29 +191,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       : Object.entries(filteredJson).map(([key, value]) => ({ key, value }));
   }, [filteredJson]);
 
-  const renderContent = () => (
-    <FlatList
-      data={rootData}
-      renderItem={({ item, index }) => (
-        <JsonItem
-          key={index.toString()}
-          label={item.key}
-          value={item.value as string | number | boolean | object | null}
-          level={0}
-          expandAll={expandedKeys.has(item.key)}
-        />
-      )}
-      keyExtractor={(item, index) => `root-${index}`}
-      onScroll={handleScroll}
-      scrollEventThrottle={16}
-      ref={scrollViewRef}
-      contentContainerStyle={styles.container}
-      initialNumToRender={10}
-      maxToRenderPerBatch={10}
-      windowSize={5}
-    />
-  );
-
   return (
     <View style={styles.wrapper}>
       <Text style={styles.filterLabel}>Filter by:</Text>
@@ -224,6 +201,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
             <Picker.Item key={key} label={key} value={key} />
           ))}
         </Picker>
+        
         <TextInput
           style={styles.input}
           placeholder="Search..."
@@ -231,7 +209,28 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
           onChangeText={setSearchText}
         />
       </View>
-      {renderContent()}
+      
+      <FlatList
+        data={rootData}
+        renderItem={({ item, index }) => (
+          <JsonItem
+            key={index.toString()}
+            label={item.key}
+            value={item.value as string | number | boolean | object | null}
+            level={0}
+            expandAll={expandedKeys.has(item.key)}
+          />
+        )}
+        keyExtractor={(item, index) => `root-${index}`}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        ref={scrollViewRef}
+        contentContainerStyle={styles.container}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+      />
+
       {showBackToTop && (
         <TouchableOpacity style={styles.backToTopButton} onPress={scrollToTop}>
           <Text style={styles.backToTopButtonText}>↑ Top</Text>

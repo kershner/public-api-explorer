@@ -1,9 +1,9 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator } from 'react-native';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useNavigation, CommonActions, useNavigationState } from '@react-navigation/native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
-import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useEffect, useRef } from 'react';
 import BottomDrawer from '@/components/BottomDrawer';
 import * as SplashScreen from 'expo-splash-screen';
@@ -22,6 +22,23 @@ export default function RootLayout() {
   const initialUrlHandledRef = useRef(new Set());
   const hookShouldRunRef = useRef(true);
   const backgroundAnimation = useStore((state) => state.backgroundAnimation);
+  const navigationState = useNavigationState(state => state);
+  const prevStackLength = useRef(navigationState.routes.length);
+
+  useEffect(() => {
+    const currentStackLength = navigationState.routes.length;
+    
+    // Detect a back navigation when the stack length decreases
+    if (currentStackLength < prevStackLength.current) {
+      const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
+      if (currentScreen === 'index') {
+        useStore.setState({ inputValue: '', url: '', error: '', jsonData: {} });
+        router.replace({ pathname: "/" });
+      }
+    }
+    
+    prevStackLength.current = currentStackLength;
+  }, [navigationState]);
 
   useEffect(() => {
     const loadState = async () => {
@@ -85,7 +102,7 @@ export default function RootLayout() {
   );
 
   const goHomeAndClearStack = () => {
-    useStore.setState({ inputValue: '', url: '', error: '', jsonDataMap: {} });
+    useStore.setState({ inputValue: '', url: '', error: '', jsonData: {}, jsonDataMap: {} });
     navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "index" }] }));
   };
 

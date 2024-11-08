@@ -47,7 +47,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         fontWeight: '600',
         fontSize: 16,
         textAlign: 'left',
-        width: 150,
+        width: hasNestedData ? '100%' : 150,
         color: colors.textPrimary,
       },
       nestedRow: {

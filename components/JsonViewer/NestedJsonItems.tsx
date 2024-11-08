@@ -14,7 +14,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
     StyleSheet.create({
       nestedList: {
         paddingLeft: 8,
-        width: '100%',
+        width: '100%'
       },
     }), []
   );
@@ -27,7 +27,10 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
       )}
       keyExtractor={(item, index) => `${level}-${index}`}
       style={styles.nestedList}
-      initialNumToRender={250}
+      initialNumToRender={50}
+      maxToRenderPerBatch={50}
+      disableVirtualization={true}
+      removeClippedSubviews={true}
     />
   );
 };

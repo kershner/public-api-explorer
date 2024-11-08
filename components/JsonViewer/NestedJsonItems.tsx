@@ -1,5 +1,5 @@
+import { FlatList, StyleSheet, Platform  } from 'react-native';
 import JsonItem from '@/components/JsonViewer/JsonItem';
-import { FlatList, StyleSheet } from 'react-native';
 import React, { useMemo } from 'react';
 
 interface NestedItemsProps {
@@ -29,7 +29,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
       style={styles.nestedList}
       initialNumToRender={50}
       maxToRenderPerBatch={50}
-      disableVirtualization={true}
+      disableVirtualization={Platform.OS === 'web'}
       removeClippedSubviews={true}
     />
   );

@@ -1,4 +1,4 @@
-import { FlatList, Platform, StyleSheet, View, ActivityIndicator, TextInput, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Platform, StyleSheet, View, TextInput, Text, TouchableOpacity } from 'react-native';
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import JsonItem from '@/components/JsonViewer/JsonItem';
 import { Picker } from '@react-native-picker/picker';
@@ -229,6 +229,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={5}
+        disableVirtualization={Platform.OS === 'web'}
       />
 
       {showBackToTop && (

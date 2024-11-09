@@ -23,13 +23,10 @@ const PublicApiCards: React.FC = () => {
     const styles = useMemo(
       () =>
         StyleSheet.create({
-          outerContainer: {
-            flex: 1,
-          },
-          innerContainer: {
+          container: {
             flexDirection: isRoot ? 'column' : 'row-reverse',
             alignItems: isRoot ? 'flex-end': 'center',
-            ...(isRoot && { flex: 1 }),
+            flex: 1,
           },
           pickerWrapper: {
             flexDirection: 'row',
@@ -53,19 +50,10 @@ const PublicApiCards: React.FC = () => {
             borderWidth: 0,
           },
           scrollViewContainer: {
-            width: '100%',
-            ...(isRoot && {
-              flexGrow: 1
-            })
-          },
-          container: {
             flexDirection: 'row',
             flexWrap: isRoot ? 'wrap' : 'nowrap',
             alignItems: 'flex-start',
             justifyContent: isRoot ? 'center' : 'flex-start',
-            ...(isRoot && {
-              width: '100%',
-            }),
           },
         }),
       [colors, isRoot]
@@ -96,43 +84,39 @@ const PublicApiCards: React.FC = () => {
   ).current;
 
   return (
-    <View style={styles.outerContainer}>
-      <View 
-        {...(!isRoot ? panResponder.panHandlers : {})}
-        style={styles.innerContainer} >
-        
-        <View style={styles.pickerWrapper}>
-          { isRoot && <Text style={{ fontWeight: 'bold' }}>Filter by category: </Text> }
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectedCategory}
-              onValueChange={(value) => setSelectedCategory(value)}
-              style={styles.picker}
-            >
-              <Picker.Item label="All" value="All" />
-              {[...new Set(publicApis.map(api => api.category))]
-                .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically
-                .map(category => (
-                  <Picker.Item key={category} label={category} value={category} />
-              ))}
-            </Picker>
-          </View>
-        </View>
-
-        <ScrollView
-          contentContainerStyle={styles.scrollViewContainer}
-          ref={scrollRef}
-          horizontal={!isRoot}
-          showsHorizontalScrollIndicator={!isRoot}
-          showsVerticalScrollIndicator={isRoot}
-        >
-          <View style={styles.container}>
-            {filteredApis.map((api, index) => (
-              <PublicApiCard key={index} api={api} index={index} />
+    <View 
+      {...(!isRoot ? panResponder.panHandlers : {})}
+      style={styles.container} >
+      
+      <View style={styles.pickerWrapper}>
+        { isRoot && <Text style={{ fontWeight: 'bold' }}>Filter by category: </Text> }
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedCategory}
+            onValueChange={(value) => setSelectedCategory(value)}
+            style={styles.picker}
+          >
+            <Picker.Item label="All" value="All" />
+            {[...new Set(publicApis.map(api => api.category))]
+              .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically
+              .map(category => (
+                <Picker.Item key={category} label={category} value={category} />
             ))}
-          </View>
-        </ScrollView>
+          </Picker>
+        </View>
       </View>
+
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContainer}
+        ref={scrollRef}
+        horizontal={!isRoot}
+        showsHorizontalScrollIndicator={!isRoot}
+        showsVerticalScrollIndicator={isRoot}
+      >
+        {filteredApis.map((api, index) => (
+          <PublicApiCard key={index} api={api} index={index} />
+        ))}
+      </ScrollView>
     </View>
   );
 };

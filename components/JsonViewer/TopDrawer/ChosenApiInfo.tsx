@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Linking, TouchableOpacity  } from 'react-native';
+import { View, Text, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import React, { useState, useEffect } from 'react';
 import { publicApis } from '@/data/PublicApis';
@@ -10,7 +10,7 @@ interface ChosenApiInfoProps {
   url: string;
 }
 
-const findPublicApiByUrl = (url: string| ""): PublicApi | undefined => {
+const findPublicApiByUrl = (url: string | ""): PublicApi | undefined => {
   return publicApis.find(api => api.url === url);
 };
 
@@ -34,14 +34,11 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   const styles = StyleSheet.create({
     chosenApiContainer: { 
       paddingBottom: 8,
-      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
     },
     titleContainer: {
-      display: 'flex',
       flexDirection: 'row',
-      alignSelf: 'center',
       alignItems: 'center',
       backgroundColor: colors.textPrimary,
       borderRadius: 5,
@@ -55,11 +52,25 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     },
     openLinkIcon: {
       color: colors.background,
-      paddingLeft: 4
+      paddingLeft: 4,
+    },
+    textContainer: {
+      paddingLeft: 8,
+      flexShrink: 1,
+    },
+    urlLinkContainer: {
+      flex: 1,
+    },
+    urlLink: {
+      fontSize: 18,
+      color: colors.linkText,
+      textDecorationLine: 'underline',
+      textDecorationStyle: 'solid',
     },
     description: { 
       color: colors.textPrimary,
-      paddingLeft: 8
+      flexWrap: 'wrap',
+      flexShrink: 1,
     },
   });
 
@@ -70,7 +81,15 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
         <Icon style={styles.openLinkIcon} name="open-in-new" size={16} />
       </TouchableOpacity>
       
-      <Text style={styles.description}>{chosenApi.description}</Text>
+      <View style={styles.textContainer}>
+        <TouchableOpacity style={styles.urlLinkContainer} onPress={() => Linking.openURL(url)}>
+          <Text style={styles.urlLink} numberOfLines={1} ellipsizeMode="tail">
+            {url}
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.description}>{chosenApi.description}</Text>
+      </View>
     </View>
   );
 };

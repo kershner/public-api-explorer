@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet, PanResponder } from 'react-native';
+import { View, ScrollView, StyleSheet, PanResponder, Text } from 'react-native';
 import PublicApiCard from '@/components/PublicApiCards/PublicApiCard';
 import React, { useRef, useState, useMemo } from 'react';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
@@ -30,6 +30,10 @@ const PublicApiCards: React.FC = () => {
             flexDirection: isRoot ? 'column' : 'row-reverse',
             alignItems: isRoot ? 'flex-end': 'center',
             ...(isRoot && { flex: 1 }),
+          },
+          pickerWrapper: {
+            flexDirection: 'row',
+            alignItems: 'center'
           },
           pickerContainer: {
             marginVertical: 8,
@@ -97,19 +101,22 @@ const PublicApiCards: React.FC = () => {
         {...(!isRoot ? panResponder.panHandlers : {})}
         style={styles.innerContainer} >
         
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            onValueChange={(value) => setSelectedCategory(value)}
-            style={styles.picker}
-          >
-            <Picker.Item label="All" value="All" />
-            {[...new Set(publicApis.map(api => api.category))]
-              .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically
-              .map(category => (
-                <Picker.Item key={category} label={category} value={category} />
-            ))}
-          </Picker>
+        <View style={styles.pickerWrapper}>
+          { isRoot && <Text style={{ fontWeight: 'bold' }}>Filter by category: </Text> }
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(value) => setSelectedCategory(value)}
+              style={styles.picker}
+            >
+              <Picker.Item label="All" value="All" />
+              {[...new Set(publicApis.map(api => api.category))]
+                .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically
+                .map(category => (
+                  <Picker.Item key={category} label={category} value={category} />
+              ))}
+            </Picker>
+          </View>
         </View>
 
         <ScrollView

@@ -58,10 +58,6 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
         },
-        disabledRow: {
-          pointerEvents: 'none',
-          opacity: 0.2,
-        },
         colorPicker: {
           marginTop: 10,
           flex: 1,
@@ -72,6 +68,7 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
         },
         brightnessSlider: {
           height: 40,
+          marginTop: 8,
         },
       }),
     [colors, customColorOn]
@@ -84,7 +81,7 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
         <ToggleThumb onPress={toggleCustomColorOn} isOn={customColorOn} />
       </View>
 
-      <View style={[styles.row, !customColorOn && styles.disabledRow]}>
+      <View style={styles.row}>
         <ReanimatedColorPicker value={localColor} onChange={handleColorChange} style={styles.colorPicker}>
           <HueSlider style={styles.hueSlider} />
           <BrightnessSlider style={styles.brightnessSlider} />

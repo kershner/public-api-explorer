@@ -6,15 +6,15 @@ import React from "react";
 
 const JsonViewerScreen: React.FC = () => {
   const { url } = useLocalSearchParams<{ url?: string }>();
-  const jsonData = useStore((state) => state.getJsonDataForUrl(url));
   const router = useRouter();
+  const jsonData = useStore((state) => state.getJsonDataForUrl(url));
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
     if (isMounted && !jsonData && url) {
-      useStore.setState({ inputValue: url, url });
+      useStore.setState({ inputValue: url });
       router.replace({ pathname: "/", params: { url } });
     }
   }, [isMounted, jsonData, url]);

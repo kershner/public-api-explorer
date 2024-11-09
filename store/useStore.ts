@@ -30,7 +30,7 @@ interface State {
   customAccentColorOn: boolean;
   backgroundAnimation: boolean;
   modalOpen: boolean;
-  requestTimeout: number; // New property
+  requestTimeout: number;
   setLoading: (loading: boolean) => void;
   setUrl: (url: string) => void;
   setInputValue: (value: string) => void;
@@ -45,7 +45,7 @@ interface State {
   toggleCustomAccentColorOn: () => void;
   setBackgroundAnimation: (backgroundAnimation: boolean) => void;
   setModalOpen: (open: boolean) => void;
-  setRequestTimeout: (timeout: number) => void; // New method
+  setRequestTimeout: (timeout: number) => void;
   loadPersistedState: () => Promise<void>;
   persistState: () => Promise<void>;
 }

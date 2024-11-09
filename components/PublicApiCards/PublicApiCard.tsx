@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import useCompareOrigins from '@/hooks/useCompareOrigins';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { PublicApi } from '@/models/PublicApi';
 import { useStore } from '@/store/useStore';
@@ -10,17 +11,18 @@ type PublicApiCardProps = {
 };
 
 const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
-  const inputValue = useStore((state) => state.inputValue);
   const setInputValue = useStore((state) => state.setInputValue);
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
   const isRoot = useIsRootScreen();
-
+  const url = useStore((state) => state.url);
+  const currentlyViewing = useCompareOrigins(api.url, url);
+  
   const styles = useMemo(
     () =>
       StyleSheet.create({
         card: {
-          backgroundColor: colors.accent,
+          backgroundColor: currentlyViewing ? colors.textPrimary : colors.accent,
           borderRadius: 8,
           marginHorizontal: 4,
           marginBottom: isRoot ? 8 : 0,
@@ -39,7 +41,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           fontSize: 16,
           fontWeight: 'bold',
           marginBottom: 4,
-          color: colors.textPrimary,
+          color: currentlyViewing ? colors.background : colors.textPrimary,
           textAlign: 'left',
         },
         description: {
@@ -65,7 +67,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           fontWeight: '600',
         },
       }),
-    [colors, isRoot, index]
+    [colors, isRoot, index, currentlyViewing]
   );
 
   const handlePress = () => {

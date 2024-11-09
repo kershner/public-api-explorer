@@ -1,8 +1,9 @@
-import { View, Modal, Text, Switch, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Modal, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ColorPickerSection from '@/components/SettingsMenu/ColorPickerSection';
-import React, { useMemo, useCallback, useState } from 'react';
-import { defaultState, useStore } from '@/store/useStore';
+import React, { useMemo, useCallback } from 'react';
+import ToggleThumb from '@/components/ToggleThumb';
 import { Ionicons } from '@expo/vector-icons';
+import { useStore } from '@/store/useStore';
 
 const SettingsMenu: React.FC = () => {
   const modalOpen = useStore((state) => state.modalOpen);
@@ -62,26 +63,37 @@ const SettingsMenu: React.FC = () => {
           color: colors.textPrimary,
         },
         optionRowsContainer: {
+          marginTop: 24,
           padding: 16,
           width: 400,
           alignSelf: 'center',
         },
         optionRow: {
-          marginBottom: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 20,
+          paddingBottom: 20,
+          borderBottomWidth: 1,
+          borderColor: colors.accent
+        },
+        optionRowLabel: {
+          color: colors.textPrimary,
+          fontWeight: 'bold',
         },
         resetButton: {
           marginTop: 20,
           padding: 10,
-          backgroundColor: colors.accent,
+          backgroundColor: colors.textPrimary,
           borderRadius: 5,
           alignItems: 'center',
         },
         resetButtonText: {
-          color: colors.textPrimary,
+          color: colors.background,
           fontWeight: 'bold',
         },
       }),
-    [colors]
+    [colors, darkMode]
   );
 
   return (
@@ -96,29 +108,33 @@ const SettingsMenu: React.FC = () => {
 
         <View style={styles.optionRowsContainer}>
           <View style={styles.optionRow}>
-            <Text style={{ color: colors.textPrimary }}>Dark mode</Text>
-            <Switch value={darkMode} onValueChange={toggleDarkMode} />
+            <Text style={styles.optionRowLabel}>Dark mode</Text>
+            <ToggleThumb onPress={toggleDarkMode} isOn={darkMode} />
           </View>
 
-          <ColorPickerSection
-            label="Custom background color"
-            colorValue={customBackgroundColor}
-            setColorValue={setCustomBackgroundColor}
-            customColorOn={customBackgroundColorOn}
-            toggleCustomColorOn={toggleCustomBackgroundColorOn}
-          />
-
-          <ColorPickerSection
-            label="Custom accent color"
-            colorValue={customAccentColor}
-            setColorValue={setCustomAccentColor}
-            customColorOn={customAccentColorOn}
-            toggleCustomColorOn={toggleCustomAccentColorOn}
-          />
+          <View style={styles.optionRow}>
+            <ColorPickerSection
+              label="Custom background color"
+              colorValue={customBackgroundColor}
+              setColorValue={setCustomBackgroundColor}
+              customColorOn={customBackgroundColorOn}
+              toggleCustomColorOn={toggleCustomBackgroundColorOn}
+            />
+          </View>
 
           <View style={styles.optionRow}>
-            <Text style={{ color: colors.textPrimary }}>Background animation</Text>
-            <Switch value={backgroundAnimation} onValueChange={setBackgroundAnimation} />
+            <ColorPickerSection
+              label="Custom accent color"
+              colorValue={customAccentColor}
+              setColorValue={setCustomAccentColor}
+              customColorOn={customAccentColorOn}
+              toggleCustomColorOn={toggleCustomAccentColorOn}
+            />
+          </View>
+
+          <View style={styles.optionRow}>
+            <Text style={styles.optionRowLabel}>Background animation</Text>
+            <ToggleThumb onPress={() => setBackgroundAnimation(!backgroundAnimation)} isOn={backgroundAnimation} />
           </View>
 
           <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>

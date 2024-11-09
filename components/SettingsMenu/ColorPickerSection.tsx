@@ -1,6 +1,7 @@
-import ReanimatedColorPicker, { HueSlider } from 'reanimated-color-picker';
+import ReanimatedColorPicker, { HueSlider, BrightnessSlider } from 'reanimated-color-picker';
 import React, { useMemo, useEffect, useState, useRef } from 'react';
-import { View, Text, Switch, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import ToggleThumb from '@/components/ToggleThumb';
 import { useStore } from '@/store/useStore';
 
 interface ColorPickerSectionProps {
@@ -18,72 +19,75 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
   customColorOn,
   toggleCustomColorOn,
 }) => {
-  const [localColor, setLocalColor] = useState(
-    colorValue === '#FFFFFF' ? '#FF0000' : colorValue
-  );
   const colors = useStore((state) => state.colors);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Custom throttled function to update the global state
+  const [localColor, setLocalColor] = useState(colorValue);
+
   const throttledSetColorValue = (color: string) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      setColorValue(color);
-    }, 100); // Throttle every 100ms
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setColorValue(color), 100);
   };
 
-  useEffect(() => {
-    if (colorValue !== localColor && colorValue !== '#FFFFFF') {
-      setLocalColor(colorValue);
-    }
-  }, [colorValue]);
-
-  useEffect(() => {
-    if (customColorOn && localColor !== colorValue) {
-      throttledSetColorValue(localColor);
-    }
-  }, [localColor, customColorOn, colorValue]);
-
-  const updateColor = (newColor: string) => {
+  const handleColorChange = (color) => {
+    const newColor = color.hex.toUpperCase();
     setLocalColor(newColor);
+
     if (customColorOn) {
       throttledSetColorValue(newColor);
     }
   };
 
+  useEffect(() => {
+    setLocalColor(colorValue);
+  }, [colorValue]);
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        container: { marginBottom: 16 },
-        labelText: { color: colors.textPrimary, marginBottom: 8 },
+        container: {
+          flex: 1,
+        },
+        labelText: {
+          fontWeight: 'bold',
+          color: colors.textPrimary,
+          marginBottom: 8,
+        },
         row: {
           flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'space-between',
         },
-        switch: { marginRight: 16 },
-        colorPicker: { flex: 1 },
-        slider: { width: '100%', height: 40 },
+        disabledRow: {
+          pointerEvents: 'none',
+          opacity: 0.2,
+        },
+        colorPicker: {
+          marginTop: 10,
+          flex: 1,
+        },
+        hueSlider: {
+          height: 40,
+          marginBottom: 8,
+        },
+        brightnessSlider: {
+          height: 40,
+        },
       }),
-    [colors]
+    [colors, customColorOn]
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.labelText}>{label}</Text>
       <View style={styles.row}>
-        <Switch
-          value={customColorOn}
-          onValueChange={toggleCustomColorOn}
-          style={styles.switch}
-        />
-        <ReanimatedColorPicker
-          value={localColor}
-          onChange={(color) => updateColor(color.hex.toUpperCase())}
-          style={styles.colorPicker}
-        >
-          <HueSlider style={styles.slider} />
+        <Text style={styles.labelText}>{label}</Text>
+        <ToggleThumb onPress={toggleCustomColorOn} isOn={customColorOn} />
+      </View>
+
+      <View style={[styles.row, !customColorOn && styles.disabledRow]}>
+        <ReanimatedColorPicker value={localColor} onChange={handleColorChange} style={styles.colorPicker}>
+          <HueSlider style={styles.hueSlider} />
+          <BrightnessSlider style={styles.brightnessSlider} />
         </ReanimatedColorPicker>
       </View>
     </View>

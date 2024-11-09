@@ -35,16 +35,18 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     chosenApiContainer: { 
       paddingBottom: 8,
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      alignItems: 'center'
     },
     titleContainer: {
       display: 'flex',
       flexDirection: 'row',
+      alignSelf: 'center',
       alignItems: 'center',
       backgroundColor: colors.textPrimary,
       borderRadius: 5,
       paddingHorizontal: 10,
-      paddingVertical: 2,
+      paddingVertical: 6,
     },
     title: { 
       color: colors.background,

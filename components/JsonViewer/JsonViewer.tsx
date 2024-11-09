@@ -1,6 +1,6 @@
 import { FlatList, Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import FilterControls from "@/components/JsonViewer/TopDrawer/FilterControls";
 import ChosenApiInfo from "@/components/JsonViewer/TopDrawer/ChosenApiInfo";
-import FilterControls from "@/components/JsonViewer/TopDrawer/FilterControls"; // import FilterControls
 import React, { useMemo, useState, useRef } from 'react';
 import JsonItem from '@/components/JsonViewer/JsonItem';
 import { useStore } from '@/store/useStore';
@@ -18,12 +18,18 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   const styles = useMemo(() => 
     StyleSheet.create({
-      wrapper: { flex: 1, padding: 16 },
-      container: { flexGrow: 1, paddingBottom: 80 },
+      wrapper: { 
+        flex: 1, 
+        padding: 16 
+      },
+      container: { 
+        flexGrow: 1, 
+        paddingBottom: 80 
+      },
       backToTopButton: {
         position: 'absolute',
         bottom: 20,
-        right: 70,
+        right: Platform.OS === 'web' ? 16 * 2 : 16,  // Offset for web scrollbar
         backgroundColor: colors.background,
         borderWidth: 2,
         borderColor: colors.textPrimary,
@@ -33,8 +39,10 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       backToTopButtonText: {
         color: colors.textPrimary,
       },
-    }), [colors]
+    }), 
+    [colors]
   );
+  
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;

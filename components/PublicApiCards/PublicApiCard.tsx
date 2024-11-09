@@ -19,7 +19,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
     () =>
       StyleSheet.create({
         card: {
-          backgroundColor: colors.accent,
+          backgroundColor: isRoot ? colors.accent : colors.textPrimary,
           borderRadius: 8,
           marginHorizontal: 4,
           marginBottom: isRoot ? 8 : 0,
@@ -38,7 +38,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           fontSize: 16,
           fontWeight: 'bold',
           marginBottom: 4,
-          color: colors.textPrimary,
+          color: isRoot ? colors.textPrimary : colors.background,
           textAlign: 'left',
         },
         description: {

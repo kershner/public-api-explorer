@@ -32,6 +32,10 @@ const PublicApiCards: React.FC = () => {
             flexDirection: 'row',
             alignItems: 'center'
           },
+          pickerLabel: {
+            color: colors.textPrimary,
+            fontWeight: 'bold'
+          },
           pickerContainer: {
             marginVertical: 8,
             marginLeft: isRoot ? 0 : 8,
@@ -89,7 +93,7 @@ const PublicApiCards: React.FC = () => {
       style={styles.container} >
       
       <View style={styles.pickerWrapper}>
-        { isRoot && <Text style={{ fontWeight: 'bold' }}>Filter by category: </Text> }
+        { isRoot && <Text style={styles.pickerLabel}>Filter by category: </Text> }
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={selectedCategory}

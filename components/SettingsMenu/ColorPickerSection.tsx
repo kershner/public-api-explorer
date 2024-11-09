@@ -62,13 +62,12 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
           marginTop: 10,
           flex: 1,
         },
-        hueSlider: {
-          height: 40,
-          marginBottom: 8,
+        sliderWrapper: {
+          marginBottom: 10
         },
-        brightnessSlider: {
-          height: 40,
-          marginTop: 8,
+        sliderLabel: {
+          color: colors.textPrimary,
+          marginBottom: 4
         },
       }),
     [colors, customColorOn]
@@ -83,8 +82,15 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
 
       <View style={styles.row}>
         <ReanimatedColorPicker value={localColor} onChange={handleColorChange} style={styles.colorPicker}>
-          <HueSlider style={styles.hueSlider} />
-          <BrightnessSlider style={styles.brightnessSlider} />
+          <View style={styles.sliderWrapper}>
+            <Text style={styles.sliderLabel}>Hue:</Text>
+            <HueSlider />
+          </View>
+          
+          <View style={styles.sliderWrapper}>
+            <Text style={styles.sliderLabel}>Brightness:</Text>
+            <BrightnessSlider />
+          </View>
         </ReanimatedColorPicker>
       </View>
     </View>

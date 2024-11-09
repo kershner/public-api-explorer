@@ -16,7 +16,7 @@ const BottomDrawer: React.FC = () => {
         container: {
           paddingHorizontal: 10,
           paddingTop: 10,
-          height: isRoot ? '100%' : undefined,
+          height: isRoot ? '93%' : undefined,
         },
       }),
     [colors, isRoot]

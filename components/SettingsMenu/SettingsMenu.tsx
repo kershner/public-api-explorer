@@ -26,41 +26,6 @@ const SettingsMenu: React.FC = () => {
   const backgroundAnimation = useStore((state) => state.backgroundAnimation);
   const setBackgroundAnimation = useStore((state) => state.setBackgroundAnimation);
 
-  const requestTimeout = useStore((state) => state.requestTimeout);
-  const setRequestTimeout = useStore((state) => state.setRequestTimeout);
-
-  const [timeoutValue, setTimeoutValue] = useState<string>(requestTimeout.toString());
-  const [validationMessage, setValidationMessage] = useState<string>('');
-
-  const defaultRequestTimeout = defaultState.requestTimeout;
-  const MIN_TIMEOUT = defaultRequestTimeout;
-  const MAX_TIMEOUT = defaultRequestTimeout * 3;
-
-  const handleTimeoutChange = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-
-    setTimeoutValue(numericValue);
-
-    if (numericValue === '') {
-      setValidationMessage('');
-      return;
-    }
-
-    const timeout = parseInt(numericValue, 10);
-    if (!isNaN(timeout)) {
-      if (timeout < MIN_TIMEOUT) {
-        setValidationMessage(`Timeout must be at least ${MIN_TIMEOUT} ms.`);
-      } else if (timeout > MAX_TIMEOUT) {
-        setValidationMessage(`Timeout must be no more than ${MAX_TIMEOUT} ms.`);
-      } else {
-        setRequestTimeout(timeout);
-        setValidationMessage('');
-        return;
-      }
-    }
-    setValidationMessage('Please enter a valid number.'); // Generic error for invalid input
-  };
-
   const resetSettings = () => {
     setCustomBackgroundColor(useStore.getState().customBackgroundColor);
     setCustomAccentColor(useStore.getState().customAccentColor);
@@ -73,9 +38,6 @@ const SettingsMenu: React.FC = () => {
     if (!darkMode) {
       toggleDarkMode();
     }
-    setRequestTimeout(defaultRequestTimeout);
-    setTimeoutValue(defaultRequestTimeout.toString());
-    setValidationMessage('');
   };
 
   const styles = useMemo(
@@ -118,17 +80,6 @@ const SettingsMenu: React.FC = () => {
           color: colors.textPrimary,
           fontWeight: 'bold',
         },
-        timeoutInput: {
-          height: 40,
-          borderColor: colors.border,
-          borderWidth: 1,
-          color: colors.textPrimary,
-          paddingHorizontal: 8,
-        },
-        validationMessage: {
-          color: 'red',
-          marginTop: 4,
-        },
       }),
     [colors]
   );
@@ -168,20 +119,6 @@ const SettingsMenu: React.FC = () => {
           <View style={styles.optionRow}>
             <Text style={{ color: colors.textPrimary }}>Background animation</Text>
             <Switch value={backgroundAnimation} onValueChange={setBackgroundAnimation} />
-          </View>
-
-          <View style={styles.optionRow}>
-            <Text style={{ color: colors.textPrimary }}>Request timeout (ms)</Text>
-            <TextInput
-              style={styles.timeoutInput}
-              keyboardType="numeric"
-              value={timeoutValue}
-              onChangeText={handleTimeoutChange}
-              placeholder={`Min: ${MIN_TIMEOUT}, Max: ${MAX_TIMEOUT}`}
-            />
-            {validationMessage ? (
-              <Text style={styles.validationMessage}>{validationMessage}</Text>
-            ) : null}
           </View>
 
           <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>

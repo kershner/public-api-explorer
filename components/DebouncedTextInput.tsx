@@ -11,7 +11,7 @@ const DebouncedTextInput: React.FC = () => {
   const debounceTime = 500; // ms
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
-  const requestTimeout = useStore((state) => state.requestTimeout);
+  const requestTimeout = 5000 // ms
   const isRoot = useIsRootScreen();
 
   const styles = useMemo(

@@ -31,17 +31,29 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   }
 
   const styles = StyleSheet.create({
-    chosenApiContainer: { paddingBottom: 16 },
-    title: { color: colors.textPrimary },
-    description: { color: colors.textPrimary },
-    category: { color: colors.textPrimary },
+    chosenApiContainer: { 
+      paddingBottom: 8,
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    title: { 
+      color: colors.background,
+      fontWeight: 'bold',
+      backgroundColor: colors.textPrimary,
+      borderRadius: 5,
+      paddingHorizontal: 10,
+      paddingVertical: 2,
+    },
+    description: { 
+      color: colors.textPrimary,
+      paddingLeft: 8
+    },
   });
 
   return (
     <View style={styles.chosenApiContainer}>
       <Text style={styles.title}>{chosenApi.title}</Text>
       <Text style={styles.description}>{chosenApi.description}</Text>
-      <Text style={styles.category}>{chosenApi.category}</Text>
     </View>
   );
 };

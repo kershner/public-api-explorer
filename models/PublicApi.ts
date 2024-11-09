@@ -4,5 +4,6 @@ export class PublicApi {
     public title: string,
     public description: string,
     public category: string,
+    public viewMoreUrl: string
   ) {}
 }

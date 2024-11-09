@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Linking, TouchableOpacity  } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import React, { useState, useEffect } from 'react';
 import { publicApis } from '@/data/PublicApis';
 import { PublicApi } from '@/models/PublicApi';
@@ -36,13 +37,22 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       display: 'flex',
       flexDirection: 'row'
     },
-    title: { 
-      color: colors.background,
-      fontWeight: 'bold',
+    titleContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
       backgroundColor: colors.textPrimary,
       borderRadius: 5,
       paddingHorizontal: 10,
       paddingVertical: 2,
+    },
+    title: { 
+      color: colors.background,
+      fontWeight: 'bold',
+    },
+    openLinkIcon: {
+      color: colors.background,
+      paddingLeft: 4
     },
     description: { 
       color: colors.textPrimary,
@@ -52,7 +62,11 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
 
   return (
     <View style={styles.chosenApiContainer}>
-      <Text style={styles.title}>{chosenApi.title}</Text>
+      <TouchableOpacity style={styles.titleContainer} onPress={() => Linking.openURL(chosenApi.viewMoreUrl)}>
+        <Text style={styles.title}>{chosenApi.title}</Text>
+        <Icon style={styles.openLinkIcon} name="open-in-new" size={16} />
+      </TouchableOpacity>
+      
       <Text style={styles.description}>{chosenApi.description}</Text>
     </View>
   );

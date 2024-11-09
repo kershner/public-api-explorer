@@ -9,7 +9,7 @@ interface ChosenApiInfoProps {
   url: string;
 }
 
-const findPublicApiByUrl = (url: string): PublicApi | undefined => {
+const findPublicApiByUrl = (url: string| ""): PublicApi | undefined => {
   return publicApis.find(api => api.url === url);
 };
 

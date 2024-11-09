@@ -1,6 +1,6 @@
 import { FlatList, Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import ChosenApiInfo from "@/components/JsonViewer/TopDrawer/ChosenApiInfo";
-import TopDrawer from '@/components/JsonViewer/TopDrawer/TopDrawer';
+import FilterControls from "@/components/JsonViewer/TopDrawer/FilterControls"; // import FilterControls
 import React, { useMemo, useState, useRef } from 'react';
 import JsonItem from '@/components/JsonViewer/JsonItem';
 import { useStore } from '@/store/useStore';
@@ -12,7 +12,7 @@ interface JsonViewerProps {
 
 const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const colors = useStore((state) => state.colors);
-  const [filteredJson, setFilteredJson] = useState<unknown>(jsonData);
+  const [filteredJson, setFilteredJson] = useState<unknown>(jsonData); // Use filteredJson as data
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
   const scrollViewRef = useRef(null);
 
@@ -45,6 +45,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
     scrollViewRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
+  // Use filteredJson for rootData instead of jsonData
   const rootData = useMemo(() => {
     return Array.isArray(filteredJson)
       ? filteredJson.map((item, index) => ({ key: index.toString(), value: item }))
@@ -53,10 +54,9 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   return (
     <View style={styles.wrapper}>
-      {/* Render ChosenApiInfo to display API information based on the current URL */}
       <ChosenApiInfo jsonData={jsonData} url={url} />
-
-      <TopDrawer
+      
+      <FilterControls
         jsonData={jsonData}
         onFilterUpdate={setFilteredJson}
         colors={colors}

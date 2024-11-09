@@ -42,7 +42,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     },
   });
 
-  // Extract keys from JSON data for filtering
   const extractKeys = useCallback((data: unknown, keys: Set<string>) => {
     if (Array.isArray(data)) {
       data.forEach((item) => extractKeys(item, keys));
@@ -64,7 +63,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     }
   }, [jsonData, extractKeys]);
 
-  // Debounce the search text
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchText(searchText.trim());
@@ -72,29 +70,33 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     return () => clearTimeout(handler);
   }, [searchText]);
 
-  // Filter logic based on search and selected key
   useEffect(() => {
     const searchLower = debouncedSearchText.toLowerCase();
 
     const applyFilters = (data: unknown): unknown => {
       if (Array.isArray(data)) {
-        return data.map((item) => applyFilters(item)).filter((item) => item !== null) || null;
+        return data
+          .map((item) => applyFilters(item))
+          .filter((item) => item !== null);
       } else if (typeof data === 'object' && data !== null) {
-        const originalObject: Record<string, unknown> = { ...data };
+        const originalObject: Record<string, unknown> = {};
         let matchFound = false;
 
         for (const [key, value] of Object.entries(data)) {
           const keyLower = key.toLowerCase();
-          const valueString = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' 
-            ? String(value).toLowerCase() 
-            : "";
+          const valueString = 
+            typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+              ? String(value).toLowerCase()
+              : '';
 
-          const valueMatches = searchLower 
-            ? keyLower.includes(searchLower) || valueString.includes(searchLower) 
-            : true;
+          // Check if key or value matches the search text
+          const valueMatches =
+            (!searchLower || valueString.includes(searchLower) || keyLower.includes(searchLower)) &&
+            (!selectedKey || key === selectedKey);
 
           if (valueMatches) {
             matchFound = true;
+            originalObject[key] = value;
           } else if (typeof value === 'object' && value !== null) {
             const nestedMatch = applyFilters(value);
             if (nestedMatch) {
@@ -110,33 +112,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     };
 
     const filteredResult = applyFilters(jsonData);
-
-    if (filteredResult) {
-      const filteredByKey = (data: unknown): unknown => {
-        if (typeof data === 'object' && data !== null) {
-          const result: Record<string, unknown> = {};
-          let keyExists = false;
-
-          for (const [key, value] of Object.entries(data)) {
-            if (key === selectedKey) {
-              result[key] = value;
-              keyExists = true;
-            } else if (typeof value === 'object') {
-              const nestedResult = filteredByKey(value);
-              if (nestedResult) {
-                result[key] = nestedResult;
-              }
-            }
-          }
-          return keyExists || Object.keys(result).length > 0 ? result : null;
-        }
-        return null;
-      };
-
-      onFilterUpdate(selectedKey ? filteredByKey(filteredResult) || filteredResult : filteredResult);
-    } else {
-      onFilterUpdate(filteredResult);
-    }
+    onFilterUpdate(filteredResult);
   }, [jsonData, selectedKey, debouncedSearchText, onFilterUpdate]);
 
   return (

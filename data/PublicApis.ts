@@ -310,7 +310,7 @@ export const publicApis: PublicApi[] = [
     "https://random-data-api.com/documentation"
   ),
   new PublicApi(
-    "https://api.funtranslations.com/translate/yoda.json?text=Hello%20world",
+    "https://api.funtranslations.com/translate/yoda.json?text=Hello+world",
     "Yoda Translations",
     "Converts regular English text into Yoda's dialect.",
     "Entertainment",
@@ -321,7 +321,7 @@ export const publicApis: PublicApi[] = [
     "SpaceX Launches",
     "Provides detailed information on SpaceX launches and missions.",
     "Space",
-    "https://api.spacexdata.com/"
+    "https://github.com/r-spacex/SpaceX-API/tree/master/docs#rspacex-api-docs"
   ),
   new PublicApi(
     "https://api.thecatapi.com/v1/breeds",
@@ -426,7 +426,7 @@ export const publicApis: PublicApi[] = [
     "reliefweb",
     "Updates and reports on global humanitarian emergencies.",
     "Disasters",
-    "https://api.reliefweb.int/"
+    "https://reliefweb.int/help/api"
   ),
   new PublicApi(
     "https://hellosalut.stefanbohacek.dev/?lang=es",
@@ -454,10 +454,10 @@ export const publicApis: PublicApi[] = [
     "Travel Advisory Data",
     "Current travel safety advisories by country.",
     "Travel",
-    "https://www.travel-advisory.info/api"
+    "https://www.travel-advisory.info"
   ),
   new PublicApi(
-    "https://api.funtranslations.com/translate/shakespeare.json?text=You%20are%20testing%20this%20api",
+    "https://api.funtranslations.com/translate/shakespeare.json?text=You+are+testing+this+api",
     "Shakespeare Translation Api",
     "Converts text to Shakespearean English.",
     "Entertainment",

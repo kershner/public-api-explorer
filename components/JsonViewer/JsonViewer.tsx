@@ -20,11 +20,12 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
     StyleSheet.create({
       wrapper: { 
         flex: 1, 
-        padding: 16 
+        paddingTop: 16,
+        paddingHorizontal: 16,
       },
       container: { 
         flexGrow: 1, 
-        paddingBottom: 80 
+        paddingBottom: 80,
       },
       backToTopButton: {
         position: 'absolute',

@@ -15,7 +15,6 @@ const BottomDrawer: React.FC = () => {
       StyleSheet.create({
         container: {
           paddingHorizontal: 10,
-          paddingTop: 10,
           height: isRoot ? '93%' : undefined,
         },
       }),

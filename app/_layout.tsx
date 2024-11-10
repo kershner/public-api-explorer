@@ -1,5 +1,5 @@
+import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator } from 'react-native';
-import { useNavigation, CommonActions, useNavigationState } from '@react-navigation/native';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
@@ -79,12 +79,20 @@ export default function RootLayout() {
     handleInitialUrl();
   }, [searchParams, initialLoad]);
 
+  const navTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: 'transparent'
+    }
+  }
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
         globalContainer: { flex: 1, backgroundColor: colors.background },
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1 },
-        stackContainer: { backgroundColor: colors.background },
+        stackContainer: { },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
         headerBack: { fontSize: 16, color: colors.textPrimary },
@@ -108,6 +116,7 @@ export default function RootLayout() {
   return (
     <SafeAreaView style={styles.globalContainer}>
       <View style={styles.stackWrapper}>
+        <ThemeProvider value={navTheme}>
         <Stack
           initialRouteName="view"
           screenOptions={{
@@ -133,6 +142,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ title: APP_TITLE }} />
           <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
         </Stack>
+        </ThemeProvider>
       </View>
 
       { backgroundAnimation && <FloatingIconGrid /> }

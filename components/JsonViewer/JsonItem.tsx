@@ -29,6 +29,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
       itemContainer: {
         flexDirection: 'column',
         alignItems: 'flex-start',
+        backgroundColor: colors.background,
       },
       levelIndicator: {
         borderLeftWidth: 1,
@@ -39,6 +40,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         alignItems: 'center',
         padding: 4,
         width: '100%',
+        backgroundColor: colors.background,
         borderBottomWidth: hasNestedData ? 0 : 1,
         borderBottomColor: colors.accent,
         borderStyle: 'dotted',
@@ -54,7 +56,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         backgroundColor: colors.accent,
         borderRadius: 6,
         padding: 8,
-        marginVertical: 4,
+        marginTop: 4,
       },
       valueContainer: {
         marginLeft: 8,

@@ -11,7 +11,12 @@ interface ChosenApiInfoProps {
 }
 
 const findPublicApiByUrl = (url: string | ""): PublicApi | undefined => {
-  return publicApis.find(api => api.url === url);
+  try {
+    const targetOrigin = new URL(url).origin;
+    return publicApis.find(api => new URL(api.url).origin === targetOrigin);
+  } catch (error) {
+    return undefined;
+  }
 };
 
 const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
@@ -64,6 +69,7 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     urlLink: {
       fontSize: 18,
       color: colors.linkText,
+      fontWeight: 'bold',
       textDecorationLine: 'underline',
       textDecorationStyle: 'solid',
     },

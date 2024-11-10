@@ -1,3 +1,4 @@
+import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
 import React, { useEffect } from 'react';
 import { useRouter } from "expo-router";
@@ -11,7 +12,7 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     if (jsonData && url) {
       setJsonDataForUrl(url, jsonData);
-      router.push({ pathname: "view", params: { url } });
+      router.push({ pathname: `${APP_TITLE}/view`, params: { url } });
     }
   }, [jsonData, url]);
 

@@ -31,7 +31,7 @@ export default function RootLayout() {
     // Detect a back navigation when the stack length decreases
     if (currentStackLength < prevStackLength.current) {
       const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
-      if (currentScreen === 'index') {
+      if (currentScreen === `${APP_TITLE}/index` ) {
         goHomeAndClearStack();
       }
     }
@@ -110,7 +110,7 @@ export default function RootLayout() {
 
   const goHomeAndClearStack = () => {
     useStore.setState({ inputValue: '', url: '', error: '', jsonData: {}, jsonDataMap: {} });
-    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "index" }] }));
+    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: `${APP_TITLE}/index` }] }));
   };
 
   return (
@@ -118,7 +118,6 @@ export default function RootLayout() {
       <View style={styles.stackWrapper}>
         <ThemeProvider value={navTheme}>
         <Stack
-          initialRouteName="view"
           screenOptions={{
             contentStyle: styles.stackContainer,
             headerStyle: styles.headerContainer,
@@ -139,8 +138,8 @@ export default function RootLayout() {
             ),
           }}
         >
-          <Stack.Screen name="index" options={{ title: APP_TITLE }} />
-          <Stack.Screen name="view" options={{ title: "JSON Viewer" }} />
+          <Stack.Screen name="public-api-explorer/index" options={{ title: APP_TITLE }} />
+          <Stack.Screen name="public-api-explorer/view" options={{ title: "JSON Viewer" }} />
         </Stack>
         </ThemeProvider>
       </View>

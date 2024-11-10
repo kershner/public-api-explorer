@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import JsonViewer from "@/components/JsonViewer/JsonViewer";
+import { APP_TITLE } from "@/constants/constants";
 import { useEffect, useState } from "react";
 import { useStore } from '@/store/useStore';
 import React from "react";
@@ -15,7 +16,7 @@ const JsonViewerScreen: React.FC = () => {
   useEffect(() => {
     if (isMounted && !jsonData && url) {
       useStore.setState({ inputValue: url });
-      router.replace({ pathname: "/", params: { url } });
+      router.replace({ pathname: `${APP_TITLE}/`, params: { url } });
     }
   }, [isMounted, jsonData, url]);
 

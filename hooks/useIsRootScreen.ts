@@ -1,4 +1,5 @@
 import { useNavigationState } from '@react-navigation/native';
+import { APP_TITLE } from '@/constants/constants';
 
 const useIsRootScreen = () => {
   return useNavigationState((state) => {
@@ -9,7 +10,7 @@ const useIsRootScreen = () => {
       return true;
     }
 
-    return currentRoute.name === "index";
+    return currentRoute.name === `${APP_TITLE}/index`;
   });
 };
 

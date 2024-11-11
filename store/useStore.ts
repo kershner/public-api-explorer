@@ -57,9 +57,9 @@ export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl'
   jsonData: null,
   jsonDataMap: {},
   darkMode: true,
-  customBackgroundColor: '#FFFFFF',
+  customBackgroundColor: '#FF0000',
   customBackgroundColorOn: false,
-  customAccentColor: '#FFFFFF',
+  customAccentColor: '#0000FF',
   customAccentColorOn: false,
   backgroundAnimation: true,
   modalOpen: false,
@@ -86,10 +86,18 @@ const persistData = async (state: Partial<State>) => {
 const loadData = async (keys: string[]) => {
   const persistedData = await AsyncStorage.multiGet(keys);
   return persistedData.reduce((acc, [key, value]) => {
-    if (value !== null) acc[key] = value.replace(/^"|"$/g, '');
+    if (value !== null) {
+      acc[key] = value.replace(/^"|"$/g, ''); // Clean up stored string values
+    } else if (key in defaultState) {
+      // Convert the default value to a string if it's not null
+      const defaultValue = defaultState[key as keyof typeof defaultState];
+      acc[key] = defaultValue !== null ? String(defaultValue) : null;
+    }
     return acc;
   }, {} as Record<string, string | null>);
 };
+
+
 
 export const useStore = create<State>((set, get) => ({
   ...defaultState,

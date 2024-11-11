@@ -1,7 +1,6 @@
 import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator } from 'react-native';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useEffect, useRef } from 'react';
@@ -132,7 +131,7 @@ export default function RootLayout() {
             headerRight: () => (
               <View style={styles.menuButtonWrapper}>
                 <TouchableOpacity onPress={() => useStore.setState({ modalOpen: true })}>
-                  <FontAwesome name="bars" size={28} color={colors.textPrimary} />
+                  <Text style={{ fontSize: 32, color: colors.textPrimary, fontWeight: 'bold' }}>☰</Text>
                 </TouchableOpacity>
               </View>
             ),

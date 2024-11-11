@@ -25,7 +25,7 @@
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/images/favicon.png",
-      "publicPath": "/public-api-explorer/"
+      "publicPath": "https://djfdm802jwooz.cloudfront.net/static/public-api-explorer/dist"
     },
     "plugins": [
       "expo-router"

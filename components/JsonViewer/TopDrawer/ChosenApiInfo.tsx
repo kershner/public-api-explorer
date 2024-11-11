@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, Linking, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import React, { useState, useEffect } from 'react';
 import { publicApis } from '@/data/PublicApis';
 import { PublicApi } from '@/models/PublicApi';
@@ -84,7 +83,7 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     <View style={styles.chosenApiContainer}>
       <TouchableOpacity style={styles.titleContainer} onPress={() => Linking.openURL(chosenApi.viewMoreUrl)}>
         <Text style={styles.title}>{chosenApi.title}</Text>
-        <Icon style={styles.openLinkIcon} name="open-in-new" size={16} />
+        <Text style={styles.openLinkIcon}>↗️</Text>
       </TouchableOpacity>
       
       <View style={styles.textContainer}>

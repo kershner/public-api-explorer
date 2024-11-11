@@ -2,7 +2,6 @@ import { View, Modal, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ColorPickerSection from '@/components/SettingsMenu/ColorPickerSection';
 import React, { useMemo, useCallback } from 'react';
 import ToggleThumb from '@/components/ToggleThumb';
-import { Ionicons } from '@expo/vector-icons';
 import { useStore } from '@/store/useStore';
 
 const SettingsMenu: React.FC = () => {
@@ -102,7 +101,7 @@ const SettingsMenu: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.title}>Settings</Text>
           <TouchableOpacity onPress={toggleModal}>
-            <Ionicons name="close" size={24} color={colors.textPrimary} />
+            <Text style={{ fontSize: 32, color: colors.textPrimary, fontWeight: 'bold' }}>X</Text>
           </TouchableOpacity>
         </View>
 

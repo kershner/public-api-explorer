@@ -7,7 +7,8 @@ const fs = require('fs');
 const path = require('path');
 
 const buildDir = path.join(__dirname, '../dist');
-const staticPath = '/static/react-apps/publicApiExplorer/dist';
+const staticPath = '/static/react-apps/public-api-explorer/dist';
+// const staticPath = 'https://kershnerportfolio.s3.us-east-2.amazonaws.com/static/public-api-explorer/dist';
 const pathsToReplace = ['/assets', '/_expo'];
 const allowedExtensions = ['.html', '.js', '.css'];
 

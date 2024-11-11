@@ -97,8 +97,6 @@ const loadData = async (keys: string[]) => {
   }, {} as Record<string, string | null>);
 };
 
-
-
 export const useStore = create<State>((set, get) => ({
   ...defaultState,
 

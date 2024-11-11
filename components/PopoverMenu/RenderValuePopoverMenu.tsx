@@ -78,32 +78,32 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
     <PopoverMenu isVisible={isVisible} fromRef={fromRef} onClose={onClose}>
       <PopoverMenuButton
         label="Copy value"
-        icon="content-copy"
+        icon="📄"
         onPress={() => handleCopy(String(value), 'Value copied to clipboard.')}
       />
       <PopoverMenuButton
         label="Copy value with label"
-        icon="content-copy"
+        icon="📄"
         onPress={() => handleCopy(`${label}: ${String(value)}`, 'Value copied to clipboard with label.')}
       />
       {isLink && (
         <PopoverMenuButton
           label="Open link"
-          icon="open-in-new"
+          icon="↗️"
           onPress={handleOpenLink}
         />
       )}
       {isImage && (
         <PopoverMenuButton
           label="View image"
-          icon="image"
+          icon="📷"
           onPress={handleViewImage}
         />
       )}
       {isApiLink && (
         <PopoverMenuButton
           label="Explore API link"
-          icon="code"
+          icon="💻"
           onPress={handleViewApiLink}
         />
       )}

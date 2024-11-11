@@ -1,5 +1,4 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useStore } from '@/store/useStore';
 import React from 'react';
 
@@ -22,11 +21,15 @@ const PopoverMenuButton: React.FC<PopoverMenuButtonProps> = ({ onPress, icon, la
       marginLeft: 8,
       color: colors.textPrimary,
     },
+    icon: {
+      fontSize: 20,
+      color: colors.textPrimary
+    }
   });
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Icon name={icon} size={20} color={colors.textPrimary} />
+      <Text style={styles.icon}>{icon + '\uFE0E'}</Text>
       <Text style={styles.buttonText}>{label}</Text>
     </TouchableOpacity>
   );

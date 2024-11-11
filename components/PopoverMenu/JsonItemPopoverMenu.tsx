@@ -33,8 +33,8 @@ const JsonItemPopoverMenu: React.FC<JsonItemPopoverMenuProps> = ({ isVisible, fr
 
   return (
     <PopoverMenu isVisible={isVisible} fromRef={fromRef} onClose={onClose}>
-      <PopoverMenuButton label="Copy JSON" icon="content-copy" onPress={handleCopyJson} />
-      <PopoverMenuButton label="Download JSON" icon="file-download" onPress={handleDownloadJson} />
+      <PopoverMenuButton label="Copy JSON" icon="📄" onPress={handleCopyJson} />
+      <PopoverMenuButton label="Download JSON" icon="📥" onPress={handleDownloadJson} />
     </PopoverMenu>
   );
 };

@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import NestedJsonItems from '@/components/JsonViewer/NestedJsonItems';
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import RenderValue from '@/components/JsonViewer/RenderValue';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useStore } from '@/store/useStore';
 
 interface JsonItemProps {
@@ -86,7 +85,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         )}
         {hasNestedData && (
           <TouchableOpacity ref={buttonRef} onPress={() => setIsPopoverVisible(true)} style={styles.menuButton}>
-            <Icon name="more-vert" size={24} color={colors.textPrimary} />
+            <Text style={{ fontSize: 24, color: colors.textPrimary, fontWeight: 'bold' }}>⋮</Text>
           </TouchableOpacity>
         )}
       </TouchableOpacity>

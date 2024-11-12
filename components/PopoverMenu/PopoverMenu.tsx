@@ -30,7 +30,6 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
           borderRadius: 8,
           top: position.top,
           left: position.left,
-          width: popoverWidth,
         },
         popoverContent: {
           borderRadius: 6,

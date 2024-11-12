@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "export-web": "npx expo export -p web && node scripts/replace-urls.js"
+    "export-web": "npx expo export -p web && node scripts/replace-urls.js && node scripts/move-dist.js"
   },
   "jest": {
     "preset": "jest-expo"

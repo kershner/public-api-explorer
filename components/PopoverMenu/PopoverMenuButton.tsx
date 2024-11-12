@@ -6,16 +6,18 @@ interface PopoverMenuButtonProps {
   onPress: () => void;
   icon: string;
   label: string;
+  isHighlighted?: boolean;
 }
 
-const PopoverMenuButton: React.FC<PopoverMenuButtonProps> = ({ onPress, icon, label }) => {
+const PopoverMenuButton: React.FC<PopoverMenuButtonProps> = ({ onPress, icon, label, isHighlighted=false }) => {
   const colors = useStore((state) => state.colors);
 
   const styles = StyleSheet.create({
     button: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 10,
+      paddingVertical: 6,
+      paddingHorizontal: 0,
     },
     buttonText: {
       marginLeft: 8,
@@ -24,13 +26,22 @@ const PopoverMenuButton: React.FC<PopoverMenuButtonProps> = ({ onPress, icon, la
     icon: {
       fontSize: 20,
       color: colors.textPrimary
+    },
+    highlighted: {
+      backgroundColor: colors.textPrimary,
+      // width: '100%',
+      paddingHorizontal: 16,
+      borderRadius: 6
+    },
+    highlightedText: {
+      color: colors.background
     }
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.icon}>{icon + '\uFE0E'}</Text>
-      <Text style={styles.buttonText}>{label}</Text>
+    <TouchableOpacity onPress={onPress} style={[styles.button, isHighlighted && styles.highlighted]}>
+      <Text style={[styles.icon, isHighlighted && styles.highlightedText]}>{icon + '\uFE0E'}</Text>
+      <Text style={[styles.buttonText, isHighlighted && styles.highlightedText]}>{label}</Text>
     </TouchableOpacity>
   );
 };

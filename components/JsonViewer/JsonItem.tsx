@@ -54,7 +54,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
       nestedRow: {
         backgroundColor: colors.accent,
         borderRadius: 6,
-        padding: 8,
+        paddingHorizontal: 8,
         marginTop: 4,
       },
       valueContainer: {
@@ -63,6 +63,11 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
       },
       menuButton: {
         marginLeft: 'auto',
+      },
+      rowOptionsIcon: { 
+        fontSize: 20, 
+        color: colors.textPrimary, 
+        fontWeight: 'bold' 
       },
     }), [colors]
   );
@@ -85,7 +90,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         )}
         {hasNestedData && (
           <TouchableOpacity ref={buttonRef} onPress={() => setIsPopoverVisible(true)} style={styles.menuButton}>
-            <Text style={{ fontSize: 24, color: colors.textPrimary, fontWeight: 'bold' }}>⋮</Text>
+            <Text style={styles.rowOptionsIcon}>⋮</Text>
           </TouchableOpacity>
         )}
       </TouchableOpacity>

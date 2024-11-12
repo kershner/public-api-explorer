@@ -105,6 +105,7 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
           label="Explore API link"
           icon="💻"
           onPress={handleViewApiLink}
+          isHighlighted={true}
         />
       )}
     </PopoverMenu>

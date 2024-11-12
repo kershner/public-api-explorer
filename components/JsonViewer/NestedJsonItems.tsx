@@ -5,9 +5,10 @@ import React, { useMemo } from 'react';
 interface NestedItemsProps {
   data: object;
   level: number;
+  expandAll: boolean;
 }
 
-const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
+const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level, expandAll }) => {
   const nestedData = Object.entries(data).map(([key, value]) => ({ key, value }));
 
   const styles = useMemo(() => 
@@ -23,7 +24,7 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level }) => {
     <FlatList
       data={nestedData}
       renderItem={({ item }) => (
-        <JsonItem label={item.key} value={item.value} level={level} expandAll={false} />
+        <JsonItem label={item.key} value={item.value} level={level} expandAll={expandAll} />
       )}
       keyExtractor={(item, index) => `${level}-${index}`}
       style={styles.nestedList}

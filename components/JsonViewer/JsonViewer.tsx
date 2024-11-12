@@ -26,11 +26,12 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       container: { 
         flexGrow: 1, 
         paddingBottom: 80,
+        paddingRight: 4,
       },
       backToTopButton: {
         position: 'absolute',
         bottom: 20,
-        right: Platform.OS === 'web' ? 16 * 2 : 16,  // Offset for web scrollbar
+        right: Platform.OS === 'web' ? 18 * 2 : 18,  // Offset for web scrollbar
         backgroundColor: colors.background,
         borderWidth: 2,
         borderColor: colors.textPrimary,
@@ -44,7 +45,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
     [colors]
   );
   
-
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     setShowBackToTop(offsetY > 200);

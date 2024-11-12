@@ -2,7 +2,7 @@ import { ThemeColors } from "@/store/useStore";
 
 export const APP_TITLE = 'public-api-explorer';
 
-export const S3_BASE_URL = 'https://djfdm802jwooz.cloudfront.net/static/react-apps/public-api-explorer/';
+export const S3_BASE_URL = 'https://djfdm802jwooz.cloudfront.net/static/react-apps/public-api-explorer';
 
 export const lightModeColors: ThemeColors = {
   background: '#FFFFFF',

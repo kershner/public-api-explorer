@@ -10,7 +10,7 @@ export const lightModeColors: ThemeColors = {
   border: '#BFBFBF',
   textPrimary: '#121212',
   textSecondary: '#FFFFFF',
-  linkText: '#007AFF',
+  linkText: '#121212',
   error: 'red',
 };
 
@@ -20,6 +20,6 @@ export  const darkModeColors: ThemeColors = {
   border: '#FFFFFF',
   textPrimary: '#FFFFFF',
   textSecondary: '#121212',
-  linkText: '#007AFF',
+  linkText: '#FFFFFF',
   error: 'red',
 };

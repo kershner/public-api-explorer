@@ -1,12 +1,27 @@
-import { Dimensions, StyleSheet, Animated, Easing, Text } from 'react-native';
-import React, { useEffect, useRef, useMemo } from 'react';
+import { Dimensions, StyleSheet, Animated, Easing } from 'react-native';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
+import { S3_BASE_URL } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
+import * as Font from 'expo-font';
 
-interface IconGridProps {
-  iconSize?: number;
-}
+const S3_FONTS_URL = `${S3_BASE_URL}/fonts`;
 
-const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
+// Define icon sets and append each file name to the base URL
+const iconSets = [
+  { name: 'Ionicons', url: `${S3_FONTS_URL}/Ionicons.ttf`, component: require('react-native-vector-icons/Ionicons').default },
+  { name: 'FontAwesome', url: `${S3_FONTS_URL}/FontAwesome.ttf`, component: require('react-native-vector-icons/FontAwesome').default },
+  { name: 'Entypo', url: `${S3_FONTS_URL}/Entypo.ttf`, component: require('react-native-vector-icons/Entypo').default },
+  { name: 'Feather', url: `${S3_FONTS_URL}/Feather.ttf`, component: require('react-native-vector-icons/Feather').default },
+  { name: 'Foundation', url: `${S3_FONTS_URL}/Foundation.ttf`, component: require('react-native-vector-icons/Foundation').default },
+  { name: 'Fontisto', url: `${S3_FONTS_URL}/Fontisto.ttf`, component: require('react-native-vector-icons/Fontisto').default },
+  { name: 'EvilIcons', url: `${S3_FONTS_URL}/EvilIcons.ttf`, component: require('react-native-vector-icons/EvilIcons').default },
+  { name: 'Octicons', url: `${S3_FONTS_URL}/Octicons.ttf`, component: require('react-native-vector-icons/Octicons').default },
+];
+
+const FloatingIconGrid: React.FC<{ iconSize?: number }> = ({ iconSize = 48 }) => {
+  const [fontLoaded, setFontLoaded] = useState(false);
+  const [readyToRender, setReadyToRender] = useState(false);
+  const [selectedIconSet, setSelectedIconSet] = useState(iconSets[0]);
   const colors = useStore((state) => state.colors);
   const { width, height } = Dimensions.get('window');
   const numColumns = Math.floor(width / iconSize);
@@ -15,47 +30,34 @@ const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const animDuration = 80000;
 
-  // List of known colored emojis to exclude
-  const knownColoredEmojis = new Set([
-    'U+1F6F7', 'U+1F6F8', 'U+1F6F9', 'U+1F6FA', // Transport and vehicle emojis
-    'U+1F6D5',                                  // Hindu temple
-    'U+1F63B', 'U+1F63C', 'U+1F63D', 'U+1F63E', 'U+1F63F', // Cat faces
-    'U+1F640', 'U+1F641', 'U+1F642', 'U+1F643', 'U+1F644', // Faces with various expressions
-    'U+1F645', 'U+1F646', 'U+1F647',            // Gesture emojis
-    'U+1F648', 'U+1F649', 'U+1F64A',            // See/hear/speak-no-evil monkeys
-    'U+1F64B', 'U+1F64C', 'U+1F64D', 'U+1F64E', 'U+1F64F'  // Additional gestures and prayer
-  ]);
+  // Choose a random icon set on component mount
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * iconSets.length);
+    const chosenIconSet = iconSets[randomIndex];
+    setSelectedIconSet(chosenIconSet);
+  }, []);
 
-  // Function to convert emoji to a Unicode code point string
-  const toUnicodeCodePoints = (emoji: string) => {
-    return Array.from(emoji)
-      .map(char => `U+${char.codePointAt(0)?.toString(16).toUpperCase()}`)
-      .join(' ');
-  };
+  // Load the selected font dynamically
+  useEffect(() => {
+    const loadFont = async () => {
+      await Font.loadAsync({ [selectedIconSet.name]: selectedIconSet.url });
+      setFontLoaded(true);
+    };
+    loadFont();
+  }, [selectedIconSet]);
 
-  // Function to generate a random emoji with forced text presentation
-  const getRandomTextEmoji = () => {
-    const emojiRanges = [
-      [0x1F600, 0x1F64F], // Emoticons
-      [0x1F300, 0x1F5FF], // Misc Symbols & Pictographs
-      [0x1F680, 0x1F6FF], // Transport & Map Symbols
-      [0x1F700, 0x1F77F], // Alchemical Symbols
-    ];
-
-    let emoji;
-    do {
-      const [start, end] = emojiRanges[Math.floor(Math.random() * emojiRanges.length)];
-      emoji = String.fromCodePoint(Math.floor(Math.random() * (end - start + 1)) + start) + '\uFE0E';
-    } while (knownColoredEmojis.has(toUnicodeCodePoints(emoji).replace(' U+FE0E', ''))); // Exclude known colored emojis
-
-    return emoji;
-  };
+  useEffect(() => {
+    if (fontLoaded) setReadyToRender(true);
+  }, [fontLoaded]);
 
   const iconDataArray = useMemo(() => {
+    if (!fontLoaded || !selectedIconSet.component.glyphMap) return [];
+    const iconNames = Object.keys(selectedIconSet.component.glyphMap);
     return Array.from({ length: totalIcons }).map(() => {
-      return { emoji: getRandomTextEmoji() };
+      const randomIconName = iconNames[Math.floor(Math.random() * iconNames.length)];
+      return { name: randomIconName };
     });
-  }, [totalIcons]);
+  }, [fontLoaded, selectedIconSet, totalIcons]);
 
   const styles = useMemo(
     () =>
@@ -70,38 +72,51 @@ const FloatingIconGrid: React.FC<IconGridProps> = ({ iconSize = 48 }) => {
         },
         icon: {
           color: colors.accent,
-          fontSize: iconSize,
-          margin: iconSize * 0.45, // Adjust the margin to construct the grid
+          margin: iconSize * 0.45,
+          fontFamily: selectedIconSet.name,
+        },
+        loadingContainer: {
+          ...StyleSheet.absoluteFillObject,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colors.background,
         },
       }),
-    [colors.accent, width, iconSize]
+    [colors, width, iconSize, selectedIconSet]
   );
 
   useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(scrollAnim, {
-          toValue: -height,
-          duration: animDuration,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scrollAnim, {
-          toValue: 0,
-          duration: animDuration,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [height]);
+    if (readyToRender) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(scrollAnim, {
+            toValue: -height,
+            duration: animDuration,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scrollAnim, {
+            toValue: 0,
+            duration: animDuration,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    }
+  }, [readyToRender, height]);
+
+  if (!fontLoaded) { return null; }
+
+  const Icon = ({ name, size, style }) => {
+    const IconComponent = selectedIconSet.component;
+    return <IconComponent name={name} size={size} style={style} />;
+  };
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY: scrollAnim }] }]}>
-      {iconDataArray.map(({ emoji }, index) => (
-        <Text key={index} style={styles.icon}>
-          {emoji}
-        </Text>
+      {iconDataArray.map(({ name }, index) => (
+        <Icon key={index} name={name as any} size={iconSize} style={styles.icon} />
       ))}
     </Animated.View>
   );

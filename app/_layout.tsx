@@ -87,9 +87,8 @@ export default function RootLayout() {
       StyleSheet.create({
         globalContainer: { 
           flex: 1, 
-          backgroundColor: colors.background, 
-          height: '100%', 
-          top: isRoot ? 15 : 0
+          backgroundColor: colors.background,
+          paddingTop: isRoot ? 10 : 0,
         },
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
         stackContainer: { },

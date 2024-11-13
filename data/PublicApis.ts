@@ -181,7 +181,7 @@ export const publicApis: PublicApi[] = [
     "Zippopotam",
     "Provides postal and location data for various regions.",
     "Location",
-    "http://www.zippopotam.us/"
+    "https://www.zippopotam.us/"
   ),
   new PublicApi(
     "https://datausa.io/api/data?drilldowns=Nation&measures=Population&year=latest",
@@ -205,14 +205,14 @@ export const publicApis: PublicApi[] = [
     "https://lyricsovh.docs.apiary.io/"
   ),
   new PublicApi(
-    "http://de1.api.radio-browser.info/json/stations?limit=50",
+    "https://de1.api.radio-browser.info/json/stations?limit=50",
     "Internet Radio Stations",
     "Provides a list of internet radio stations worldwide.",
     "Music",
     "https://www.radio-browser.info/"
   ),
   new PublicApi(
-    "http://universities.hipolabs.com/search?country=turkey",
+    "https://universities.hipolabs.com/search?country=turkey",
     "Universities API",
     "Database of universities globally, searchable by country.",
     "Education",
@@ -471,7 +471,7 @@ export const publicApis: PublicApi[] = [
     "https://www.tvmaze.com/api"
   ),
   new PublicApi(
-    "http://api.citybik.es/v2/networks",
+    "https://api.citybik.es/v2/networks",
     "City Bikes",
     "Provides real-time bike-sharing data from networks worldwide.",
     "Transportation",
@@ -485,7 +485,7 @@ export const publicApis: PublicApi[] = [
     "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation"
   ),
   new PublicApi(
-    "http://api.open-notify.org/iss-now.json",
+    "https://api.open-notify.org/iss-now.json",
     "Open Notify",
     "Real-time location data of the International Space Station.",
     "Space",

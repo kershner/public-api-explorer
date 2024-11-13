@@ -4,6 +4,7 @@ import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useMemo } from 'react';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
 import BottomDrawer from '@/components/BottomDrawer';
 import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
@@ -22,6 +23,7 @@ export default function RootLayout() {
   const backgroundAnimation = useStore((state) => state.backgroundAnimation);
   const navigationState = useNavigationState(state => state);
   const prevStackLength = useRef(navigationState.routes.length);
+  const isRoot = useIsRootScreen();
 
   useEffect(() => {
     const currentStackLength = navigationState.routes.length;
@@ -83,8 +85,13 @@ export default function RootLayout() {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        globalContainer: { flex: 1, backgroundColor: colors.background },
-        stackWrapper: { flex: 1, position: 'relative', zIndex: 1 },
+        globalContainer: { 
+          flex: 1, 
+          backgroundColor: colors.background, 
+          height: '100%', 
+          top: isRoot ? 15 : 0
+        },
+        stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
         stackContainer: { },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
@@ -98,7 +105,7 @@ export default function RootLayout() {
           zIndex: 2 
         },
       }),
-    [colors]
+    [colors, isRoot]
   );
 
   const goHomeAndClearStack = () => {

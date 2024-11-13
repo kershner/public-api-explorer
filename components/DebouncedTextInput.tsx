@@ -36,6 +36,8 @@ const DebouncedTextInput: React.FC = () => {
           justifyContent: 'center',
           height: '100%',
           backgroundColor: colors.accent,
+          position: 'absolute',
+          right: 0
         },
         clearButtonText: {
           fontSize: 22,
@@ -53,6 +55,11 @@ const DebouncedTextInput: React.FC = () => {
           marginVertical: 8,
           color: colors.textPrimary,
           ...(!isRoot && { display: 'none' }),
+        },
+        loadingSpinnerWrapper: {
+          position: 'absolute',
+          right: 0,
+          backgroundColor: colors.background,
         }
       }),
     [colors, isRoot]
@@ -105,7 +112,9 @@ const DebouncedTextInput: React.FC = () => {
           </Pressable>
         ) : null}
         {loading ? (
-          <ActivityIndicator size={50} color={colors.textPrimary} />
+          <View style={styles.loadingSpinnerWrapper}>
+            <ActivityIndicator size={50} color={colors.textPrimary} />
+          </View>
         ) : null}
       </View>
     </View>

@@ -1,4 +1,4 @@
-import { View, Modal, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Modal, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import ColorPickerSection from '@/components/SettingsMenu/ColorPickerSection';
 import React, { useMemo, useCallback } from 'react';
 import ToggleThumb from '@/components/ToggleThumb';
@@ -62,9 +62,9 @@ const SettingsMenu: React.FC = () => {
           color: colors.textPrimary,
         },
         optionRowsContainer: {
-          marginTop: 24,
-          padding: 16,
-          width: 400,
+          padding: 20,
+          maxWidth: 400,
+          width: '100%',
           alignSelf: 'center',
         },
         optionRow: {
@@ -105,7 +105,7 @@ const SettingsMenu: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.optionRowsContainer}>
+        <ScrollView contentContainerStyle={styles.optionRowsContainer}>
           <View style={styles.optionRow}>
             <Text style={styles.optionRowLabel}>Dark mode</Text>
             <ToggleThumb onPress={toggleDarkMode} isOn={darkMode} />
@@ -139,7 +139,7 @@ const SettingsMenu: React.FC = () => {
           <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>
             <Text style={styles.resetButtonText}>Back to Default</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </Modal>
   );

@@ -69,6 +69,7 @@ const FloatingIconGrid: React.FC<{ iconSize?: number }> = ({ iconSize = 48 }) =>
           flexDirection: 'row',
           flexWrap: 'wrap',
           width,
+          backgroundColor: colors.background
         },
         icon: {
           color: colors.accent,

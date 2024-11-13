@@ -19,12 +19,16 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
 
   const styles = StyleSheet.create({
     filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: colors.textPrimary },
-    filterContainer: { flexDirection: 'row', alignItems: 'center' },
+    filterContainer: { 
+      flex: 1,
+      flexDirection: 'row', 
+      gap: 10,
+    },
     picker: {
       flex: 1,
       height: 40,
-      marginRight: 8,
       borderColor: colors.textPrimary,
+      maxWidth: 150,
       borderWidth: 2,
       borderRadius: 4,
       backgroundColor: colors.background,
@@ -35,7 +39,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
       height: 40,
       borderColor: colors.textPrimary,
       borderWidth: 2,
-      paddingHorizontal: 10,
+      paddingLeft: 10,
       borderRadius: 4,
       color: colors.textPrimary,
       backgroundColor: colors.background,

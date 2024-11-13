@@ -42,15 +42,16 @@ const PublicApiCards: React.FC = () => {
             justifyContent: 'center',
             borderRadius: 4,
             borderWidth: 2,
+            backgroundColor: colors.background,
             borderColor: colors.textPrimary,
             overflow: 'hidden',
             width: 100,
+            height: 41,
           },
           picker: {
             backgroundColor: colors.background,
             color: colors.textPrimary,
             paddingHorizontal: 12,
-            paddingVertical: 12,
             borderWidth: 0,
           },
           scrollViewContainer: {
@@ -58,6 +59,7 @@ const PublicApiCards: React.FC = () => {
             flexWrap: isRoot ? 'wrap' : 'nowrap',
             alignItems: 'flex-start',
             justifyContent: isRoot ? 'center' : 'flex-start',
+            paddingVertical: 8
           },
         }),
       [colors, isRoot]

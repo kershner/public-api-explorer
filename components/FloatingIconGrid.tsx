@@ -64,11 +64,8 @@ const FloatingIconGrid: React.FC<{ iconSize?: number }> = ({ iconSize = 48 }) =>
       StyleSheet.create({
         container: {
           position: 'absolute',
-          top: 0,
-          left: 0,
           flexDirection: 'row',
           flexWrap: 'wrap',
-          width,
           backgroundColor: colors.background
         },
         icon: {

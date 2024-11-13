@@ -83,9 +83,9 @@ export default function RootLayout() {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        globalContainer: { flex: 1, backgroundColor: colors.background, overflow: 'hidden' },
-        stackWrapper: { flex: 1, position: 'relative', zIndex: 1, backgroundColor: colors.background },
-        stackContainer: { backgroundColor: colors.background },
+        globalContainer: { flex: 1, backgroundColor: colors.background },
+        stackWrapper: { flex: 1, position: 'relative', zIndex: 1 },
+        stackContainer: { },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
         headerBack: { fontSize: 16, color: colors.textPrimary },

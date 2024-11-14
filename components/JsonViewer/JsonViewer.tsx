@@ -15,6 +15,8 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const [filteredJson, setFilteredJson] = useState<unknown>(jsonData); // Use filteredJson as data
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
   const scrollViewRef = useRef(null);
+  const currentApiExpanded = useStore((state) => state.currentApiExpanded);
+  const setCurrentApiExpanded = useStore((state) => state.setCurrentApiExpanded);
 
   const styles = useMemo(() => 
     StyleSheet.create({
@@ -41,6 +43,18 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       backToTopButtonText: {
         color: colors.textPrimary,
       },
+      toggleButton: {
+        marginBottom: currentApiExpanded ? 4 : 0,
+        paddingVertical: 4,
+        paddingHorizontal: 16,
+        backgroundColor: colors.accent,
+        borderRadius: 15,
+        alignSelf: 'flex-end',
+      },
+      toggleButtonText: {
+        color: colors.textPrimary,
+        fontWeight: 'bold',
+      },
     }), 
     [colors]
   );
@@ -54,7 +68,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
     scrollViewRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  // Use filteredJson for rootData instead of jsonData
   const rootData = useMemo(() => {
     return Array.isArray(filteredJson)
       ? filteredJson.map((item, index) => ({ key: index.toString(), value: item }))
@@ -63,8 +76,17 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   return (
     <View style={styles.wrapper}>
-      <ChosenApiInfo jsonData={jsonData} url={url} />
-      
+      <TouchableOpacity 
+        style={styles.toggleButton} 
+        onPress={() => setCurrentApiExpanded(!currentApiExpanded)}
+      >
+        <Text style={styles.toggleButtonText}>{currentApiExpanded ? '▼' : '▶'} API Info</Text>
+      </TouchableOpacity>
+
+      {currentApiExpanded && (
+        <ChosenApiInfo jsonData={jsonData} url={url} />
+      )}
+
       <FilterControls
         jsonData={jsonData}
         onFilterUpdate={setFilteredJson}

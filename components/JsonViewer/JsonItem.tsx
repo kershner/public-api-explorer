@@ -53,7 +53,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         fontWeight: '600',
         fontSize: 16,
         textAlign: 'left',
-        width: hasNestedData ? '100%' : 150,
+        width: hasNestedData ? '100%' : 135,
         color: colors.textPrimary,
       },
       valueContainer: {

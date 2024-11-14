@@ -30,6 +30,7 @@ interface State {
   customAccentColorOn: boolean;
   backgroundAnimation: boolean;
   modalOpen: boolean;
+  currentApiExpanded: boolean,
   setLoading: (loading: boolean) => void;
   setUrl: (url: string) => void;
   setInputValue: (value: string) => void;
@@ -44,11 +45,12 @@ interface State {
   toggleCustomAccentColorOn: () => void;
   setBackgroundAnimation: (backgroundAnimation: boolean) => void;
   setModalOpen: (open: boolean) => void;
+  setCurrentApiExpanded: (open: boolean) => void;
   loadPersistedState: () => Promise<void>;
   persistState: () => Promise<void>;
 }
 
-export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation'>> = {
+export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation' | 'setCurrentApiExpanded' >> = {
   initialLoad: true,
   loading: false,
   url: '',
@@ -63,6 +65,7 @@ export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl'
   customAccentColorOn: false,
   backgroundAnimation: true,
   modalOpen: false,
+  currentApiExpanded: true,
   colors: darkModeColors,
 };
 
@@ -163,6 +166,8 @@ export const useStore = create<State>((set, get) => ({
   },
 
   setModalOpen: (open) => set({ modalOpen: open }),
+  
+  setCurrentApiExpanded: (open) => set({ currentApiExpanded: open }),
 
   loadPersistedState: async () => {
     const keys = [

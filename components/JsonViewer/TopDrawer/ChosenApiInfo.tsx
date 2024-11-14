@@ -45,7 +45,7 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.textPrimary,
-      borderRadius: 5,
+      borderRadius: 35,
       paddingHorizontal: 10,
       paddingVertical: 6,
       maxWidth: '55%',

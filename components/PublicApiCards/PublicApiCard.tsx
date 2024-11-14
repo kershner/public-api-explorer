@@ -20,7 +20,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
       StyleSheet.create({
         card: {
           backgroundColor: isRoot ? colors.accent : colors.textPrimary,
-          borderRadius: 8,
+          borderRadius: isRoot ? 15 : 35,
           marginHorizontal: 4,
           marginBottom: isRoot ? 8 : 0,
           alignItems: 'flex-start',

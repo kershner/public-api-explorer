@@ -18,6 +18,7 @@ const PopoverMenuButton: React.FC<PopoverMenuButtonProps> = ({ onPress, icon, la
       alignItems: 'center',
       paddingVertical: 6,
       paddingHorizontal: 0,
+      width: '100%'
     },
     buttonText: {
       marginLeft: 8,
@@ -25,11 +26,13 @@ const PopoverMenuButton: React.FC<PopoverMenuButtonProps> = ({ onPress, icon, la
     },
     icon: {
       fontSize: 20,
-      color: colors.textPrimary
+      color: colors.textPrimary,
+      maxWidth: 20,
+      width: '100%',
+      textAlign: 'center',
     },
     highlighted: {
       backgroundColor: colors.textPrimary,
-      // width: '100%',
       paddingHorizontal: 16,
       borderRadius: 6
     },

@@ -36,7 +36,6 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
       },
       row: {
         flexDirection: 'row',
-        alignItems: 'center',
         padding: 4,
         width: '100%',
         backgroundColor: colors.background,
@@ -44,18 +43,18 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         borderBottomColor: colors.accent,
         borderStyle: 'dotted',
       },
+      nestedRow: {
+        backgroundColor: colors.accent,
+        borderRadius: 6,
+        paddingHorizontal: 8,
+        marginTop: 4,
+      },
       key: {
         fontWeight: '600',
         fontSize: 16,
         textAlign: 'left',
         width: hasNestedData ? '100%' : 150,
         color: colors.textPrimary,
-      },
-      nestedRow: {
-        backgroundColor: colors.accent,
-        borderRadius: 6,
-        paddingHorizontal: 8,
-        marginTop: 4,
       },
       valueContainer: {
         marginLeft: 8,
@@ -80,7 +79,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         disabled={!hasNestedData}
         style={[styles.row, hasNestedData && styles.nestedRow]}
       >
-        <Text style={styles.key}>
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.key}>
           {hasNestedData ? (isOpen ? '▼ ' : '▶ ') : ''}{label}:
         </Text>
         {!hasNestedData && (

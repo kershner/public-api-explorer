@@ -23,9 +23,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
   const styles = StyleSheet.create({
     rowAboveFilter: {
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      alignItems: 'flex-end'
     },
-    filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: colors.textPrimary },
+    filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 2, color: colors.textPrimary },
     filterContainer: { 
       flex: 1,
       flexDirection: 'row', 

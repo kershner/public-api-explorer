@@ -44,6 +44,10 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         borderStyle: 'dotted',
         alignItems: 'center'
       },
+      nestedRowWrapper: {
+        borderLeftWidth: 3,
+        borderLeftColor: colors.accent,
+      },
       nestedRow: {
         backgroundColor: colors.accent,
         borderRadius: 6,
@@ -73,7 +77,10 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
   );
 
   return (
-    <View style={styles.itemContainer}>
+    <View style={[
+      styles.itemContainer, 
+      !hasNestedData && level !== 0 && styles.nestedRowWrapper
+    ]}>
       <View style={styles.levelIndicator} />
       <TouchableOpacity
         onPress={() => hasNestedData && setIsOpen(!isOpen)}

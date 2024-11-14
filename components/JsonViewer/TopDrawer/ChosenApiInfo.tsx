@@ -46,7 +46,9 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     titleAndToggleRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      width: '100%'
     },
     titleContainer: {
       flexDirection: 'row',
@@ -68,6 +70,7 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     },
     textContainer: {
       flexShrink: 1,
+      width: '100%'
     },
     urlLinkContainer: {
       flex: 1,

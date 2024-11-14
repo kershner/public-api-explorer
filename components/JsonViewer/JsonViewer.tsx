@@ -1,6 +1,6 @@
 import { FlatList, Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import FilterControls from "@/components/JsonViewer/TopDrawer/FilterControls";
-import ChosenApiInfo from "@/components/JsonViewer/TopDrawer/ChosenApiInfo";
+import ChosenApiInfo from '@/components/JsonViewer/TopDrawer/ChosenApiInfo';
 import React, { useMemo, useState, useRef } from 'react';
 import JsonItem from '@/components/JsonViewer/JsonItem';
 import { useStore } from '@/store/useStore';
@@ -16,7 +16,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
   const scrollViewRef = useRef(null);
   const currentApiExpanded = useStore((state) => state.currentApiExpanded);
-  const setCurrentApiExpanded = useStore((state) => state.setCurrentApiExpanded);
 
   const styles = useMemo(() => 
     StyleSheet.create({
@@ -76,13 +75,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity 
-        style={styles.toggleButton} 
-        onPress={() => setCurrentApiExpanded(!currentApiExpanded)}
-      >
-        <Text style={styles.toggleButtonText}>{currentApiExpanded ? '▼' : '▶'} API Info</Text>
-      </TouchableOpacity>
-
       {currentApiExpanded && (
         <ChosenApiInfo jsonData={jsonData} url={url} />
       )}

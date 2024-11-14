@@ -1,3 +1,4 @@
+import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
 import { View, Text, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { publicApis } from '@/data/PublicApis';
@@ -21,6 +22,7 @@ const findPublicApiByUrl = (url: string | ""): PublicApi | undefined => {
 const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   const [chosenApi, setChosenApi] = useState<PublicApi | undefined>(undefined);
   const colors = useStore((state) => state.colors);
+  const currentApiExpanded = useStore((state) => state.currentApiExpanded);
 
   useEffect(() => {
     if (url) {
@@ -38,8 +40,13 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   const styles = StyleSheet.create({
     chosenApiContainer: { 
       paddingBottom: 8,
+      flexWrap: 'wrap',
+      width: '100%',
+    },
+    titleAndToggleRow: {
       flexDirection: 'row',
-      alignItems: 'center',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     titleContainer: {
       flexDirection: 'row',
@@ -47,7 +54,7 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       backgroundColor: colors.textPrimary,
       borderRadius: 35,
       paddingHorizontal: 10,
-      paddingLeft: 25,
+      paddingLeft: 12,
       paddingVertical: 6,
       maxWidth: '55%',
     },
@@ -60,7 +67,6 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       paddingLeft: 4,
     },
     textContainer: {
-      paddingLeft: 8,
       flexShrink: 1,
     },
     urlLinkContainer: {
@@ -82,10 +88,16 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
 
   return (
     <View style={styles.chosenApiContainer}>
-      <TouchableOpacity style={styles.titleContainer} onPress={() => Linking.openURL(chosenApi.viewMoreUrl)}>
-        <Text style={styles.title}>{chosenApi.title}</Text>
-        <Text style={styles.openLinkIcon}>↗️</Text>
-      </TouchableOpacity>
+      <View style={styles.titleAndToggleRow}>
+        <TouchableOpacity style={styles.titleContainer} onPress={() => Linking.openURL(chosenApi.viewMoreUrl)}>
+          <Text style={styles.title}>{chosenApi.title}</Text>
+          <Text style={styles.openLinkIcon}>↗️</Text>
+        </TouchableOpacity>
+
+        {currentApiExpanded && (
+          <ToggleApiInfoButton />
+        )}
+      </View>
       
       <View style={styles.textContainer}>
         <TouchableOpacity style={styles.urlLinkContainer} onPress={() => Linking.openURL(url)}>

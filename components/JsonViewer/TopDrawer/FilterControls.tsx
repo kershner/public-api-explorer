@@ -1,6 +1,8 @@
+import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Picker } from '@react-native-picker/picker';
+import { useStore } from '@/store/useStore';
 
 interface FilterControlsProps {
   jsonData: unknown;
@@ -16,8 +18,13 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
   const [selectedKey, setSelectedKey] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
+  const currentApiExpanded = useStore((state) => state.currentApiExpanded);
 
   const styles = StyleSheet.create({
+    rowAboveFilter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
     filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: colors.textPrimary },
     filterContainer: { 
       flex: 1,
@@ -121,7 +128,12 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
 
   return (
     <View>
-      <Text style={styles.filterLabel}>Filter by:</Text>
+      <View style={styles.rowAboveFilter}>
+        <Text style={styles.filterLabel}>Filter by:</Text>
+        {!currentApiExpanded && (
+          <ToggleApiInfoButton />
+        )}
+      </View>
       <View style={styles.filterContainer}>
         <Picker selectedValue={selectedKey} onValueChange={setSelectedKey} style={styles.picker}>
           <Picker.Item label="All Keys" value="" />

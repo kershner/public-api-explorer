@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { PublicApi } from '@/models/PublicApi';
 import { useStore } from '@/store/useStore';
 import { checkUrl } from '@/utils/utils';
@@ -13,6 +14,7 @@ type PublicApiCardProps = {
 const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal }) => {
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
+  const isRoot = useIsRootScreen();
   
   const styles = useMemo(
     () =>
@@ -24,7 +26,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           marginBottom: 8,
           alignItems: 'flex-start',
           flexShrink: 1,
-          maxWidth: 150,
+          maxWidth: isRoot ? 150 : 250,
         },
         content: {
           paddingVertical: 8,

@@ -408,11 +408,11 @@ export const publicApis: PublicApi[] = [
     "https://randomfox.ca/"
   ),
   new PublicApi(
-    "https://anapioficeandfire.com/api/books/1",
+    "https://www.anapioficeandfire.com/api/books/1",
     "An API of Ice and Fire",
     "Provides data on characters, books, and houses from Game of Thrones.",
     "Books",
-    "https://anapioficeandfire.com/"
+    "https://www.anapioficeandfire.com/"
   ),
   new PublicApi(
     "https://archive.org/metadata/principleofrelat00eins",

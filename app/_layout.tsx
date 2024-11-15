@@ -1,8 +1,6 @@
 import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, Platform } from 'react-native';
-import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
-import DebouncedTextInput from '@/components/DebouncedTextInput';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useMemo } from 'react';
@@ -10,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';
+import { checkUrl } from '@/utils/utils';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,7 +48,7 @@ export default function RootLayout() {
     const handleUrlNavigation = (url: string) => {
       if (!initialUrlHandledRef.current.has(url)) {
         initialUrlHandledRef.current.add(url);
-        useStore.setState({ inputValue: url, url });
+        checkUrl(url);
         hookShouldRunRef.current = false;
       }
     };

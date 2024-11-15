@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, Modal, Pressable, ScrollView, TouchableOpacity } from 'react-native';
-import ApiQueryInput from '@/components/JsonViewer/BottomDrawer/ApiQueryBuilder/ApiQueryInput'; 
 import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
+import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput'; 
 import React, { useMemo, useState } from 'react';
 import { useStore } from '@/store/useStore';
 

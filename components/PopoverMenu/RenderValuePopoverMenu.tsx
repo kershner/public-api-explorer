@@ -2,10 +2,10 @@ import PopoverMenuButton from '@/components/PopoverMenu/PopoverMenuButton';
 import ImageLightbox from '@/components/PopoverMenu/ImageLightbox';
 import PopoverMenu from '@/components/PopoverMenu/PopoverMenu';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { checkUrl, showAlert } from '@/utils/utils';
 import React, { useEffect, useState } from 'react';
 import { View, Linking } from 'react-native';
 import { useStore } from '@/store/useStore';
-import { showAlert } from '@/utils/utils';
 
 interface RenderValuePopoverMenuProps {
   isVisible: boolean;
@@ -70,7 +70,7 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
 
   const handleViewApiLink = () => {
     if (typeof value === 'string') {
-      useStore.setState({ inputValue: value });
+      checkUrl(value);
     }
     onClose();
   };

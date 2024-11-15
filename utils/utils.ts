@@ -19,7 +19,7 @@ export const setError = (errorMsg: string) => {
   setLoading(false);
 };
 
-export async function checkUrl(url: string, timeout: number) {
+export async function checkUrl(url: string, timeout: number = 5000) {
   const defaultMsg = 'Network issue or invalid URL.';
 
   try {

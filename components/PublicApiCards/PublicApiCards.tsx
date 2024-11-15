@@ -31,19 +31,19 @@ const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
           },
           pickerWrapper: {
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
           },
           pickerLabel: {
             color: colors.textPrimary,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
           },
           pickerContainer: {
             margin: 8,
             justifyContent: 'center',
             borderRadius: 4,
             borderWidth: 2,
-            backgroundColor: colors.background,
             borderColor: colors.textPrimary,
+            backgroundColor: colors.background,
             overflow: 'hidden',
             width: 100,
             height: 41,
@@ -53,6 +53,7 @@ const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
             color: colors.textPrimary,
             paddingHorizontal: 12,
             borderWidth: 0,
+            height: '100%',
           },
           scrollViewContainer: {
             flexDirection: 'row',

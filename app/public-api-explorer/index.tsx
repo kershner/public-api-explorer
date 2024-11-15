@@ -1,4 +1,4 @@
-import ApiQueryInput from '@/components/JsonViewer/BottomDrawer/ApiQueryBuilder/ApiQueryInput';
+import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput';
 import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { View, Text, StyleSheet } from 'react-native';
@@ -39,7 +39,7 @@ const HomeScreen: React.FC = () => {
           color: colors.textPrimary,
           ...(!isRoot && { display: 'none' }),
         },
-    }), []
+    }), [colors]
   );
 
   return (

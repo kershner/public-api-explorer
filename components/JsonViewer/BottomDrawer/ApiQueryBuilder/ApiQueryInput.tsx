@@ -21,6 +21,7 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
     StyleSheet.create({
       wrapper: {
         flex: isRoot ? undefined : 1,
+        marginBottom: isRoot ? 0 : 6,
       },
       inputContainer: {
         borderWidth: 2,

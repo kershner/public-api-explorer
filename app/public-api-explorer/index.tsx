@@ -28,6 +28,9 @@ const HomeScreen: React.FC = () => {
         bottomDrawer: {
           paddingHorizontal: 16
         },
+        inputWrapper: {
+          paddingHorizontal: 8
+        },
         inputTitle: {
           textAlign: 'center',
           fontSize: 48,
@@ -41,8 +44,10 @@ const HomeScreen: React.FC = () => {
 
   return (
     <>
-      <Text style={styles.inputTitle}>Dive into some open data:</Text>
-      <ApiQueryInput url='Enter a public API endpoint...' />
+      <View style={styles.inputWrapper}>
+        <Text style={styles.inputTitle}>Dive into some open data:</Text>
+        <ApiQueryInput url='Enter a public API endpoint...' />
+      </View>
       <PublicApiCards />
     </>
   );

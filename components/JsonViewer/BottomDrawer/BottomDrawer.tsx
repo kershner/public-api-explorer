@@ -36,7 +36,7 @@ const BottomDrawer = ({ url }: { url: string }) => {
           paddingVertical: 4,
           paddingHorizontal: 12,
           marginLeft: 6,
-          marginVertical: 4,
+          marginBottom: 8,
           borderRadius: 4,
           backgroundColor: colors.accent,
           justifyContent: 'center'

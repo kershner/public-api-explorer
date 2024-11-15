@@ -14,8 +14,8 @@ const ToggleApiInfoButton: React.FC = () => {
           paddingVertical: 6,
           paddingHorizontal: 16,
           backgroundColor: colors.accent,
-          borderRadius: 35,
-          marginBottom: 8,
+          borderRadius: 5,
+          marginBottom: currentApiExpanded ? 0 : 8,
         },
         toggleButtonText: {
           color: colors.textPrimary,

@@ -46,8 +46,8 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     titleAndToggleRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
       flexWrap: 'wrap',
+      alignItems: 'flex-end',
       width: '100%'
     },
     titleContainer: {
@@ -56,9 +56,9 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       backgroundColor: colors.textPrimary,
       borderRadius: 35,
       paddingHorizontal: 10,
-      paddingLeft: 12,
+      paddingLeft: 15,
       paddingVertical: 6,
-      maxWidth: '55%',
+      maxWidth: '68%'
     },
     title: { 
       color: colors.background,

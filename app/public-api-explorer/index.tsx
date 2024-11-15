@@ -1,11 +1,11 @@
+import ApiQueryInput from '@/components/JsonViewer/BottomDrawer/ApiQueryBuilder/ApiQueryInput';
 import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
+import { View, Text, StyleSheet } from 'react-native';
 import { APP_TITLE } from '@/constants/constants';
 import React, { useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import { useStore } from '@/store/useStore';
 import { useRouter } from "expo-router";
-import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput';
-import useIsRootScreen from '@/hooks/useIsRootScreen';
 
 const HomeScreen: React.FC = () => {
   const jsonData = useStore((state) => state.jsonData);

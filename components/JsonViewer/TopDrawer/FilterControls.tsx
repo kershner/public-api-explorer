@@ -19,7 +19,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
 
   // Styles, with repeated color properties removed for brevity
   const styles = StyleSheet.create({
-    rowAboveFilter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
     filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 2, color: colors.textPrimary },
     filterContainer: { flexDirection: 'row', gap: 10, alignItems: 'center' },
     multiSelectContainer: { flex: 1, height: 40, borderWidth: 2, borderRadius: 4, padding: 8, justifyContent: 'center', backgroundColor: colors.background, borderColor: colors.textPrimary },
@@ -116,10 +115,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
 
   return (
     <View>
-      <View style={styles.rowAboveFilter}>
-        <Text style={styles.filterLabel}>Filter by:</Text>
-        {!currentApiExpanded && <ToggleApiInfoButton />}
-      </View>
       <View style={styles.filterContainer}>
         {/* Multi-select trigger */}
         <TouchableOpacity style={styles.multiSelectContainer} onPress={() => setIsPopoverVisible(true)}>
@@ -134,6 +129,8 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
           value={searchText}
           onChangeText={setSearchText}
         />
+
+        <ToggleApiInfoButton />
       </View>
 
       {/* Display selected filters with clear button */}

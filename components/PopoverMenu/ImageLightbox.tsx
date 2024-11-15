@@ -24,14 +24,12 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({ visible, onClose, imageUr
 
   return (
     <Modal visible={visible} transparent onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={() => { /* Do nothing to absorb touch events */ }}>
-        <View style={styles.overlay}>
-          <Image source={{ uri: imageUrl }} style={styles.image} />
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableWithoutFeedback>
+      <View style={styles.overlay}>
+        <Image source={{ uri: imageUrl }} style={styles.image} />
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 };

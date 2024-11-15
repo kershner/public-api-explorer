@@ -1,5 +1,6 @@
-import { TouchableOpacity, TextInput, StyleSheet, View, Modal, ActivityIndicator } from 'react-native';
-import ApiQueryModal from '@/components/ApiQueryBuilder/ApiQueryModal';
+import { TouchableOpacity, TextInput, StyleSheet, View, Modal, ActivityIndicator, Pressable } from 'react-native';
+import ApiQueryModal from '@/components/JsonViewer/BottomDrawer/ApiQueryBuilder/ApiQueryModal';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
 import React, { useMemo, useState } from 'react';
 import { useStore } from '@/store/useStore';
 
@@ -11,23 +12,27 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
+  const isRoot = useIsRootScreen();
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 
   const styles = useMemo(() => 
     StyleSheet.create({
+      wrapper: {
+        flex: isRoot ? undefined : 1,
+      },
       inputContainer: {
         borderWidth: 2,
         borderColor: colors.textPrimary,
         borderRadius: 5,
         padding: 10,
-        backgroundColor: colors.background
+        backgroundColor: colors.background,
       },
       input: {
         fontSize: 18,
         color: colors.textPrimary,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
       },
       loadingSpinnerWrapper: {
         position: 'absolute',
@@ -46,7 +51,7 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
   );
 
   return (
-    <View>
+    <View style={styles.wrapper}>
       <TouchableOpacity onPress={openModal} style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -62,9 +67,9 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
       </TouchableOpacity>
 
       <Modal transparent visible={modalVisible}>
-        <View style={styles.overlay}>
+        <Pressable style={styles.overlay} onPress={closeModal}>
           <ApiQueryModal onClose={closeModal} url={url} />
-        </View>
+        </Pressable>
       </Modal>
     </View>
   );

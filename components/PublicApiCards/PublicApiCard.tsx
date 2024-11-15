@@ -1,32 +1,30 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { PublicApi } from '@/models/PublicApi';
 import { useStore } from '@/store/useStore';
-import React, { useMemo } from 'react';
 import { checkUrl } from '@/utils/utils';
+import React, { useMemo } from 'react';
 
 type PublicApiCardProps = {
   api: PublicApi;
   index: number;
+  closeModal?: () => void;
 };
 
-const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
-  const setInputValue = useStore((state) => state.setInputValue);
+const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal }) => {
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
-  const isRoot = useIsRootScreen();
   
   const styles = useMemo(
     () =>
       StyleSheet.create({
         card: {
-          backgroundColor: isRoot ? colors.accent : colors.textPrimary,
-          borderRadius: isRoot ? 15 : 35,
+          backgroundColor: colors.accent,
+          borderRadius: 15,
           marginHorizontal: 4,
-          marginBottom: isRoot ? 8 : 0,
+          marginBottom: 8,
           alignItems: 'flex-start',
           flexShrink: 1,
-          maxWidth: isRoot ? 150 : undefined,
+          maxWidth: 150,
         },
         content: {
           paddingVertical: 8,
@@ -39,7 +37,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           fontSize: 16,
           fontWeight: 'bold',
           marginBottom: 4,
-          color: isRoot ? colors.textPrimary : colors.background,
+          color: colors.textPrimary,
           textAlign: 'left',
         },
         description: {
@@ -47,7 +45,6 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           color: colors.textPrimary,
           marginBottom: 6,
           flexWrap: 'wrap',
-          ...(!isRoot && { display: 'none' }),
         },
         tagContainer: {
           backgroundColor: colors.background,
@@ -57,7 +54,6 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           alignSelf: 'flex-start',
           marginTop: 6,
           flexWrap: 'wrap',
-          ...(!isRoot && { display: 'none' }),
         },
         tag: {
           fontSize: 12,
@@ -65,11 +61,12 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
           fontWeight: '600',
         },
       }),
-    [colors, isRoot, index]
+    [colors, index]
   );
 
   const handlePress = () => {
     setTimeout(() => {
+      if (closeModal) closeModal();
       setLoading(true);
       checkUrl(api.url, 5000);
     }, 100);

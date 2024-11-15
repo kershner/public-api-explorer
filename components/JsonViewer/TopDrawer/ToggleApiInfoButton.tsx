@@ -28,7 +28,7 @@ const ToggleApiInfoButton: React.FC = () => {
   return (
     <TouchableOpacity style={styles.toggleButton} onPress={() => setCurrentApiExpanded(!currentApiExpanded)}>
       <Text style={styles.toggleButtonText}>
-        {currentApiExpanded ? '▼' : '▶'} API Info
+        {currentApiExpanded ? '▼' : '▶'}
       </Text>
     </TouchableOpacity>
   );

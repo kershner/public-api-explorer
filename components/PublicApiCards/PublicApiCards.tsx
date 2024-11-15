@@ -1,7 +1,6 @@
-import { View, ScrollView, StyleSheet, PanResponder, Text } from 'react-native';
+import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import PublicApiCard from '@/components/PublicApiCards/PublicApiCard';
 import React, { useRef, useState, useMemo } from 'react';
-import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { Picker } from '@react-native-picker/picker';
 import { publicApis } from '@/data/PublicApis';
 import { shuffleArray } from '@/utils/utils';
@@ -9,10 +8,12 @@ import { useStore } from '@/store/useStore';
 
 const randomizedApiList = shuffleArray(publicApis);
 
-const PublicApiCards: React.FC = () => {
+type PublicApiCardsProps = {
+  closeModal?: () => void;
+};
+
+const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
   const scrollRef = useRef<ScrollView | null>(null);
-  const scrollStartX = useRef(0);
-  const isRoot = useIsRootScreen();
   const colors = useStore((state) => state.colors);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
@@ -24,8 +25,8 @@ const PublicApiCards: React.FC = () => {
       () =>
         StyleSheet.create({
           container: {
-            flexDirection: isRoot ? 'column' : 'row-reverse',
-            alignItems: isRoot ? 'flex-end': 'center',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
             flex: 1,
           },
           pickerWrapper: {
@@ -37,8 +38,7 @@ const PublicApiCards: React.FC = () => {
             fontWeight: 'bold'
           },
           pickerContainer: {
-            marginVertical: 8,
-            marginLeft: isRoot ? 0 : 8,
+            margin: 8,
             justifyContent: 'center',
             borderRadius: 4,
             borderWidth: 2,
@@ -56,46 +56,21 @@ const PublicApiCards: React.FC = () => {
           },
           scrollViewContainer: {
             flexDirection: 'row',
-            flexWrap: isRoot ? 'wrap' : 'nowrap',
+            flexWrap: 'wrap',
             alignItems: 'flex-start',
-            justifyContent: isRoot ? 'center' : 'flex-start',
+            justifyContent: 'center',
             paddingVertical: 8
           },
         }),
-      [colors, isRoot]
+      [colors]
     );
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dx) > Math.abs(gestureState.dy),
-      onPanResponderGrant: () => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTo({ x: scrollStartX.current, animated: false });
-        }
-      },
-      onPanResponderMove: (_, gestureState) => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTo({
-            x: scrollStartX.current - gestureState.dx,
-            animated: false,
-          });
-        }
-      },
-      onPanResponderRelease: () => {
-        if (scrollRef.current) {
-          scrollStartX.current = scrollRef.current.getScrollableNode().scrollLeft || 0;
-        }
-      },
-    })
-  ).current;
 
   return (
     <View 
-      {...(!isRoot ? panResponder.panHandlers : {})}
       style={styles.container} >
       
       <View style={styles.pickerWrapper}>
-        { isRoot && <Text style={styles.pickerLabel}>Filter by category: </Text> }
+      <Text style={styles.pickerLabel}>Filter by category: </Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={selectedCategory}
@@ -115,12 +90,10 @@ const PublicApiCards: React.FC = () => {
       <ScrollView
         contentContainerStyle={styles.scrollViewContainer}
         ref={scrollRef}
-        horizontal={!isRoot}
-        showsHorizontalScrollIndicator={!isRoot}
-        showsVerticalScrollIndicator={isRoot}
-      >
+        >
+
         {filteredApis.map((api, index) => (
-          <PublicApiCard key={index} api={api} index={index} />
+          <PublicApiCard key={index} api={api} index={index} closeModal={closeModal} />
         ))}
       </ScrollView>
     </View>

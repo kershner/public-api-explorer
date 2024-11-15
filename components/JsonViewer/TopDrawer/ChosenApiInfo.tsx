@@ -1,4 +1,3 @@
-import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
 import { View, Text, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { publicApis } from '@/data/PublicApis';
@@ -22,7 +21,6 @@ const findPublicApiByUrl = (url: string | ""): PublicApi | undefined => {
 const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   const [chosenApi, setChosenApi] = useState<PublicApi | undefined>(undefined);
   const colors = useStore((state) => state.colors);
-  const currentApiExpanded = useStore((state) => state.currentApiExpanded);
 
   useEffect(() => {
     if (url) {
@@ -72,20 +70,11 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       flexShrink: 1,
       width: '100%'
     },
-    urlLinkContainer: {
-      flex: 1,
-    },
-    urlLink: {
-      fontSize: 18,
-      color: colors.linkText,
-      fontWeight: 'bold',
-      textDecorationLine: 'underline',
-      textDecorationStyle: 'solid',
-    },
     description: { 
       color: colors.textPrimary,
       flexWrap: 'wrap',
       flexShrink: 1,
+      marginTop: 5,
     },
   });
 
@@ -96,19 +85,9 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
           <Text style={styles.title}>{chosenApi.title}</Text>
           <Text style={styles.openLinkIcon}>↗️</Text>
         </TouchableOpacity>
-
-        {currentApiExpanded && (
-          <ToggleApiInfoButton />
-        )}
       </View>
       
       <View style={styles.textContainer}>
-        <TouchableOpacity style={styles.urlLinkContainer} onPress={() => Linking.openURL(url)}>
-          <Text style={styles.urlLink} numberOfLines={1} ellipsizeMode="tail">
-            {url}
-          </Text>
-        </TouchableOpacity>
-
         <Text style={styles.description}>{chosenApi.description}</Text>
       </View>
     </View>

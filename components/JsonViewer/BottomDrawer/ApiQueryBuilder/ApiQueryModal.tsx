@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, TouchableOpacity } from 'react-native';
 import { useStore } from '@/store/useStore';
 import React, { useMemo, useState } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface ApiQueryModalProps {
   onClose: () => void;
@@ -61,35 +62,39 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url }) => {
           fontWeight: '600',
           color: colors.textPrimary,
         },
+        closeButton: { alignSelf: 'flex-end', backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4, marginRight: 8, marginBottom: 8 },
+        closeButtonText: { color: colors.background, fontSize: 16, fontWeight: 'bold' },
       }),
     [colors]
   );
 
   return (
-    <View style={styles.modalContainer}>
-      <Text style={styles.title}>Customize Your Query</Text>
-      <TextInput
-        style={styles.textInput}
-        value={query} // Set the initial value to the provided URL
-        onChangeText={setQuery} // Update state on input change
-        placeholder="Enter API query"
-        placeholderTextColor={colors.textPrimary}
-      />
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={styles.button}
-          onPress={() => {
-            // You can handle saving the query here if needed
-            onClose();
-          }}
-        >
-          <Text style={styles.buttonText}>Save</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={onClose}>
-          <Text style={styles.buttonText}>Close</Text>
-        </Pressable>
-      </View>
-    </View>
+    <Pressable style={styles.modalContainer} onPress={() => {}}>
+      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableOpacity>
+
+      <ScrollView>
+        <Text style={styles.title}>Customize Your Query</Text>
+        <TextInput
+          style={styles.textInput}
+          value={query}
+          onChangeText={setQuery}
+          placeholder="Enter API query"
+          placeholderTextColor={colors.textPrimary}
+        />
+        <View style={styles.buttonContainer}>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              onClose();
+            }}
+          >
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </Pressable>
   );
 };
 

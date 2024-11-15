@@ -15,7 +15,7 @@ interface RenderValueProps {
 const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
   const colors = useStore((state) => state.colors);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
-  const valueRef = useRef(null); // Reference for positioning popover
+  const valueRef = useRef(null);
 
   const styles = useMemo(
     () =>

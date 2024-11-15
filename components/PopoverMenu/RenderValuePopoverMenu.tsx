@@ -1,6 +1,7 @@
+import PopoverMenuButton from '@/components/PopoverMenu/PopoverMenuButton';
+import ImageLightbox from '@/components/PopoverMenu/ImageLightbox';
 import PopoverMenu from '@/components/PopoverMenu/PopoverMenu';
 import Clipboard from '@react-native-clipboard/clipboard';
-import PopoverMenuButton from './PopoverMenuButton';
 import React, { useEffect, useState } from 'react';
 import { View, Linking } from 'react-native';
 import { useStore } from '@/store/useStore';
@@ -18,6 +19,7 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
   const [isLink, setIsLink] = useState(false);
   const [isImage, setIsImage] = useState(false);
   const [isApiLink, setIsApiLink] = useState(false);
+  const [isLightboxVisible, setIsLightboxVisible] = useState(false);
   const url = useStore((state) => state.url);
 
   useEffect(() => {
@@ -44,7 +46,6 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
     if (isVisible) {
       checkValueType();
     }
-
   }, [isVisible, value, url]);
 
   const handleCopy = (content: string, message: string) => {
@@ -63,7 +64,7 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
   };
 
   const handleViewImage = () => {
-    console.log('View image functionality triggered.');
+    setIsLightboxVisible(true); // Show lightbox
     onClose();
   };
 
@@ -75,40 +76,44 @@ const RenderValuePopoverMenu: React.FC<RenderValuePopoverMenuProps> = ({ isVisib
   };
 
   return (
-    <PopoverMenu isVisible={isVisible} fromRef={fromRef} onClose={onClose}>
-      <PopoverMenuButton
-        label="Copy value"
-        icon="📄"
-        onPress={() => handleCopy(String(value), 'Value copied to clipboard.')}
-      />
-      <PopoverMenuButton
-        label="Copy value with label"
-        icon="📄"
-        onPress={() => handleCopy(`${label}: ${String(value)}`, 'Value copied to clipboard with label.')}
-      />
-      {isLink && (
+    <>
+      <PopoverMenu isVisible={isVisible} fromRef={fromRef} onClose={onClose}>
         <PopoverMenuButton
-          label="Open link"
-          icon="↗️"
-          onPress={handleOpenLink}
+          label="Copy value"
+          icon="📄"
+          onPress={() => handleCopy(String(value), 'Value copied to clipboard.')}
         />
-      )}
-      {isImage && (
         <PopoverMenuButton
-          label="View image"
-          icon="📷"
-          onPress={handleViewImage}
+          label="Copy value with label"
+          icon="📄"
+          onPress={() => handleCopy(`${label}: ${String(value)}`, 'Value copied to clipboard with label.')}
         />
-      )}
-      {isApiLink && (
-        <PopoverMenuButton
-          label="Explore API link"
-          icon="💻"
-          onPress={handleViewApiLink}
-          isHighlighted={true}
-        />
-      )}
-    </PopoverMenu>
+        {isLink && (
+          <PopoverMenuButton
+            label="Open link"
+            icon="↗️"
+            onPress={handleOpenLink}
+          />
+        )}
+        {isImage && (
+          <PopoverMenuButton
+            label="View image"
+            icon="📷"
+            onPress={handleViewImage}
+          />
+        )}
+        {isApiLink && (
+          <PopoverMenuButton
+            label="Explore API link"
+            icon="💻"
+            onPress={handleViewApiLink}
+            isHighlighted={true}
+          />
+        )}
+      </PopoverMenu>
+
+      <ImageLightbox visible={isLightboxVisible} onClose={() => setIsLightboxVisible(false)} imageUrl={typeof value === 'string' ? value : ''} />
+    </>
   );
 };
 

@@ -123,7 +123,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
       <View style={styles.filterContainer}>
         {/* Multi-select trigger */}
         <TouchableOpacity style={styles.multiSelectContainer} onPress={() => setIsPopoverVisible(true)}>
-          <Text style={{ color: colors.textPrimary }}>
+          <Text style={{ color: colors.textPrimary }} numberOfLines={1} ellipsizeMode="tail">
             {selectedKeys.size > 0 ? `Selected (${selectedKeys.size})` : "Select Keys"}
           </Text>
         </TouchableOpacity>

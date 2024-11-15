@@ -89,3 +89,9 @@ export const printState = () => {
   const state = useStore.getState();
   console.log(JSON.stringify(state, null, 2));
 };
+
+export const isEmpty = (obj) =>
+  obj == null || // null or undefined
+  (typeof obj === 'string' && obj.trim().length === 0) || // empty string
+  (Array.isArray(obj) && obj.length === 0) || // empty array
+  (typeof obj === 'object' && Object.keys(obj).length === 0); // empty object

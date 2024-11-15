@@ -5,6 +5,7 @@ import React, { useMemo, useState, useRef, useEffect } from 'react';
 import RenderValue from '@/components/JsonViewer/RenderValue';
 import Tooltip from '@/components/JsonViewer/Tooltip';
 import { useStore } from '@/store/useStore';
+import { isEmpty } from '@/utils/utils';
 
 interface JsonItemProps {
   label: string;
@@ -21,6 +22,8 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
   const buttonRef = useRef(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const hideEmptyRows = useStore((state) => state.hideEmptyRows);
+  const noValue = isEmpty(value);
 
   useEffect(() => {
     setIsOpen(expandAll);
@@ -85,6 +88,10 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
     setTooltipPosition({ top: pageY - 40, left: pageX });
     setTooltipVisible(true);
   };
+
+  if (hideEmptyRows && noValue) {
+    return null;
+  }
 
   return (
     <View style={[

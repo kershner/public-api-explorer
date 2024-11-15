@@ -26,6 +26,9 @@ const SettingsMenu: React.FC = () => {
   const backgroundAnimation = useStore((state) => state.backgroundAnimation);
   const setBackgroundAnimation = useStore((state) => state.setBackgroundAnimation);
 
+  const hideEmptyRows = useStore((state) => state.hideEmptyRows);
+  const toggleHideEmptyRows = useStore((state) => state.toggleHideEmptyRows);
+
   const resetSettings = () => {
     setCustomBackgroundColor(useStore.getState().customBackgroundColor);
     setCustomAccentColor(useStore.getState().customAccentColor);
@@ -37,6 +40,9 @@ const SettingsMenu: React.FC = () => {
     }
     if (!darkMode) {
       toggleDarkMode();
+    }
+    if (hideEmptyRows) {
+      toggleHideEmptyRows();
     }
   };
 
@@ -73,8 +79,8 @@ const SettingsMenu: React.FC = () => {
           justifyContent: 'space-between',
           marginBottom: 20,
           paddingBottom: 20,
-          borderBottomWidth: 1,
-          borderColor: colors.accent
+          borderBottomWidth: 2,
+          borderColor: colors.accent,
         },
         optionRowLabel: {
           color: colors.textPrimary,
@@ -134,6 +140,11 @@ const SettingsMenu: React.FC = () => {
           <View style={styles.optionRow}>
             <Text style={styles.optionRowLabel}>Background animation</Text>
             <ToggleThumb onPress={() => setBackgroundAnimation(!backgroundAnimation)} isOn={backgroundAnimation} />
+          </View>
+
+          <View style={styles.optionRow}>
+            <Text style={styles.optionRowLabel}>Hide Empty Rows</Text>
+            <ToggleThumb onPress={toggleHideEmptyRows} isOn={hideEmptyRows} />
           </View>
 
           <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>

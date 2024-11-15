@@ -31,6 +31,7 @@ interface State {
   backgroundAnimation: boolean;
   modalOpen: boolean;
   currentApiExpanded: boolean,
+  hideEmptyRows: boolean,
   setLoading: (loading: boolean) => void;
   setUrl: (url: string) => void;
   setInputValue: (value: string) => void;
@@ -46,11 +47,12 @@ interface State {
   setBackgroundAnimation: (backgroundAnimation: boolean) => void;
   setModalOpen: (open: boolean) => void;
   setCurrentApiExpanded: (open: boolean) => void;
+  toggleHideEmptyRows: () => void;
   loadPersistedState: () => Promise<void>;
   persistState: () => Promise<void>;
 }
 
-export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation' | 'setCurrentApiExpanded' >> = {
+export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl' | 'setInputValue' | 'setError' | 'setJsonData' | 'setJsonDataForUrl' | 'getJsonDataForUrl' | 'toggleDarkMode' | 'setCustomBackgroundColor' | 'toggleCustomBackgroundColorOn' | 'setCustomAccentColor' | 'toggleCustomAccentColorOn' | 'setModalOpen' | 'loadPersistedState' | 'persistState' | 'setBackgroundAnimation' | 'setCurrentApiExpanded' | 'toggleHideEmptyRows' >> = {
   initialLoad: true,
   loading: false,
   url: '',
@@ -66,6 +68,7 @@ export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl'
   backgroundAnimation: true,
   modalOpen: false,
   currentApiExpanded: true,
+  hideEmptyRows: false,
   colors: darkModeColors,
 };
 
@@ -169,6 +172,14 @@ export const useStore = create<State>((set, get) => ({
   
   setCurrentApiExpanded: (open) => set({ currentApiExpanded: open }),
 
+  toggleHideEmptyRows: () => {
+    set((state) => {
+      const hideEmptyRows = !state.hideEmptyRows;
+      persistData({ hideEmptyRows: hideEmptyRows });
+      return { hideEmptyRows };
+    });
+  },
+
   loadPersistedState: async () => {
     const keys = [
       'darkMode',
@@ -177,6 +188,7 @@ export const useStore = create<State>((set, get) => ({
       'customAccentColor',
       'customAccentColorOn',
       'backgroundAnimation',
+      'hideEmptyRows'
     ];
 
     const loadedState = await loadData(keys);
@@ -184,6 +196,7 @@ export const useStore = create<State>((set, get) => ({
     const isCustomBackgroundOn = loadedState.customBackgroundColorOn === 'true';
     const isCustomAccentOn = loadedState.customAccentColorOn === 'true';
     const backgroundAnimation = loadedState.backgroundAnimation === 'true';
+    const hideEmptyRows = loadedState.hideEmptyRows === 'true';
     
     set((state) => ({
       darkMode: isDarkMode,
@@ -191,7 +204,8 @@ export const useStore = create<State>((set, get) => ({
       customBackgroundColorOn: isCustomBackgroundOn,
       customAccentColor: cleanColor(loadedState.customAccentColor),
       customAccentColorOn: isCustomAccentOn,
-      backgroundAnimation,
+      hideEmptyRows: hideEmptyRows,
+      backgroundAnimation: backgroundAnimation,
       colors: getColors(
         isDarkMode,
         cleanColor(loadedState.customBackgroundColor),
@@ -212,6 +226,7 @@ export const useStore = create<State>((set, get) => ({
       customAccentColor: state.customAccentColor,
       customAccentColorOn: state.customAccentColorOn,
       backgroundAnimation: state.backgroundAnimation,
+      hideEmptyRows: state.hideEmptyRows,
     });
   },
 }));

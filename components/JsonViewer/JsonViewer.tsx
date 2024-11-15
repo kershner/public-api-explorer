@@ -32,7 +32,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       },
       backToTopButton: {
         position: 'absolute',
-        bottom: 55,
+        bottom: 60,
         right: Platform.OS === 'web' ? 19 * 2 : 19,  // Offset for web scrollbar
         backgroundColor: colors.background,
         borderWidth: 2,

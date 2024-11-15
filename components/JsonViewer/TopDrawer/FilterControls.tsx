@@ -1,7 +1,7 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
 import React, { useState, useEffect, useCallback } from 'react';
-import { ThemeColors, useStore } from '@/store/useStore';
+import { ThemeColors } from '@/store/useStore';
 
 interface FilterControlsProps {
   jsonData: unknown;
@@ -15,16 +15,15 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
-  const currentApiExpanded = useStore((state) => state.currentApiExpanded);
 
   // Styles, with repeated color properties removed for brevity
   const styles = StyleSheet.create({
     filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 2, color: colors.textPrimary },
-    filterContainer: { flexDirection: 'row', gap: 10, alignItems: 'center' },
+    filterContainer: { flexDirection: 'row', gap: 5, alignItems: 'center' },
     multiSelectContainer: { flex: 1, height: 40, borderWidth: 2, borderRadius: 4, padding: 8, justifyContent: 'center', backgroundColor: colors.background, borderColor: colors.textPrimary },
     keyFilterLabel: {fontWeight: 'bold', fontSize: 16, paddingBottom: 4, color: colors.textPrimary },
     input: { flex: 3, height: 40, borderWidth: 2, paddingLeft: 10, borderRadius: 4, color: colors.textPrimary, borderColor: colors.textPrimary, backgroundColor: colors.background },
-    activeFiltersContainer: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginVertical: 4 },
+    activeFiltersContainer: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginVertical: 6 },
     filterChip: { backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 20 },
     filterChipText: { color: colors.background, fontWeight: 'bold', fontSize: 10 },
     clearButton: { backgroundColor: colors.accent, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 20, alignSelf: 'flex-start' },

@@ -13,6 +13,7 @@ const BottomDrawer = ({ url }: { url: string }) => {
       StyleSheet.create({
         container: {
           flexDirection: 'row',
+          gap: 5,
         },
         overlay: {
           flex: 1,
@@ -33,13 +34,11 @@ const BottomDrawer = ({ url }: { url: string }) => {
           elevation: 5,
         },
         showApisButton: {
-          paddingVertical: 4,
-          paddingHorizontal: 12,
-          marginLeft: 6,
+          padding: 12,
           marginBottom: 8,
           borderRadius: 4,
           backgroundColor: colors.accent,
-          justifyContent: 'center'
+          alignSelf: 'center',
         },
         showApisText: {
           color: colors.textPrimary,

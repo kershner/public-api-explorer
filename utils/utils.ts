@@ -23,7 +23,7 @@ export async function checkUrl(url: string, timeout: number = 5000) {
   const defaultMsg = 'Network issue or invalid URL.';
 
   try {
-    useStore.setState({ loading: true });
+    useStore.setState({ loading: true, error: '' });
     const response = await fetchWithTimeout(url, { method: 'GET' }, timeout);
 
     if (response.ok) {

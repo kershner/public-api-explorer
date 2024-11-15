@@ -6,6 +6,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
+import ErrorFlash from '@/components/ErrorFlash';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';
 import { checkUrl } from '@/utils/utils';
@@ -85,7 +86,8 @@ export default function RootLayout() {
       StyleSheet.create({
         globalContainer: { 
           flex: 1, 
-          backgroundColor: colors.background
+          backgroundColor: colors.background,
+          overflow: 'hidden',
         },
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
         stackContainer: { },
@@ -143,6 +145,7 @@ export default function RootLayout() {
       {backgroundAnimation && <FloatingIconGrid />}
 
       <SettingsMenu />
+      <ErrorFlash />
 
       {initialLoad && (
         <SafeAreaView style={styles.loadingContainer}>

@@ -31,7 +31,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     popoverOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' },
     popoverContent: { maxWidth: 300, width: '100%', maxHeight: '50%', backgroundColor: colors.background, borderRadius: 8, padding: 16 },
     closeButton: { backgroundColor: colors.textPrimary, padding: 8, borderRadius: 4, alignItems: 'center', marginTop: 16 },
-    closeButtonText: { color: colors.background },
+    closeButtonText: { color: colors.background, fontWeight: 'bold'},
     optionText: { fontSize: 16, color: colors.textPrimary },
     selectedOptionText: { fontWeight: 'bold' }
   });
@@ -115,6 +115,8 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
   return (
     <View>
       <View style={styles.filterContainer}>
+        <ToggleApiInfoButton />
+
         {/* Multi-select trigger */}
         <TouchableOpacity style={styles.multiSelectContainer} onPress={() => setIsPopoverVisible(true)}>
           <Text style={{ color: colors.textPrimary }} numberOfLines={1} ellipsizeMode="tail">
@@ -128,8 +130,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
           value={searchText}
           onChangeText={setSearchText}
         />
-
-        <ToggleApiInfoButton />
       </View>
 
       {/* Display selected filters with clear button */}

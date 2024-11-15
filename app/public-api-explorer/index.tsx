@@ -46,7 +46,7 @@ const HomeScreen: React.FC = () => {
     <>
       <View style={styles.inputWrapper}>
         <Text style={styles.inputTitle}>Dive into some open data:</Text>
-        <ApiQueryInput url='Enter a public API endpoint...' />
+        <ApiQueryInput />
       </View>
       <PublicApiCards />
     </>

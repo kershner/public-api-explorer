@@ -1,14 +1,14 @@
 import { TouchableOpacity, Text, TextInput, StyleSheet, View, Modal, ActivityIndicator, Pressable } from 'react-native';
 import ApiQueryModal from '@/components/ApiQueryBuilder/ApiQueryModal';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@/store/useStore';
 
 interface ApiQueryInputProps {
-  url: string;
+  url?: string;
 }
 
-const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
+const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url = '' }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
@@ -48,28 +48,19 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
         justifyContent: 'center',
         alignItems: 'center',
       },
-      error: {
-        color: colors.error,
-        paddingVertical: 4,
-        position: 'absolute',
-        bottom: 45,
-        left: 0
-      }
     }), 
     [colors]
   );
 
   return (
     <View style={styles.wrapper}>
-      { error && (
-        <Text style={styles.error}>{error}</Text>
-      )}
       <TouchableOpacity onPress={openModal} style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           editable={false}
           value={url}
           pointerEvents="none"
+          placeholder="Enter a public API endpoint..."
         />
         {loading ? (
           <View style={styles.loadingSpinnerWrapper}>

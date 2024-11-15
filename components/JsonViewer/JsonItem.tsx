@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import NestedJsonItems from '@/components/JsonViewer/NestedJsonItems';
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import RenderValue from '@/components/JsonViewer/RenderValue';
+import Tooltip from '@/components/JsonViewer/Tooltip';
 import { useStore } from '@/store/useStore';
 
 interface JsonItemProps {
@@ -18,6 +19,8 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
   const colors = useStore((state) => state.colors);
   const hasNestedData = typeof value === 'object' && value !== null;
   const buttonRef = useRef(null);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     setIsOpen(expandAll);
@@ -60,6 +63,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         textAlign: 'left',
         width: hasNestedData ? '100%' : 135,
         color: colors.textPrimary,
+        cursor: hasNestedData ? undefined : 'pointer'
       },
       valueContainer: {
         marginLeft: 8,
@@ -76,6 +80,12 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
     }), [colors]
   );
 
+  const handleTextPress = (event) => {
+    const { pageX, pageY } = event.nativeEvent;
+    setTooltipPosition({ top: pageY - 40, left: pageX });
+    setTooltipVisible(true);
+  };
+
   return (
     <View style={[
       styles.itemContainer, 
@@ -87,9 +97,18 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
         disabled={!hasNestedData}
         style={[styles.row, hasNestedData && styles.nestedRow]}
       >
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.key}>
-          {hasNestedData ? (isOpen ? '▼ ' : '▶ ') : ''}{label}:
-        </Text>
+        {!hasNestedData ? (
+          <Text numberOfLines={1} ellipsizeMode="tail" onPress={handleTextPress} style={styles.key}>
+            {label}:
+          </Text>
+        ) : (
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.key}>
+            {isOpen ? '▼ ' : '▶ '}{label}:
+          </Text>
+        )}
+
+        <Tooltip isVisible={tooltipVisible} position={tooltipPosition} onClose={() => setTooltipVisible(false)} label={label} />
+          
         {!hasNestedData && (
           <View style={styles.valueContainer}>
             <RenderValue value={value} label={label} />

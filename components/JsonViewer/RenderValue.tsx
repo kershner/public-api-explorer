@@ -24,7 +24,7 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
           fontSize: 16,
           textAlign: 'left',
           alignSelf: 'flex-start',
-          width: screenWidth < 600 ? 200 : 400,
+          maxWidth: screenWidth < 600 ? 200 : 400,
           color: colors.textPrimary,
           borderWidth: 2,
           borderColor: isPopoverVisible ? colors.textPrimary : colors.background,

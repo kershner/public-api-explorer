@@ -1,10 +1,11 @@
 import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, Platform } from 'react-native';
+import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
+import DebouncedTextInput from '@/components/DebouncedTextInput';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useMemo } from 'react';
-import BottomDrawer from '@/components/BottomDrawer';
 import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
@@ -142,7 +143,6 @@ export default function RootLayout() {
 
       {backgroundAnimation && <FloatingIconGrid />}
 
-      <BottomDrawer />
       <SettingsMenu />
 
       {initialLoad && (

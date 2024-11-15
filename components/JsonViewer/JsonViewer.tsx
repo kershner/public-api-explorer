@@ -1,6 +1,8 @@
 import { FlatList, Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import FilterControls from "@/components/JsonViewer/TopDrawer/FilterControls";
 import ChosenApiInfo from '@/components/JsonViewer/TopDrawer/ChosenApiInfo';
+import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
+import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput';
 import React, { useMemo, useState, useRef } from 'react';
 import JsonItem from '@/components/JsonViewer/JsonItem';
 import { useStore } from '@/store/useStore';
@@ -26,13 +28,13 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       },
       container: { 
         flexGrow: 1, 
-        paddingBottom: 80,
+        paddingBottom: 100,
         paddingRight: 4,
       },
       backToTopButton: {
         position: 'absolute',
-        bottom: 20,
-        right: Platform.OS === 'web' ? 18 * 2 : 18,  // Offset for web scrollbar
+        bottom: 110,
+        right: Platform.OS === 'web' ? 19 * 2 : 19,  // Offset for web scrollbar
         backgroundColor: colors.background,
         borderWidth: 2,
         borderColor: colors.textPrimary,
@@ -106,6 +108,12 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         disableVirtualization={Platform.OS === 'web'}
       />
 
+      {/* New JsonViewer bottom drawer below */}
+      <View>
+        <ApiQueryInput url={url} />
+        <PublicApiCards />
+      </View>
+      
       {showBackToTop && (
         <TouchableOpacity style={styles.backToTopButton} onPress={scrollToTop}>
           <Text style={styles.backToTopButtonText}>↑ Top</Text>

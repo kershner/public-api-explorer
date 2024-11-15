@@ -1,6 +1,9 @@
+import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
+import DebouncedTextInput from '@/components/DebouncedTextInput';
 import { APP_TITLE } from '@/constants/constants';
+import React, { useEffect, useMemo } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { useStore } from '@/store/useStore';
-import React, { useEffect } from 'react';
 import { useRouter } from "expo-router";
 
 const HomeScreen: React.FC = () => {
@@ -16,7 +19,21 @@ const HomeScreen: React.FC = () => {
     }
   }, [jsonData, url]);
 
-  return null;
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        bottomDrawer: {
+          paddingHorizontal: 16
+        }
+    }), []
+  );
+
+  return (
+    <>
+      <DebouncedTextInput />
+      <PublicApiCards />
+    </>
+  );
 };
 
 export default HomeScreen;

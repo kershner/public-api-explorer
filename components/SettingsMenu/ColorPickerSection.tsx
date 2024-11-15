@@ -33,9 +33,7 @@ const ColorPickerSection: React.FC<ColorPickerSectionProps> = ({
     const newColor = color.hex.toUpperCase();
     setLocalColor(newColor);
 
-    if (customColorOn) {
-      throttledSetColorValue(newColor);
-    }
+    throttledSetColorValue(newColor);
   };
 
   useEffect(() => {

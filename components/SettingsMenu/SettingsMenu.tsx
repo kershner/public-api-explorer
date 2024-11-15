@@ -56,11 +56,11 @@ const SettingsMenu: React.FC = () => {
         header: {
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
           paddingHorizontal: 16,
           paddingVertical: 12,
           borderBottomColor: colors.textPrimary,
           borderBottomWidth: 1,
+          gap: 20
         },
         title: {
           fontSize: 20,
@@ -105,10 +105,11 @@ const SettingsMenu: React.FC = () => {
     <Modal visible={modalOpen} onRequestClose={toggleModal}>
       <View style={styles.modalOverlay}>
         <View style={styles.header}>
+        <TouchableOpacity onPress={toggleModal}>
+          <Text style={{ fontSize: 32,color: colors.textPrimary }}>←</Text>
+        </TouchableOpacity>
+
           <Text style={styles.title}>Settings</Text>
-          <TouchableOpacity onPress={toggleModal}>
-            <Text style={{ fontSize: 32, color: colors.textPrimary, fontWeight: 'bold' }}>X</Text>
-          </TouchableOpacity>
         </View>
 
         <ScrollView contentContainerStyle={styles.optionRowsContainer}>

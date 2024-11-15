@@ -23,6 +23,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 2, color: colors.textPrimary },
     filterContainer: { flexDirection: 'row', gap: 10, alignItems: 'center' },
     multiSelectContainer: { flex: 1, height: 40, borderWidth: 2, borderRadius: 4, padding: 8, justifyContent: 'center', backgroundColor: colors.background, borderColor: colors.textPrimary },
+    keyFilterLabel: {fontWeight: 'bold', fontSize: 16, paddingBottom: 4, color: colors.textPrimary },
     input: { flex: 3, height: 40, borderWidth: 2, paddingLeft: 10, borderRadius: 4, color: colors.textPrimary, borderColor: colors.textPrimary, backgroundColor: colors.background },
     activeFiltersContainer: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginVertical: 4 },
     filterChip: { backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 20 },
@@ -154,6 +155,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
       <Modal transparent visible={isPopoverVisible} animationType="none">
         <TouchableOpacity style={styles.popoverOverlay} onPress={() => setIsPopoverVisible(false)}>
           <View style={styles.popoverContent}>
+            <Text style={styles.keyFilterLabel}>Filter by key:</Text>
             <ScrollView>
               {allKeys.map((key) => (
                 <TouchableOpacity key={key} onPress={() => toggleKeySelection(key)}>

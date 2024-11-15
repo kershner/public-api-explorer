@@ -3,6 +3,7 @@ import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { PublicApi } from '@/models/PublicApi';
 import { useStore } from '@/store/useStore';
 import React, { useMemo } from 'react';
+import { checkUrl } from '@/utils/utils';
 
 type PublicApiCardProps = {
   api: PublicApi;
@@ -68,10 +69,9 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index }) => {
   );
 
   const handlePress = () => {
-    setInputValue("");
     setTimeout(() => {
       setLoading(true);
-      setInputValue(api.url);
+      checkUrl(api.url, 5000);
     }, 100);
   };
 

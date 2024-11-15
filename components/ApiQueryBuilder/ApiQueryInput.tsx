@@ -1,4 +1,4 @@
-import { TouchableOpacity, TextInput, StyleSheet, View, Modal } from 'react-native';
+import { TouchableOpacity, TextInput, StyleSheet, View, Modal, ActivityIndicator } from 'react-native';
 import ApiQueryModal from '@/components/ApiQueryBuilder/ApiQueryModal';
 import React, { useMemo, useState } from 'react';
 import { useStore } from '@/store/useStore';
@@ -10,6 +10,7 @@ interface ApiQueryInputProps {
 const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useStore((state) => state.colors);
+  const loading = useStore((state) => state.loading);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
@@ -27,6 +28,12 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
         fontSize: 18,
         color: colors.textPrimary,
         fontWeight: 'bold'
+      },
+      loadingSpinnerWrapper: {
+        position: 'absolute',
+        right: 0,
+        top: 1,
+        backgroundColor: colors.background,
       },
       overlay: {
         flex: 1,
@@ -47,6 +54,11 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url }) => {
           value={url}
           pointerEvents="none"
         />
+        {loading ? (
+          <View style={styles.loadingSpinnerWrapper}>
+            <ActivityIndicator size={41} color={colors.textPrimary} />
+          </View>
+        ) : null}
       </TouchableOpacity>
 
       <Modal transparent visible={modalVisible}>

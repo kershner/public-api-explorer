@@ -34,7 +34,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     popoverContent: { maxWidth: 300, width: '100%', maxHeight: '50%', backgroundColor: colors.background, borderRadius: 8, padding: 16 },
     closeButton: { backgroundColor: colors.textPrimary, padding: 8, borderRadius: 4, alignItems: 'center', marginTop: 16 },
     closeButtonText: { color: colors.background },
-    optionText: { fontSize: 16 },
+    optionText: { fontSize: 16, color: colors.textPrimary },
     selectedOptionText: { fontWeight: 'bold' }
   });
 

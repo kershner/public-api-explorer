@@ -74,8 +74,8 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
     StyleSheet.create({
       modalContainer: { width: '90%', maxWidth: 600, padding: 20, backgroundColor: colors.background, borderRadius: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 8, alignSelf: 'center' },
       hr: { borderBottomWidth: 1, borderBottomColor: colors.accent, marginVertical: 10 },
-      title: { fontSize: 24, fontWeight: '600', color: colors.textPrimary, marginBottom: 20, textAlign: 'center' },
-      textInput: { cursor: 'auto', borderWidth: 2, borderColor: colors.textPrimary, backgroundColor: colors.background, padding: 12, borderRadius: 8, fontSize: 16, color: colors.textPrimary, marginBottom: 20 },
+      title: { fontSize: 24, fontWeight: '600', color: colors.textPrimary, marginBottom: 4, textAlign: 'center' },
+      textInput: { cursor: 'auto', borderWidth: 2, borderColor: colors.textPrimary, backgroundColor: colors.background, padding: 12, borderRadius: 8, fontSize: 16, color: colors.textPrimary, marginBottom: 10 },
       labelHeader: { fontSize: 18, fontWeight: '600', color: colors.textPrimary, marginBottom: 2 },
       labelDescription: { fontSize: 14, color: colors.textPrimary },
       jsonKeysContainer: { maxHeight: 150 },

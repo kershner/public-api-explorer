@@ -52,21 +52,25 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
   
   const toggleKey = (key: string, isManual = false) => {
     const stateToUpdate = isManual ? setSelectedManualKeys : setSelectedKeys;
-
     stateToUpdate((prevSelected) => {
-      const newSelected = new Set(prevSelected);
-      const queryUrl = new URL(query);
-
-      if (newSelected.has(key)) {
-        newSelected.delete(key);
-        queryUrl.searchParams.delete(key);
-      } else {
-        newSelected.add(key);
-        queryUrl.searchParams.append(key, '');
+      try {
+        const newSelected = new Set(prevSelected);
+        const queryUrl = new URL(query);
+  
+        if (newSelected.has(key)) {
+          newSelected.delete(key);
+          queryUrl.searchParams.delete(key);
+        } else {
+          newSelected.add(key);
+          queryUrl.searchParams.append(key, '');
+        }
+  
+        setQuery(queryUrl.toString());
+        return newSelected;
+      } catch (error) {
+        // If the URL is invalid, do nothing
+        return prevSelected;
       }
-
-      setQuery(queryUrl.toString());
-      return newSelected;
     });
   };
 
@@ -110,12 +114,10 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
           placeholderTextColor={colors.textPrimary}
         />
         
-        {validQuery && (
-          <Text style={styles.labelHeader}>Add Query Parameters</Text>
-        )}
-        
+        <Text style={styles.labelHeader}>Add Query Parameters</Text>
+
         {/* JSON Keys */}
-        {jsonKeys.length > 0 && validQuery && (
+        {jsonKeys.length > 0 && (
           <View style={styles.jsonKeysContainer}>
             <ScrollView contentContainerStyle={styles.keysScrollView}>
               <View style={styles.descriptionContainer}>
@@ -144,8 +146,7 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
         )}
       
         {/* Manual Keys Section */}
-        {validQuery && (
-          <View style={styles.jsonKeysContainer}>
+        <View style={styles.jsonKeysContainer}>
           <ScrollView contentContainerStyle={styles.keysScrollView}>
             <View style={styles.descriptionContainer}>
               <Text style={styles.keyContainerDescription}>
@@ -168,8 +169,6 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
             ))}
           </ScrollView>
         </View>
-        )}
-        
 
         <View style={styles.buttonContainer}>
           <Pressable

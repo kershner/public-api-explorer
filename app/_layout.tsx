@@ -10,6 +10,7 @@ import ErrorFlash from '@/components/ErrorFlash';
 import { useStore } from '@/store/useStore';
 import * as Linking from 'expo-linking';
 import { checkUrl } from '@/utils/utils';
+import RemoteSvg from '@/components/RemoteSvg';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -92,7 +93,12 @@ export default function RootLayout() {
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
         stackContainer: { },
         headerContainer: { backgroundColor: colors.background },
-        headerTitleText: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
+        headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
+        headerLogo: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 5
+        },
         headerBack: { fontSize: 16, color: colors.textPrimary },
         menuButtonWrapper: { paddingRight: 16 },
         loadingContainer: { 
@@ -124,7 +130,10 @@ export default function RootLayout() {
               headerTintColor: colors.textPrimary,
               headerTitle: () => (
                 <TouchableOpacity onPress={goHomeAndClearStack}>
-                  <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
+                  <View style={styles.headerLogo}>
+                    <RemoteSvg fileName='svg/api_explorer_logo_2.svg' width={35} height={35} />
+                    <Text style={styles.headerTitleText}>{APP_TITLE}</Text>
+                  </View>
                 </TouchableOpacity>
               ),
               headerRight: () => (

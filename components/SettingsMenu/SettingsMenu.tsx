@@ -56,6 +56,7 @@ const SettingsMenu: React.FC = () => {
         header: {
           flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'space-between',
           paddingHorizontal: 16,
           paddingVertical: 12,
           borderBottomColor: colors.textPrimary,
@@ -74,17 +75,23 @@ const SettingsMenu: React.FC = () => {
           alignSelf: 'center',
         },
         optionRow: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
           marginBottom: 20,
           paddingBottom: 20,
           borderBottomWidth: 2,
           borderColor: colors.accent,
         },
+        toggleThumbWrapper: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%'
+        },
         optionRowLabel: {
           color: colors.textPrimary,
           fontWeight: 'bold',
+        },
+        optionHelpText: {
+          width: '100%',
+          flex: 1
         },
         resetButton: {
           marginTop: 20,
@@ -97,6 +104,8 @@ const SettingsMenu: React.FC = () => {
           color: colors.background,
           fontWeight: 'bold',
         },
+        closeButton: { alignSelf: 'flex-end', backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4, marginRight: 8, marginBottom: 8 },
+        closeButtonText: { color: colors.background, fontSize: 16, fontWeight: 'bold' },
       }),
     [colors, darkMode]
   );
@@ -105,17 +114,19 @@ const SettingsMenu: React.FC = () => {
     <Modal visible={modalOpen} onRequestClose={toggleModal}>
       <View style={styles.modalOverlay}>
         <View style={styles.header}>
-        <TouchableOpacity onPress={toggleModal}>
-          <Text style={{ fontSize: 32,color: colors.textPrimary }}>←</Text>
-        </TouchableOpacity>
-
           <Text style={styles.title}>Settings</Text>
+          
+          <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
         </View>
 
         <ScrollView contentContainerStyle={styles.optionRowsContainer}>
           <View style={styles.optionRow}>
-            <Text style={styles.optionRowLabel}>Dark mode</Text>
-            <ToggleThumb onPress={toggleDarkMode} isOn={darkMode} />
+            <View style={styles.toggleThumbWrapper}>
+              <Text style={styles.optionRowLabel}>Dark mode</Text>
+              <ToggleThumb onPress={toggleDarkMode} isOn={darkMode} />
+            </View>
           </View>
 
           <View style={styles.optionRow}>
@@ -139,13 +150,23 @@ const SettingsMenu: React.FC = () => {
           </View>
 
           <View style={styles.optionRow}>
-            <Text style={styles.optionRowLabel}>Background animation</Text>
-            <ToggleThumb onPress={() => setBackgroundAnimation(!backgroundAnimation)} isOn={backgroundAnimation} />
+            <View style={styles.toggleThumbWrapper}>
+              <Text style={styles.optionRowLabel}>Background animation</Text>
+              <ToggleThumb onPress={() => setBackgroundAnimation(!backgroundAnimation)} isOn={backgroundAnimation} />
+            </View>
+            <Text style={styles.optionHelpText}>
+              Turn the background animation on or off.
+            </Text>
           </View>
 
           <View style={styles.optionRow}>
-            <Text style={styles.optionRowLabel}>Hide Empty Rows</Text>
-            <ToggleThumb onPress={toggleHideEmptyRows} isOn={hideEmptyRows} />
+            <View style={styles.toggleThumbWrapper}>
+              <Text style={styles.optionRowLabel}>Hide Empty Rows</Text>
+              <ToggleThumb onPress={toggleHideEmptyRows} isOn={hideEmptyRows} />
+            </View>
+            <Text style={styles.optionHelpText}>
+              Hide rows in the JSON with empty values.
+            </Text>
           </View>
 
           <TouchableOpacity style={styles.resetButton} onPress={resetSettings}>

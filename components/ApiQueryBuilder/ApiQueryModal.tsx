@@ -110,10 +110,12 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
           placeholderTextColor={colors.textPrimary}
         />
         
-        <Text style={styles.labelHeader}>Add Query Parameters</Text>
-
+        {validQuery && (
+          <Text style={styles.labelHeader}>Add Query Parameters</Text>
+        )}
+        
         {/* JSON Keys */}
-        {jsonKeys.length > 0 && (
+        {jsonKeys.length > 0 && validQuery && (
           <View style={styles.jsonKeysContainer}>
             <ScrollView contentContainerStyle={styles.keysScrollView}>
               <View style={styles.descriptionContainer}>
@@ -142,7 +144,8 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
         )}
       
         {/* Manual Keys Section */}
-        <View style={styles.jsonKeysContainer}>
+        {validQuery && (
+          <View style={styles.jsonKeysContainer}>
           <ScrollView contentContainerStyle={styles.keysScrollView}>
             <View style={styles.descriptionContainer}>
               <Text style={styles.keyContainerDescription}>
@@ -165,6 +168,8 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
             ))}
           </ScrollView>
         </View>
+        )}
+        
 
         <View style={styles.buttonContainer}>
           <Pressable

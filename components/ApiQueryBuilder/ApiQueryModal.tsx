@@ -77,12 +77,12 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
   const styles = useMemo(() =>
     StyleSheet.create({
       modalContainer: { width: '90%', maxHeight: '90%', maxWidth: 600, padding: 20, backgroundColor: colors.background, borderRadius: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 8, alignSelf: 'center' },
-      hr: { borderBottomWidth: 1, borderBottomColor: colors.textPrimary, marginVertical: 18 },
+      hr: { borderBottomWidth: 2, borderBottomColor: colors.accent, marginVertical: 18 },
       title: { fontSize: 24, fontWeight: '600', color: colors.textPrimary, marginBottom: 4, textAlign: 'center' },
       textInput: { cursor: 'auto', borderWidth: 2, borderColor: colors.textPrimary, backgroundColor: colors.background, padding: 12, borderRadius: 8, fontSize: 16, color: colors.textPrimary, marginBottom: 10 },
       labelHeader: { fontSize: 18, fontWeight: '600', color: colors.textPrimary, marginBottom: 2, marginTop: 8 },
       labelDescription: { fontSize: 14, color: colors.textPrimary },
-      keysScrollView: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
+      keysScrollView: { maxHeight: 200, flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
       descriptionContainer: { width: '100%' },
       keyContainerDescription: { fontSize: 14, color: colors.textPrimary },
       keyButton: { paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 20, alignSelf: 'flex-start', borderColor: colors.border },
@@ -95,7 +95,7 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
       buttonText: { fontSize: 16, fontWeight: '600', color: colors.textPrimary },
       closeButton: { alignSelf: 'flex-end', backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4, marginRight: 8, marginBottom: 8 },
       closeButtonText: { color: colors.background, fontSize: 16, fontWeight: 'bold' },
-    }), [colors]);
+    }), [colors, validQuery]);
 
   return (
     <Pressable style={styles.modalContainer}>

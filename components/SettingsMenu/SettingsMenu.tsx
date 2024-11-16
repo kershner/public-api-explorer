@@ -70,6 +70,7 @@ const SettingsMenu: React.FC = () => {
         },
         optionRowsContainer: {
           padding: 20,
+          paddingTop: 40,
           maxWidth: 400,
           width: '100%',
           alignSelf: 'center',
@@ -77,8 +78,6 @@ const SettingsMenu: React.FC = () => {
         optionRow: {
           marginBottom: 20,
           paddingBottom: 20,
-          borderBottomWidth: 2,
-          borderColor: colors.accent,
         },
         toggleThumbWrapper: {
           flexDirection: 'row',
@@ -107,6 +106,7 @@ const SettingsMenu: React.FC = () => {
         },
         closeButton: { alignSelf: 'flex-end', backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4, marginRight: 8, marginBottom: 8 },
         closeButtonText: { color: colors.background, fontSize: 16, fontWeight: 'bold' },
+        hr: { borderBottomWidth: 2, borderBottomColor: colors.accent, marginVertical: 18 },
       }),
     [colors, darkMode]
   );
@@ -130,6 +130,8 @@ const SettingsMenu: React.FC = () => {
             </View>
           </View>
 
+          <View style={styles.hr} />
+
           <View style={styles.optionRow}>
             <ColorPickerSection
               label="Custom background color"
@@ -139,6 +141,8 @@ const SettingsMenu: React.FC = () => {
               toggleCustomColorOn={toggleCustomBackgroundColorOn}
             />
           </View>
+
+          <View style={styles.hr} />
 
           <View style={styles.optionRow}>
             <ColorPickerSection
@@ -150,6 +154,8 @@ const SettingsMenu: React.FC = () => {
             />
           </View>
 
+          <View style={styles.hr} />
+
           <View style={styles.optionRow}>
             <View style={styles.toggleThumbWrapper}>
               <Text style={styles.optionRowLabel}>Background animation</Text>
@@ -159,6 +165,8 @@ const SettingsMenu: React.FC = () => {
               Turn the background animation on or off.
             </Text>
           </View>
+
+          <View style={styles.hr} />
 
           <View style={styles.optionRow}>
             <View style={styles.toggleThumbWrapper}>

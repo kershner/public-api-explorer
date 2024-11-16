@@ -122,20 +122,20 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
       </View>
 
       {/* Display selected filters with clear button */}
-      <View style={styles.activeFiltersContainer}>
-        {Array.from(selectedKeys).map((key) => (
-          <TouchableOpacity key={key} onPress={() => toggleKeySelection(key)} style={styles.filterChip}>
-            <Text style={styles.filterChipText}>{key} ✕</Text>
-          </TouchableOpacity>
-        ))}
-        
-        {selectedKeys.size > 0 && (
+      {selectedKeys.size > 0 && (
+        <View style={styles.activeFiltersContainer}>
+          {Array.from(selectedKeys).map((key) => (
+            <TouchableOpacity key={key} onPress={() => toggleKeySelection(key)} style={styles.filterChip}>
+              <Text style={styles.filterChipText}>{key} ✕</Text>
+            </TouchableOpacity>
+          ))}
+          
           <TouchableOpacity onPress={clearAllFilters} style={styles.clearButton}>
             <Text style={styles.clearButtonText}>Clear All Filters</Text>
           </TouchableOpacity>
-        )}
-      </View>
-
+        </View>  
+      )}
+      
       {/* Popover Modal */}
       <Modal transparent visible={isPopoverVisible} animationType="none">
         <TouchableOpacity style={styles.popoverOverlay} onPress={() => setIsPopoverVisible(false)}>

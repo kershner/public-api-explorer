@@ -91,7 +91,8 @@ const SettingsMenu: React.FC = () => {
         },
         optionHelpText: {
           width: '100%',
-          flex: 1
+          flex: 1,
+          color: colors.textPrimary
         },
         resetButton: {
           marginTop: 20,

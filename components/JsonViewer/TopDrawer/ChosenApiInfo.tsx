@@ -22,6 +22,10 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   const [chosenApi, setChosenApi] = useState<PublicApi | undefined>(undefined);
   const colors = useStore((state) => state.colors);
 
+  const showSchema = () => {
+    console.log('SHOW THAT SCHEMA');
+  }
+
   useEffect(() => {
     if (url) {
       const api = findPublicApiByUrl(url);
@@ -41,29 +45,30 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
       flexWrap: 'wrap',
     },
     titleAndToggleRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
       flexWrap: 'wrap',
-      alignItems: 'flex-end',
-      width: '100%'
+      alignItems: 'flex-start',
+      width: '100%',
+      gap: 3
+    },
+    titleLinks: {
+      flexDirection: 'row',
+      gap: 5
     },
     titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
       backgroundColor: colors.textPrimary,
       borderRadius: 35,
       paddingHorizontal: 10,
-      paddingLeft: 15,
-      paddingVertical: 6,
-      maxWidth: '68%'
+      paddingVertical: 2,
     },
     title: { 
-      color: colors.background,
-      fontWeight: 'bold',
+      color: colors.textPrimary,
+      fontSize: 24,
+      fontWeight: 'bold'
     },
     openLinkIcon: {
       color: colors.background,
-      paddingLeft: 4,
+      paddingHorizontal: 4,
+      fontWeight: 'bold',
     },
     textContainer: {
       flexShrink: 1,
@@ -82,10 +87,17 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   return (
     <View style={styles.chosenApiContainer}>
       <View style={styles.titleAndToggleRow}>
-        <TouchableOpacity style={styles.titleContainer} onPress={() => Linking.openURL(chosenApi.viewMoreUrl)}>
-          <Text style={styles.title}>{chosenApi.title}</Text>
-          <Text style={styles.openLinkIcon}>↗️</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>{chosenApi.title}</Text>
+
+        <View style={styles.titleLinks}>
+          <TouchableOpacity style={styles.titleContainer} onPress={() => Linking.openURL(chosenApi.viewMoreUrl)}>  
+            <Text style={styles.openLinkIcon}>Docs</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.titleContainer} onPress={showSchema}>  
+            <Text style={styles.openLinkIcon}>Schema</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       
       <View style={styles.textContainer}>

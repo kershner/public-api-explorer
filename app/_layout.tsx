@@ -97,7 +97,7 @@ export default function RootLayout() {
         headerLogo: {
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 5
+          gap: 10
         },
         headerBack: { fontSize: 16, color: colors.textPrimary },
         menuButtonWrapper: { paddingRight: 16 },

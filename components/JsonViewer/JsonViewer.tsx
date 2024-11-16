@@ -22,7 +22,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
     StyleSheet.create({
       wrapper: { 
         flex: 1, 
-        paddingTop: 16,
+        paddingTop: currentApiExpanded ? 6 : 16,
         paddingHorizontal: 16,
       },
       container: { 

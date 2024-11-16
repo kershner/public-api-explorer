@@ -24,7 +24,7 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/img/favicon.png",
+      "favicon": "https://djfdm802jwooz.cloudfront.net/static/react-apps/public-api-explorer/assets/img/img/favicon.png",
       "publicPath": "https://djfdm802jwooz.cloudfront.net/static/public-api-explorer/dist"
     },
     "plugins": [

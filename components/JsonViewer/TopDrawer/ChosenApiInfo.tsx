@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Linking, TouchableOpacity } from 'react-native';
+import JsonSchemaModal from '@/components/JsonViewer/TopDrawer/JsonSchemaModal';
 import React, { useState, useEffect } from 'react';
 import { publicApis } from '@/data/PublicApis';
 import { PublicApi } from '@/models/PublicApi';
@@ -21,9 +22,10 @@ const findPublicApiByUrl = (url: string | ""): PublicApi | undefined => {
 const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
   const [chosenApi, setChosenApi] = useState<PublicApi | undefined>(undefined);
   const colors = useStore((state) => state.colors);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const showSchema = () => {
-    console.log('SHOW THAT SCHEMA');
+    setModalVisible(true);
   }
 
   useEffect(() => {
@@ -97,6 +99,13 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
           <TouchableOpacity style={styles.titleContainer} onPress={showSchema}>  
             <Text style={styles.openLinkIcon}>Schema</Text>
           </TouchableOpacity>
+
+          <JsonSchemaModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            json={jsonData}
+            url={url}
+          />
         </View>
       </View>
       

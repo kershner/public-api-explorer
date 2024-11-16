@@ -12,7 +12,7 @@ interface ApiQueryModalProps {
 const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonData }) => {
   const [query, setQuery] = useState(url);
   const colors = useStore((state) => state.colors);
-  const validQuery = query !== url && isUrl(query);
+  const validQuery = isUrl(query);
   const [jsonKeys, setjsonKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [manualKeys, setManualKeys] = useState<string[]>(['page', 'limit', 'sort', 'order', 'q', 'search']);
@@ -76,13 +76,12 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
 
   const styles = useMemo(() =>
     StyleSheet.create({
-      modalContainer: { width: '90%', maxWidth: 600, padding: 20, backgroundColor: colors.background, borderRadius: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 8, alignSelf: 'center' },
+      modalContainer: { width: '90%', maxHeight: '90%', maxWidth: 600, padding: 20, backgroundColor: colors.background, borderRadius: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 8, alignSelf: 'center' },
       hr: { borderBottomWidth: 1, borderBottomColor: colors.textPrimary, marginVertical: 18 },
       title: { fontSize: 24, fontWeight: '600', color: colors.textPrimary, marginBottom: 4, textAlign: 'center' },
       textInput: { cursor: 'auto', borderWidth: 2, borderColor: colors.textPrimary, backgroundColor: colors.background, padding: 12, borderRadius: 8, fontSize: 16, color: colors.textPrimary, marginBottom: 10 },
       labelHeader: { fontSize: 18, fontWeight: '600', color: colors.textPrimary, marginBottom: 2, marginTop: 8 },
       labelDescription: { fontSize: 14, color: colors.textPrimary },
-      jsonKeysContainer: { maxHeight: 150 },
       keysScrollView: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
       descriptionContainer: { width: '100%' },
       keyContainerDescription: { fontSize: 14, color: colors.textPrimary },
@@ -90,7 +89,7 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
       keyButtonSelected: { backgroundColor: colors.accent, borderColor: colors.accent },
       keyButtonUnselected: { backgroundColor: colors.background, borderColor: colors.border },
       keyButtonText: { fontSize: 11, fontWeight: '500', color: colors.textPrimary },
-      buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 },
+      buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: validQuery ? 20 : 0 },
       button: { flex: 1, marginHorizontal: 5, paddingVertical: 12, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.accent },
       buttonDisabled: { opacity: 0.5 },
       buttonText: { fontSize: 16, fontWeight: '600', color: colors.textPrimary },
@@ -114,11 +113,13 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
           placeholderTextColor={colors.textPrimary}
         />
         
+        {validQuery && (
         <Text style={styles.labelHeader}>Add Query Parameters</Text>
+        )}
 
         {/* JSON Keys */}
         {jsonKeys.length > 0 && (
-          <View style={styles.jsonKeysContainer}>
+          <View>
             <ScrollView contentContainerStyle={styles.keysScrollView}>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.keyContainerDescription}>
@@ -146,30 +147,32 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
         )}
       
         {/* Manual Keys Section */}
-        <View style={styles.jsonKeysContainer}>
-          <ScrollView contentContainerStyle={styles.keysScrollView}>
-            <View style={styles.descriptionContainer}>
-              <Text style={styles.keyContainerDescription}>
-                Common API parameters
-              </Text>
-            </View>
-            {manualKeys.map((key) => (
-              <Pressable
-                key={key}
-                style={[
-                  styles.keyButton,
-                  selectedManualKeys.has(key)
-                    ? styles.keyButtonSelected
-                    : styles.keyButtonUnselected,
-                ]}
-                onPress={() => toggleKey(key, true)}
-              >
-                <Text style={styles.keyButtonText}>{key}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-
+        {validQuery && (
+          <View>
+            <ScrollView contentContainerStyle={styles.keysScrollView}>
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.keyContainerDescription}>
+                  Common API parameters
+                </Text>
+              </View>
+              {manualKeys.map((key) => (
+                <Pressable
+                  key={key}
+                  style={[
+                    styles.keyButton,
+                    selectedManualKeys.has(key)
+                      ? styles.keyButtonSelected
+                      : styles.keyButtonUnselected,
+                  ]}
+                  onPress={() => toggleKey(key, true)}
+                >
+                  <Text style={styles.keyButtonText}>{key}</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+        
         <View style={styles.buttonContainer}>
           <Pressable
             style={[styles.button, !validQuery && styles.buttonDisabled]}

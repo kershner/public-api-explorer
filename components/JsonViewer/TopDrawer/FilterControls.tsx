@@ -1,7 +1,8 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeColors } from '@/store/useStore';
+import { extractKeys } from '@/utils/utils';
 
 interface FilterControlsProps {
   jsonData: unknown;
@@ -35,18 +36,6 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     optionText: { fontSize: 16, color: colors.textPrimary },
     selectedOptionText: { fontWeight: 'bold' }
   });
-
-  // Extract unique keys from JSON data
-  const extractKeys = useCallback((data: unknown, keys: Set<string>) => {
-    if (Array.isArray(data)) {
-      data.forEach((item) => extractKeys(item, keys));
-    } else if (data && typeof data === 'object') {
-      Object.keys(data).forEach((key) => {
-        if (isNaN(Number(key))) keys.add(key);
-        extractKeys((data as Record<string, unknown>)[key], keys);
-      });
-    }
-  }, []);
 
   // Set allKeys by extracting unique keys when jsonData changes
   useEffect(() => {

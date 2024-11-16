@@ -1,18 +1,18 @@
-import { TouchableOpacity, Text, TextInput, StyleSheet, View, Modal, ActivityIndicator, Pressable } from 'react-native';
+import { TouchableOpacity, TextInput, StyleSheet, View, Modal, ActivityIndicator, Pressable } from 'react-native';
 import ApiQueryModal from '@/components/ApiQueryBuilder/ApiQueryModal';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useStore } from '@/store/useStore';
 
 interface ApiQueryInputProps {
   url?: string;
+  jsonData?: unknown
 }
 
-const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url = '' }) => {
+const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url = '', jsonData = {} }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useStore((state) => state.colors);
   const loading = useStore((state) => state.loading);
-  const error = useStore((state) => state.error);
   const isRoot = useIsRootScreen();
 
   const openModal = () => setModalVisible(true);
@@ -71,7 +71,7 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url = '' }) => {
 
       <Modal transparent visible={modalVisible}>
         <Pressable style={styles.overlay} onPress={closeModal}>
-          <ApiQueryModal onClose={closeModal} url={url} />
+          <ApiQueryModal onClose={closeModal} url={url} jsonData={jsonData} />
         </Pressable>
       </Modal>
     </View>

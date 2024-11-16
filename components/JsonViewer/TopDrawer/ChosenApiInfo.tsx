@@ -39,7 +39,6 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
     chosenApiContainer: { 
       paddingBottom: 8,
       flexWrap: 'wrap',
-      width: '100%',
     },
     titleAndToggleRow: {
       flexDirection: 'row',

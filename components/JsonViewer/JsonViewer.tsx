@@ -107,7 +107,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         disableVirtualization={Platform.OS === 'web'}
       />
 
-      <BottomDrawer url={url} />
+      <BottomDrawer url={url} jsonData={jsonData} />
       
       {showBackToTop && (
         <TouchableOpacity style={styles.backToTopButton} onPress={scrollToTop}>

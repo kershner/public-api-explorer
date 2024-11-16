@@ -4,7 +4,12 @@ import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput';
 import React, { useMemo, useState } from 'react';
 import { useStore } from '@/store/useStore';
 
-const BottomDrawer = ({ url }: { url: string }) => {
+interface BottomDrawerProps {
+  url: string;
+  jsonData?: unknown;
+}
+
+const BottomDrawer: React.FC<BottomDrawerProps> = ({ url, jsonData }) => {
   const colors = useStore((state) => state.colors);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -52,7 +57,7 @@ const BottomDrawer = ({ url }: { url: string }) => {
 
   return (
     <View style={styles.container}>
-      <ApiQueryInput url={url} />
+      <ApiQueryInput url={url} jsonData={jsonData} />
       <Pressable style={styles.showApisButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.showApisText}>APIs</Text>
       </Pressable>

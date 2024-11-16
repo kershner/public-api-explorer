@@ -95,3 +95,17 @@ export const isEmpty = (obj) =>
   (typeof obj === 'string' && obj.trim().length === 0) || // empty string
   (Array.isArray(obj) && obj.length === 0) || // empty array
   (typeof obj === 'object' && Object.keys(obj).length === 0); // empty object
+
+
+// Extract unique keys from JSON data
+export const extractKeys = (data: unknown, keys: Set<string> = new Set()): Set<string> => {
+  if (Array.isArray(data)) {
+    data.forEach((item) => extractKeys(item, keys));
+  } else if (data && typeof data === 'object') {
+    Object.keys(data).forEach((key) => {
+      if (isNaN(Number(key))) keys.add(key);
+      extractKeys((data as Record<string, unknown>)[key], keys);
+    });
+  }
+  return keys;
+};

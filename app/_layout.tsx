@@ -24,6 +24,8 @@ export default function RootLayout() {
   const backgroundAnimation = useStore((state) => state.backgroundAnimation);
   const navigationState = useNavigationState(state => state);
   const prevStackLength = useRef(navigationState.routes.length);
+  const jsonData = useStore((state) => state.jsonData);
+  const jsonDataMap = useStore((state) => state.jsonDataMap);
 
   useEffect(() => {
     const currentStackLength = navigationState.routes.length;
@@ -113,8 +115,10 @@ export default function RootLayout() {
   );
 
   const goHomeAndClearStack = () => {
-    useStore.setState({ inputValue: '', url: '', error: '', jsonData: {}, jsonDataMap: {} });
-    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: `${APP_TITLE}/index` }] }));
+    if (jsonData && jsonDataMap) {
+      useStore.setState({ inputValue: '', url: '', error: '', jsonData: {}, jsonDataMap: {} });
+      navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: `${APP_TITLE}/index` }] }));
+    }
   };
 
   return (

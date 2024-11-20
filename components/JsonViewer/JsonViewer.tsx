@@ -17,6 +17,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
   const scrollViewRef = useRef(null);
   const currentApiExpanded = useStore((state) => state.currentApiExpanded);
+  const expandAll = useStore((state) => state.expandAll);
 
   const styles = useMemo(() => 
     StyleSheet.create({
@@ -94,6 +95,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
             label={item.key}
             value={item.value as string | number | boolean | object | null}
             level={0}
+            expandAll={expandAll}
           />
         )}
         keyExtractor={(item, index) => `root-${index}`}

@@ -29,6 +29,9 @@ const SettingsMenu: React.FC = () => {
   const hideEmptyRows = useStore((state) => state.hideEmptyRows);
   const toggleHideEmptyRows = useStore((state) => state.toggleHideEmptyRows);
 
+  const expandAll = useStore((state) => state.expandAll);
+  const toggleExpandAll = useStore((state) => state.toggleExpandAll);
+
   const resetSettings = () => {
     setCustomBackgroundColor(useStore.getState().customBackgroundColor);
     setCustomAccentColor(useStore.getState().customAccentColor);
@@ -43,6 +46,9 @@ const SettingsMenu: React.FC = () => {
     }
     if (hideEmptyRows) {
       toggleHideEmptyRows();
+    }
+    if (expandAll) {
+      toggleExpandAll();
     }
   };
 
@@ -77,7 +83,6 @@ const SettingsMenu: React.FC = () => {
         },
         optionRow: {
           marginBottom: 20,
-          paddingBottom: 20,
         },
         toggleThumbWrapper: {
           flexDirection: 'row',
@@ -170,11 +175,23 @@ const SettingsMenu: React.FC = () => {
 
           <View style={styles.optionRow}>
             <View style={styles.toggleThumbWrapper}>
-              <Text style={styles.optionRowLabel}>Hide Empty Rows</Text>
+              <Text style={styles.optionRowLabel}>Hide empty rows</Text>
               <ToggleThumb onPress={toggleHideEmptyRows} isOn={hideEmptyRows} />
             </View>
             <Text style={styles.optionHelpText}>
               Hide rows in the JSON with empty values.
+            </Text>
+          </View>
+
+          <View style={styles.hr} />
+
+          <View style={styles.optionRow}>
+            <View style={styles.toggleThumbWrapper}>
+              <Text style={styles.optionRowLabel}>Expand nested rows</Text>
+              <ToggleThumb onPress={toggleExpandAll} isOn={expandAll} />
+            </View>
+            <Text style={styles.optionHelpText}>
+              Expand nested JSON rows by default.
             </Text>
           </View>
 

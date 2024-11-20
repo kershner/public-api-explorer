@@ -19,17 +19,22 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({ visible, onClose, imageUr
         closeButton: { position: 'absolute', top: 40, right: 20, backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 12, borderRadius: 4 },
         closeButtonText: { color: colors.background, fontSize: 16, fontWeight: 'bold' },
       }),
-    []
+    [colors]
   );
 
   return (
     <Modal visible={visible} transparent onRequestClose={onClose}>
-      <View style={styles.overlay}>
-        <Image source={{ uri: imageUrl }} style={styles.image} />
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.overlay}>
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+          </TouchableWithoutFeedback>
+
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

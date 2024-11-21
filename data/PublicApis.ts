@@ -518,5 +518,12 @@ export const publicApis: PublicApi[] = [
     "Detailed data on U.S. federal government spending.",
     "Finance",
     "https://api.usaspending.gov/"
+  ),
+  new PublicApi(
+    "https://www.kershner.org/api/",
+    "kershner.org API",
+    "Personal website for a very handsome developer.",
+    "Data",
+    "https://kershner.org/api/"
   )
 ];

@@ -123,7 +123,7 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
             <ScrollView contentContainerStyle={styles.keysScrollView}>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.keyContainerDescription}>
-                  These keys are present in the response but are not guaranteed as valid parameters
+                  These keys are present in the response but not guaranteed as valid parameters
                 </Text>
               </View>
               {jsonKeys.map((key) => (

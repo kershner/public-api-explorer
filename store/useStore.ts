@@ -70,7 +70,7 @@ export const defaultState: Omit<State, keyof Pick<State, 'setLoading' | 'setUrl'
   backgroundAnimation: true,
   modalOpen: false,
   currentApiExpanded: true,
-  hideEmptyRows: false,
+  hideEmptyRows: true,
   colors: darkModeColors,
   expandAll: false
 };

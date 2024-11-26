@@ -1,20 +1,22 @@
 import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, Platform } from 'react-native';
+import { Stack, useLocalSearchParams, usePathname } from 'expo-router';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
-import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
 import ErrorFlash from '@/components/ErrorFlash';
+import RemoteSvg from '@/components/RemoteSvg';
 import { useStore } from '@/store/useStore';
+import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { checkUrl } from '@/utils/utils';
-import RemoteSvg from '@/components/RemoteSvg';
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
   const colors = useStore((state) => state.colors);
   const initialLoad = useStore((state) => state.initialLoad);
   const navigation = useNavigation();
@@ -26,6 +28,8 @@ export default function RootLayout() {
   const prevStackLength = useRef(navigationState.routes.length);
   const jsonData = useStore((state) => state.jsonData);
   const jsonDataMap = useStore((state) => state.jsonDataMap);
+  const pathname = usePathname();
+  const initialRoute = 'public-api-explorer';
 
   useEffect(() => {
     const currentStackLength = navigationState.routes.length;
@@ -39,9 +43,11 @@ export default function RootLayout() {
   }, [navigationState]);
 
   useEffect(() => {
+    if (pathname === '/') router.replace(initialRoute);
+
     const loadState = async () => {
       await useStore.getState().loadPersistedState();
-      SplashScreen.hideAsync();
+      // SplashScreen.hideAsync();
     };
     loadState();
   }, []);
@@ -149,13 +155,13 @@ export default function RootLayout() {
               ),
             }}
           >
-            <Stack.Screen name="public-api-explorer/index" options={{ title: APP_TITLE }} />
-            <Stack.Screen name="public-api-explorer/view" options={{ title: "JSON Viewer" }} />
+            <Stack.Screen name={`${initialRoute}/index`} options={{ title: APP_TITLE }} />
+            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer" }} />
           </Stack>
         </ThemeProvider>
       </View>
 
-      {backgroundAnimation && <FloatingIconGrid />}
+      {/* {backgroundAnimation && <FloatingIconGrid />} */}
 
       <SettingsMenu />
       <ErrorFlash />

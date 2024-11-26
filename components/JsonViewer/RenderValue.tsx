@@ -1,4 +1,4 @@
-import { Text, Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { Text, Image, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
 import RenderValuePopoverMenu from '@/components/PopoverMenu/RenderValuePopoverMenu';
 import { isHtml, isUrl, isImageUrl } from '@/utils/utils';
 import React, { useMemo, useState, useRef } from 'react';
@@ -31,7 +31,9 @@ const RenderValue: React.FC<RenderValueProps> = ({ value, label }) => {
           borderRadius: 3,
         },
         link: {
-          cursor: 'pointer',
+          ...(Platform.OS !== 'ios' && {
+            cursor: 'pointer',
+          }),
           color: colors.linkText,
           textDecorationLine: 'underline',
           borderWidth: 2,

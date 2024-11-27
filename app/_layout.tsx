@@ -1,5 +1,5 @@
+import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, StatusBar, Platform } from 'react-native';
 import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, Platform } from 'react-native';
 import { Stack, useLocalSearchParams, usePathname } from 'expo-router';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
@@ -18,6 +18,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const router = useRouter();
   const colors = useStore((state) => state.colors);
+  const darkMode = useStore((state) => state.darkMode);
   const initialLoad = useStore((state) => state.initialLoad);
   const navigation = useNavigation();
   const searchParams = useLocalSearchParams<{ url?: string }>();
@@ -31,17 +32,26 @@ export default function RootLayout() {
   const pathname = usePathname();
   const initialRoute = 'public-api-explorer';
 
+  // Update StatusBar based on `darkMode`
   useEffect(() => {
-    if (Platform.OS !== 'ios') { 
-      const currentStackLength = navigationState.routes.length;
-      if (currentStackLength < prevStackLength.current) {
-        const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
-        if (currentScreen === `${APP_TITLE}/index` ) {
-          goHomeAndClearStack();
-        }
-      }
-      prevStackLength.current = currentStackLength;
+    const barStyle = darkMode ? 'light-content' : 'dark-content';
+    const backgroundColor = colors.background;
+
+    StatusBar.setBarStyle(barStyle, true);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(backgroundColor, true);
     }
+  }, [darkMode]);
+
+  useEffect(() => {
+    const currentStackLength = navigationState.routes.length;
+    if (Platform.OS !== 'ios' && currentStackLength < prevStackLength.current) {
+      const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
+      if (currentScreen === `${APP_TITLE}/index`) {
+        goHomeAndClearStack();
+      }
+    }
+    prevStackLength.current = currentStackLength;
   }, [navigationState]);
 
   useEffect(() => {
@@ -90,21 +100,19 @@ export default function RootLayout() {
       ...DefaultTheme.colors,
       background: 'transparent'
     }
-  }
+  };
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
         globalContainer: { flex: 1, backgroundColor: colors.background, overflow: 'hidden' },
-        stackWrapper: { flex: 1, position: 'relative', zIndex: 1, borderWidth: 1, borderColor: colors.background },
+        stackWrapper: { flex: 1, position: 'relative', zIndex: 1 },
         stackContainer: { backgroundColor: colors.background },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
         headerLogo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
         headerBack: { fontSize: 16, color: colors.textPrimary },
-        menuButtonWrapper: {
-           paddingRight: Platform.OS == 'ios' ? 0 : 16,
-        },
+        menuButtonWrapper: { paddingRight: Platform.OS === 'ios' ? 0 : 16 },
         loadingContainer: { 
           ...StyleSheet.absoluteFillObject, 
           justifyContent: 'center', 
@@ -158,7 +166,7 @@ export default function RootLayout() {
       </View>
 
       {/* {backgroundAnimation && <FloatingIconGrid />} */}
-
+      
       <SettingsMenu />
       <ErrorFlash />
 

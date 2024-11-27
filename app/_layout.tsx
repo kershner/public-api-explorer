@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { checkUrl } from '@/utils/utils';
 
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const router = useRouter();
@@ -32,14 +32,16 @@ export default function RootLayout() {
   const initialRoute = 'public-api-explorer';
 
   useEffect(() => {
-    const currentStackLength = navigationState.routes.length;
-    if (currentStackLength < prevStackLength.current) {
-      const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
-      if (currentScreen === `${APP_TITLE}/index` ) {
-        goHomeAndClearStack();
+    if (Platform.OS !== 'ios') { 
+      const currentStackLength = navigationState.routes.length;
+      if (currentStackLength < prevStackLength.current) {
+        const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
+        if (currentScreen === `${APP_TITLE}/index` ) {
+          goHomeAndClearStack();
+        }
       }
+      prevStackLength.current = currentStackLength;
     }
-    prevStackLength.current = currentStackLength;
   }, [navigationState]);
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function RootLayout() {
 
     const loadState = async () => {
       await useStore.getState().loadPersistedState();
-      // SplashScreen.hideAsync();
+      SplashScreen.hideAsync();
     };
     loadState();
   }, []);
@@ -99,7 +101,7 @@ export default function RootLayout() {
           overflow: 'hidden',
         },
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
-        stackContainer: { },
+        stackContainer: { backgroundColor: colors.background },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
         headerLogo: {
@@ -156,7 +158,7 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name={`${initialRoute}/index`} options={{ title: APP_TITLE }} />
-            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer" }} />
+            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: '' }} />
           </Stack>
         </ThemeProvider>
       </View>

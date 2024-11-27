@@ -50,7 +50,7 @@ const JsonItem: React.FC<JsonItemProps> = ({ label, value, level = 0, expandAll 
           backgroundColor: colors.background,
           borderBottomWidth: hasNestedData ? 0 : 1,
           borderBottomColor: colors.accent,
-          borderStyle: 'dotted',
+          borderStyle: Platform.OS == 'ios' ? 'solid' : 'dotted',
           alignItems: 'center',
         },
         nestedRowWrapper: {

@@ -7,7 +7,7 @@
     "icon": "./assets/img/logo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/img/lgoo_transparent.png",
+      "image": "./assets/img/logo_transparent.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

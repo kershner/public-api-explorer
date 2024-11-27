@@ -116,6 +116,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
         <TextInput
           style={styles.input}
           placeholder="Search..."
+          placeholderTextColor={colors.textPrimary}
           value={searchText}
           onChangeText={setSearchText}
         />

@@ -32,6 +32,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           paddingVertical: 8,
           paddingHorizontal: 16,
           alignItems: 'flex-start',
+          flexDirection: 'row',
           flexWrap: 'wrap',
           alignSelf: 'stretch',
         },
@@ -77,8 +78,10 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress}>
       <View style={styles.content}>
-        <Text style={styles.title}>{api.title}</Text>
-        <Text style={styles.description}>{api.description}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{api.title}</Text>
+          <Text style={styles.description}>{api.description}</Text>
+        </View>
         <View style={styles.tagContainer}>
           <Text style={styles.tag}>{api.category}</Text>
         </View>

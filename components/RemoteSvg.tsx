@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Platform } from 'react-native'; // For platform detection
 import { S3_BASE_URL } from '@/constants/constants';
 import { useStore } from '@/store/useStore';
-import { SvgXml } from 'react-native-svg';
+import { SvgXml } from 'react-native-svg'; // Native SVG rendering
+import { ReactSVG } from 'react-svg'; // Web SVG rendering
 
 const baseUrl = S3_BASE_URL;
 
@@ -38,18 +40,28 @@ const RemoteSvg: React.FC<RemoteSvgProps> = ({ fileName, width, height }) => {
         svgCache[cacheKey] = data;
         setSvgData(data);
       } catch (error) {
-        console.error(error);
+        console.error(`Failed to fetch SVG: ${cacheKey}`, error);
       }
     };
 
     fetchSvg();
   }, [fileName]);
 
-  return (
-    <>
-      {svgData && <SvgXml xml={svgData} width={width} height={height} fill={fillColor} />}
-    </>
-  );
+  if (!svgData) return null;
+
+  if (Platform.OS === 'web') {
+    return (
+      <ReactSVG
+        src={`data:image/svg+xml;base64,${btoa(svgData)}`}
+        beforeInjection={(svg) => {
+          svg.setAttribute('width', `${width}`);
+          svg.setAttribute('height', `${height}`);
+        }}
+      />
+    );
+  }
+
+  return <SvgXml xml={svgData} width={width} height={height} fill={fillColor} />;
 };
 
 export default RemoteSvg;

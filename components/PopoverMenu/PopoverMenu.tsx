@@ -12,8 +12,8 @@ interface PopoverMenuProps {
 const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, children }) => {
   const colors = useStore((state) => state.colors);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [popoverWidth, setPopoverWidth] = useState(0);
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-  const popoverWidth = 200;
 
   const styles = useMemo(
     () =>
@@ -24,18 +24,18 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
         },
         popoverStyle: {
           position: 'absolute',
-          backgroundColor: colors.textPrimary,
+          top: position.top,
+          left: position.left,
+          overflow: 'hidden',
+        },
+        popoverContent: {
+          padding: 8,
+          backgroundColor: colors.background,
           borderColor: colors.textPrimary,
           borderWidth: 2,
           borderRadius: 8,
-          top: position.top,
-          left: position.left,
-        },
-        popoverContent: {
-          borderRadius: 6,
-          padding: 8,
-          backgroundColor: colors.background,
           alignItems: 'flex-start',
+          alignSelf: 'flex-start',
         },
       }),
     [colors, position]
@@ -44,23 +44,29 @@ const PopoverMenu: React.FC<PopoverMenuProps> = ({ isVisible, fromRef, onClose, 
   useEffect(() => {
     if (isVisible && fromRef.current) {
       fromRef.current.measure((x, y, width, height, pageX, pageY) => {
-        let left = pageX + width / 2 - popoverWidth / 2;
-        let top = pageY + height;
+        const calculatedLeft = Math.max(
+          0,
+          Math.min(pageX + width / 2 - popoverWidth / 2, screenWidth - popoverWidth)
+        );
+        const calculatedTop = Math.max(0, pageY + height);
 
-        // Clamp to keep within screen bounds
-        left = Math.max(0, Math.min(left, screenWidth - popoverWidth));
-        top = Math.max(0, Math.min(top, screenHeight - popoverWidth) + 5);
-
-        setPosition({ top, left });
+        setPosition({ top: calculatedTop, left: calculatedLeft });
       });
     }
-  }, [isVisible, fromRef, screenWidth, screenHeight]);
+  }, [isVisible, fromRef, screenWidth, screenHeight, popoverWidth]);
+
+  const handleContentLayout = (event: any) => {
+    const { width } = event.nativeEvent.layout;
+    setPopoverWidth(width);
+  };
 
   return (
     <Modal transparent visible={isVisible} onRequestClose={onClose} animationType="none">
       <Pressable style={styles.modalOverlay} onPress={onClose} />
       <View style={styles.popoverStyle}>
-        <View style={styles.popoverContent}>{children}</View>
+        <View style={styles.popoverContent} onLayout={handleContentLayout}>
+          {children}
+        </View>
       </View>
     </Modal>
   );

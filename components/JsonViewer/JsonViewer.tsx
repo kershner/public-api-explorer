@@ -1,4 +1,4 @@
-import { FlatList, Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { FlatList, Platform, StyleSheet, View, TouchableOpacity, Text, SafeAreaView } from 'react-native';
 import FilterControls from "@/components/JsonViewer/TopDrawer/FilterControls";
 import ChosenApiInfo from '@/components/JsonViewer/TopDrawer/ChosenApiInfo';
 import BottomDrawer from '@/components/JsonViewer/BottomDrawer/BottomDrawer';
@@ -22,14 +22,23 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   const styles = useMemo(() => 
     StyleSheet.create({
       wrapper: { 
-        flex: 1, 
         paddingTop: currentApiExpanded ? 6 : 16,
         paddingHorizontal: 16,
+      },
+      jsonViewerContainer: {
+        position: 'relative',
+        height: '100%',
+        flex: 1
       },
       container: { 
         flexGrow: 1, 
         paddingBottom: 100,
         paddingRight: 4,
+      },
+      bottomDrawer: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%'
       },
       backToTopButton: {
         position: 'absolute',
@@ -76,7 +85,7 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
   }, [filteredJson]);
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.jsonViewerContainer}>
       {currentApiExpanded && (
         <ChosenApiInfo jsonData={jsonData} url={url} />
       )}

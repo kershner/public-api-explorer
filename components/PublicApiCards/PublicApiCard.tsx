@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { PublicApi } from '@/models/PublicApi';
 import { useStore } from '@/store/useStore';
@@ -32,7 +32,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           paddingVertical: 8,
           paddingHorizontal: 16,
           alignItems: 'flex-start',
-          flexDirection: 'row',
+          flexDirection: Platform.OS == 'ios' ? 'row' : 'column',
           flexWrap: 'wrap',
           alignSelf: 'stretch',
         },

@@ -46,7 +46,7 @@ const ApiQueryModal: React.FC<ApiQueryModalProps> = ({ onClose, url = '', jsonDa
       setSelectedManualKeys(new Set([...params].filter((key) => manualKeys.includes(key))));
     } catch (error) {
       // If the URL is invalid, do nothing
-      console.warn(`Invalid URL: ${query}`);
+      console.log(`Invalid URL: ${query}`);
     }
   }, [query, manualKeys]);
   

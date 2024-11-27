@@ -95,22 +95,16 @@ export default function RootLayout() {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        globalContainer: { 
-          flex: 1, 
-          backgroundColor: colors.background,
-          overflow: 'hidden',
-        },
-        stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
+        globalContainer: { flex: 1, backgroundColor: colors.background, overflow: 'hidden' },
+        stackWrapper: { flex: 1, position: 'relative', zIndex: 1, borderWidth: 1, borderColor: colors.background },
         stackContainer: { backgroundColor: colors.background },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
-        headerLogo: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 10
-        },
+        headerLogo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
         headerBack: { fontSize: 16, color: colors.textPrimary },
-        menuButtonWrapper: { paddingRight: 16 },
+        menuButtonWrapper: {
+           paddingRight: Platform.OS == 'ios' ? 0 : 16,
+        },
         loadingContainer: { 
           ...StyleSheet.absoluteFillObject, 
           justifyContent: 'center', 

@@ -21,11 +21,9 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
 
   const styles = useMemo(() => 
     StyleSheet.create({
-      wrapper: { 
+      jsonViewerContainer: {
         paddingTop: currentApiExpanded ? 6 : 16,
         paddingHorizontal: 16,
-      },
-      jsonViewerContainer: {
         position: 'relative',
         height: '100%',
         flex: 1

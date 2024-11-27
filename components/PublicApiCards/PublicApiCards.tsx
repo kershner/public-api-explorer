@@ -53,7 +53,6 @@ const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
             color: colors.textPrimary,
             paddingHorizontal: 12,
             borderWidth: 0,
-            height: '100%',
           },
           scrollViewContainer: {
             flexDirection: 'row',

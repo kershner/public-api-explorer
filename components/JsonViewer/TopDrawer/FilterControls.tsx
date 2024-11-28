@@ -1,6 +1,6 @@
 import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import MultiSelectPicker from '@/components/MultiSelectPicker';
+import MultiSelectPicker from '@/components/Filters/MultiSelectPicker';
 import React, { useState, useEffect } from 'react';
 import { extractKeys } from '@/utils/utils';
 import { useStore } from '@/store/useStore';
@@ -102,6 +102,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
           placeholder="Search..."
           placeholderTextColor={colors.textPrimary}
           value={searchText}
+          autoCapitalize="none"
           onChangeText={setSearchText}
         />
       </View>

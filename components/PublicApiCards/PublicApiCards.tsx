@@ -1,8 +1,9 @@
 import PublicApiCard from '@/components/PublicApiCards/PublicApiCard';
-import MultiSelectPicker from '@/components/MultiSelectPicker';
+import MultiSelectPicker from '@/components/Filters/MultiSelectPicker';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import React, { useRef, useState, useMemo } from 'react';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
+import SearchFilter from '@/components/Filters/SearchFilter';
 import { publicApis } from '@/data/PublicApis';
 import { shuffleArray } from '@/utils/utils';
 import { useStore } from '@/store/useStore';
@@ -16,13 +17,14 @@ type PublicApiCardsProps = {
 const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
   const scrollRef = useRef<ScrollView | null>(null);
   const colors = useStore((state) => state.colors);
-  const isRoot = useIsRootScreen();
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [filteredApis, setFilteredApis] = useState(randomizedApiList);
+  const isRoot = useIsRootScreen();
 
-  const filteredApis =
+  const categoryFilteredApis =
     selectedCategories.size === 0
-      ? randomizedApiList
-      : randomizedApiList.filter(api => selectedCategories.has(api.category));
+      ? filteredApis
+      : filteredApis.filter((api) => selectedCategories.has(api.category));
 
   const styles = useMemo(
     () =>
@@ -32,11 +34,18 @@ const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
           alignItems: 'flex-end',
           flex: 1,
         },
+        filtersContainer: {
+          paddingLeft: isRoot ? 8 : 0,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 10,
+        },
         pickerWrapper: {
           flexDirection: 'row',
           alignItems: 'center',
           marginVertical: 8,
-          paddingRight: 8
+          paddingRight: 8,
         },
         scrollViewContainer: {
           flexDirection: 'row',
@@ -53,20 +62,24 @@ const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.pickerWrapper}>
-        <MultiSelectPicker
-          options={[...new Set(publicApis.map(api => api.category))].sort()}
-          selectedOptions={selectedCategories}
-          onChange={setSelectedCategories}
-          label="Filter by category"
+      <View style={styles.filtersContainer}>
+        <SearchFilter
+          data={randomizedApiList}
+          onFilter={setFilteredApis}
         />
+
+        <View style={styles.pickerWrapper}>
+          <MultiSelectPicker
+            options={[...new Set(publicApis.map((api) => api.category))].sort()}
+            selectedOptions={selectedCategories}
+            onChange={setSelectedCategories}
+            label="Filter by category"
+          />
+        </View>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContainer}
-        ref={scrollRef}
-      >
-        {filteredApis.map((api, index) => (
+      <ScrollView contentContainerStyle={styles.scrollViewContainer} ref={scrollRef}>
+        {categoryFilteredApis.map((api, index) => (
           <PublicApiCard key={index} api={api} index={index} closeModal={closeModal} />
         ))}
       </ScrollView>

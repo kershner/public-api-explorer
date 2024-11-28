@@ -137,7 +137,6 @@ export default function RootLayout() {
         <ThemeProvider value={navTheme}>
           <Stack
             screenOptions={{
-              contentStyle: styles.stackContainer,
               headerStyle: styles.headerContainer,
               headerTitleStyle: styles.headerTitleText,
               headerBackTitleStyle: styles.headerBack,
@@ -160,12 +159,12 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name={`${initialRoute}/index`} options={{ title: APP_TITLE }} />
-            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: '' }} />
+            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: '', contentStyle: styles.stackContainer }} />
           </Stack>
         </ThemeProvider>
       </View>
 
-      {/* {backgroundAnimation && <FloatingIconGrid />} */}
+      {backgroundAnimation && <FloatingIconGrid />}
       
       <SettingsMenu />
       <ErrorFlash />

@@ -30,7 +30,7 @@ const MultiSelectPicker: React.FC<MultiSelectPickerProps> = ({
     label: { color: colors.textPrimary, fontWeight: 'bold', marginBottom: 4 },
     trigger: { height: 40, borderWidth: 2, borderRadius: 4, justifyContent: 'center', paddingHorizontal: 8, backgroundColor: colors.background, borderColor: colors.textPrimary },
     triggerText: { color: colors.textPrimary },
-    modalHeader: { fontSize: 18, padding: 12, backgroundColor: colors.textPrimary, color: colors.background },
+    modalHeader: { fontSize: 18, padding: 12, backgroundColor: colors.textPrimary, color: colors.background, borderTopLeftRadius: 8, borderTopRightRadius: 8 },
     modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center' },
     modalContent: { maxHeight: '50%', width: 400, margin: 20, backgroundColor: colors.background, borderRadius: 8, alignSelf: 'center' },
     scrollView: { padding: 12 },

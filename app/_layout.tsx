@@ -107,7 +107,7 @@ export default function RootLayout() {
       StyleSheet.create({
         globalContainer: { flex: 1, backgroundColor: colors.background, overflow: 'hidden' },
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1, borderWidth: 1, borderColor: colors.background },
-        stackContainer: { backgroundColor: colors.background },
+        stackContainer: { backgroundColor: Platform.OS === 'ios' ? colors.background : undefined },
         headerContainer: { backgroundColor: colors.background },
         headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
         headerLogo: { flexDirection: 'row', alignItems: 'center', gap: 10 },

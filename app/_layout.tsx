@@ -41,7 +41,7 @@ export default function RootLayout() {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(backgroundColor, true);
     }
-  }, [darkMode]);
+  }, [darkMode, colors]);
 
   useEffect(() => {
     const currentStackLength = navigationState.routes.length;
@@ -108,7 +108,7 @@ export default function RootLayout() {
         globalContainer: { flex: 1, backgroundColor: colors.background, overflow: 'hidden' },
         stackWrapper: { flex: 1, position: 'relative', zIndex: 1, borderWidth: 1, borderColor: colors.background },
         stackContainer: { backgroundColor: Platform.OS === 'ios' ? colors.background : undefined },
-        headerContainer: { backgroundColor: colors.background },
+        headerContainer: {  backgroundColor: 'transparent', borderBottomWidth: 0 },
         headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
         headerLogo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
         headerBack: { fontSize: 16, color: colors.textPrimary },
@@ -159,7 +159,7 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name={`${initialRoute}/index`} options={{ title: APP_TITLE }} />
-            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: '', contentStyle: styles.stackContainer }} />
+            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: Platform.OS === 'web' ? APP_TITLE : '', contentStyle: styles.stackContainer }} />
           </Stack>
         </ThemeProvider>
       </View>

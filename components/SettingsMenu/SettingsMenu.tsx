@@ -65,8 +65,6 @@ const SettingsMenu: React.FC = () => {
           justifyContent: 'space-between',
           paddingHorizontal: 16,
           paddingVertical: 12,
-          borderBottomColor: colors.textPrimary,
-          borderBottomWidth: 1,
           gap: 20
         },
         title: {

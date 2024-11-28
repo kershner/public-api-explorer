@@ -15,7 +15,8 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
   const isRoot = useIsRootScreen();
-  
+  const minWidth = 130;
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -23,14 +24,15 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           backgroundColor: colors.accent,
           borderRadius: 15,
           alignItems: 'flex-start',
-          width: isRoot ? (Platform.OS === 'web' ? 150 : '31%') : 250,
+          minWidth: minWidth,
+          width: isRoot ? (Platform.OS === 'web' ? minWidth : '31%') : minWidth,
         },
         content: {
           paddingVertical: 8,
           paddingHorizontal: 8,
           alignItems: 'flex-start',
           flexDirection: Platform.OS == 'ios' && isRoot ? 'row' : 'column',
-          flexWrap: 'wrap',
+          flexWrap: isRoot ? 'wrap' : 'nowrap',
           alignSelf: 'stretch',
         },
         title: {

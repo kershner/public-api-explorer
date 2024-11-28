@@ -59,6 +59,7 @@ const SearchFilter = <T,>({ data, onFilter }: SearchFilterProps<T>) => {
         placeholder="Search..."
         placeholderTextColor={colors.textPrimary}
         value={searchText}
+        autoCapitalize="none"
         onChangeText={setSearchText}
       />
     </View>

@@ -22,15 +22,12 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
         card: {
           backgroundColor: colors.accent,
           borderRadius: 15,
-          marginHorizontal: 4,
-          marginBottom: 8,
           alignItems: 'flex-start',
-          flexShrink: 1,
-          maxWidth: Platform.OS === 'ios' ? (isRoot ? '30%' : 250) : (isRoot ? 150 : 250),
+          width: isRoot ? (Platform.OS === 'web' ? 150 : '31%') : 250,
         },
         content: {
           paddingVertical: 8,
-          paddingHorizontal: 16,
+          paddingHorizontal: 8,
           alignItems: 'flex-start',
           flexDirection: Platform.OS == 'ios' ? 'row' : 'column',
           flexWrap: 'wrap',

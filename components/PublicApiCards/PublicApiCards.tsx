@@ -1,10 +1,11 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
 import PublicApiCard from '@/components/PublicApiCards/PublicApiCard';
+import MultiSelectPicker from '@/components/MultiSelectPicker';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import React, { useRef, useState, useMemo } from 'react';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { publicApis } from '@/data/PublicApis';
 import { shuffleArray } from '@/utils/utils';
 import { useStore } from '@/store/useStore';
-import MultiSelectPicker from '@/components/MultiSelectPicker';
 
 const randomizedApiList = shuffleArray(publicApis);
 
@@ -15,6 +16,7 @@ type PublicApiCardsProps = {
 const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
   const scrollRef = useRef<ScrollView | null>(null);
   const colors = useStore((state) => state.colors);
+  const isRoot = useIsRootScreen();
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
 
   const filteredApis =
@@ -40,8 +42,10 @@ const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
           flexDirection: 'row',
           flexWrap: 'wrap',
           alignItems: 'flex-start',
+          gap: 8,
           justifyContent: 'center',
           paddingVertical: 8,
+          paddingHorizontal: 8,
         },
       }),
     [colors]

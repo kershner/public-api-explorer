@@ -29,7 +29,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           paddingVertical: 8,
           paddingHorizontal: 8,
           alignItems: 'flex-start',
-          flexDirection: Platform.OS == 'ios' ? 'row' : 'column',
+          flexDirection: Platform.OS == 'ios' && isRoot ? 'row' : 'column',
           flexWrap: 'wrap',
           alignSelf: 'stretch',
         },
@@ -53,7 +53,6 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           paddingHorizontal: 8,
           alignSelf: 'flex-start',
           marginTop: 6,
-          flexWrap: 'wrap',
         },
         tag: {
           fontSize: 12,

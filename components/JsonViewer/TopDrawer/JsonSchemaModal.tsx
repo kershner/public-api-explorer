@@ -16,7 +16,7 @@ const JsonSchemaModal = ({ visible, onClose, json, url }: { visible: boolean; on
 
   const styles = useMemo(() => StyleSheet.create({
     overlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: "center", alignItems: "center" },
-    modalContent: { backgroundColor: colors.background, padding: 20, borderRadius: 8, width: '90%', maxWidth: 600, maxHeight: '80%', alignItems: "center" },
+    modalContent: { backgroundColor: colors.background, padding: 20, borderRadius: 8, width: '90%', maxWidth: 600, height: '80%', alignItems: "center" },
     topDrawer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
     header: { color: colors.textPrimary, fontWeight: 'bold', fontSize: 20 },
     urlText: { alignSelf:'flex-start', fontSize: 18, color: colors.textPrimary, marginBottom: 10 },

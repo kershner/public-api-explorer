@@ -60,6 +60,7 @@ const ApiQueryInput: React.FC<ApiQueryInputProps> = ({ url = '', jsonData = {} }
           editable={false}
           value={url}
           pointerEvents="none"
+          placeholderTextColor={colors.textPrimary}
           placeholder="Enter a public API endpoint..."
         />
         {loading ? (

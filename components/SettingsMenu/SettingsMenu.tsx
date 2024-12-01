@@ -1,4 +1,4 @@
-import { View, Modal, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Modal, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import ColorPickerSection from '@/components/SettingsMenu/ColorPickerSection';
 import React, { useMemo, useCallback } from 'react';
 import ToggleThumb from '@/components/ToggleThumb';
@@ -65,8 +65,6 @@ const SettingsMenu: React.FC = () => {
           justifyContent: 'space-between',
           paddingHorizontal: 16,
           paddingVertical: 12,
-          borderBottomColor: colors.textPrimary,
-          borderBottomWidth: 1,
           gap: 20
         },
         title: {
@@ -118,7 +116,7 @@ const SettingsMenu: React.FC = () => {
 
   return (
     <Modal visible={modalOpen} onRequestClose={toggleModal}>
-      <View style={styles.modalOverlay}>
+      <SafeAreaView style={styles.modalOverlay}>
         <View style={styles.header}>
           <Text style={styles.title}>Settings</Text>
           
@@ -199,7 +197,7 @@ const SettingsMenu: React.FC = () => {
             <Text style={styles.resetButtonText}>Back to Default</Text>
           </TouchableOpacity>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };

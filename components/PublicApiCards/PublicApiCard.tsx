@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
 import { PublicApi } from '@/models/PublicApi';
 import { useStore } from '@/store/useStore';
@@ -15,24 +15,24 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
   const isRoot = useIsRootScreen();
-  
+  const minWidth = 130;
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
         card: {
           backgroundColor: colors.accent,
           borderRadius: 15,
-          marginHorizontal: 4,
-          marginBottom: 8,
           alignItems: 'flex-start',
-          flexShrink: 1,
-          maxWidth: isRoot ? 150 : 250,
+          minWidth: minWidth,
+          width: isRoot ? (Platform.OS === 'web' ? minWidth : '31%') : minWidth,
         },
         content: {
           paddingVertical: 8,
-          paddingHorizontal: 16,
+          paddingHorizontal: 8,
           alignItems: 'flex-start',
-          flexWrap: 'wrap',
+          flexDirection: Platform.OS == 'ios' && isRoot ? 'row' : 'column',
+          flexWrap: isRoot ? 'wrap' : 'nowrap',
           alignSelf: 'stretch',
         },
         title: {
@@ -52,10 +52,9 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
           backgroundColor: colors.background,
           borderRadius: 15,
           paddingVertical: 4,
-          paddingHorizontal: 10,
+          paddingHorizontal: 8,
           alignSelf: 'flex-start',
           marginTop: 6,
-          flexWrap: 'wrap',
         },
         tag: {
           fontSize: 12,
@@ -77,10 +76,12 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress}>
       <View style={styles.content}>
-        <Text style={styles.title}>{api.title}</Text>
-        <Text style={styles.description}>{api.description}</Text>
+        <View>
+          <Text style={styles.title}>{api.title}</Text>
+          <Text style={styles.description}>{api.description}</Text>
+        </View>
         <View style={styles.tagContainer}>
-          <Text style={styles.tag}>{api.category}</Text>
+          <Text style={styles.tag} numberOfLines={1}>{api.category}</Text>
         </View>
       </View>
     </TouchableOpacity>

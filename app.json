@@ -5,15 +5,16 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/img/logo.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/img/logo_transparent.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tylerkershner.publicapiexplorer",
+      "scheme": "public-api-explorer"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,6 +33,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "dea5925d-d22a-4174-b7ee-38f75aac2a9e"
+      }
     }
   }
 }

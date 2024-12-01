@@ -1,7 +1,7 @@
-import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput';
 import PublicApiCards from '@/components/PublicApiCards/PublicApiCards';
+import ApiQueryInput from '@/components/ApiQueryBuilder/ApiQueryInput';
+import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import useIsRootScreen from '@/hooks/useIsRootScreen';
-import { View, Text, StyleSheet } from 'react-native';
 import { APP_TITLE } from '@/constants/constants';
 import React, { useEffect, useMemo } from 'react';
 import { useStore } from '@/store/useStore';
@@ -25,15 +25,12 @@ const HomeScreen: React.FC = () => {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        bottomDrawer: {
-          paddingHorizontal: 16
-        },
         inputWrapper: {
           paddingHorizontal: 8
         },
         inputTitle: {
           textAlign: 'center',
-          fontSize: 48,
+          fontSize: 32,
           fontWeight: 'bold',
           marginVertical: 8,
           color: colors.textPrimary,
@@ -44,10 +41,12 @@ const HomeScreen: React.FC = () => {
 
   return (
     <>
-      <View style={styles.inputWrapper}>
-        <Text style={styles.inputTitle}>Dive into some open data:</Text>
-        <ApiQueryInput />
-      </View>
+      <SafeAreaView>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.inputTitle} numberOfLines={1}>Dive into some open data:</Text>
+          <ApiQueryInput />
+        </View>
+      </SafeAreaView>
       <PublicApiCards />
     </>
   );

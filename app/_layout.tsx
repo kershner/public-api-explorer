@@ -1,21 +1,24 @@
+import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, StatusBar, Platform } from 'react-native';
 import { useNavigation, CommonActions, useNavigationState, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text, ActivityIndicator, Platform } from 'react-native';
+import { Stack, useLocalSearchParams, usePathname } from 'expo-router';
 import SettingsMenu from '@/components/SettingsMenu/SettingsMenu';
 import FloatingIconGrid from '@/components/FloatingIconGrid';
-import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { APP_TITLE } from '@/constants/constants';
 import ErrorFlash from '@/components/ErrorFlash';
+import RemoteSvg from '@/components/RemoteSvg';
 import { useStore } from '@/store/useStore';
+import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { checkUrl } from '@/utils/utils';
-import RemoteSvg from '@/components/RemoteSvg';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
   const colors = useStore((state) => state.colors);
+  const darkMode = useStore((state) => state.darkMode);
   const initialLoad = useStore((state) => state.initialLoad);
   const navigation = useNavigation();
   const searchParams = useLocalSearchParams<{ url?: string }>();
@@ -26,12 +29,25 @@ export default function RootLayout() {
   const prevStackLength = useRef(navigationState.routes.length);
   const jsonData = useStore((state) => state.jsonData);
   const jsonDataMap = useStore((state) => state.jsonDataMap);
+  const pathname = usePathname();
+  const initialRoute = 'public-api-explorer';
+
+  // Update StatusBar based on `darkMode`
+  useEffect(() => {
+    const barStyle = darkMode ? 'light-content' : 'dark-content';
+    const backgroundColor = colors.background;
+
+    StatusBar.setBarStyle(barStyle, true);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(backgroundColor, true);
+    }
+  }, [darkMode, colors]);
 
   useEffect(() => {
     const currentStackLength = navigationState.routes.length;
-    if (currentStackLength < prevStackLength.current) {
+    if (Platform.OS !== 'ios' && currentStackLength < prevStackLength.current) {
       const currentScreen = navigationState.routes[currentStackLength - 1]?.name || "Unknown";
-      if (currentScreen === `${APP_TITLE}/index` ) {
+      if (currentScreen === `${APP_TITLE}/index`) {
         goHomeAndClearStack();
       }
     }
@@ -39,6 +55,8 @@ export default function RootLayout() {
   }, [navigationState]);
 
   useEffect(() => {
+    if (pathname === '/') router.replace(initialRoute);
+
     const loadState = async () => {
       await useStore.getState().loadPersistedState();
       SplashScreen.hideAsync();
@@ -82,27 +100,19 @@ export default function RootLayout() {
       ...DefaultTheme.colors,
       background: 'transparent'
     }
-  }
+  };
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        globalContainer: { 
-          flex: 1, 
-          backgroundColor: colors.background,
-          overflow: 'hidden',
-        },
-        stackWrapper: { flex: 1, position: 'relative', zIndex: 1,  },
-        stackContainer: { },
-        headerContainer: { backgroundColor: colors.background },
+        globalContainer: { flex: 1, backgroundColor: colors.background, overflow: 'hidden' },
+        stackWrapper: { flex: 1, position: 'relative', zIndex: 1 },
+        stackContainer: { backgroundColor: Platform.OS === 'ios' ? colors.background : undefined },
+        headerContainer: {  backgroundColor: 'transparent', borderBottomWidth: 0 },
         headerTitleText: { fontSize: 18, fontWeight: "bold", color: colors.textPrimary },
-        headerLogo: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 10
-        },
+        headerLogo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
         headerBack: { fontSize: 16, color: colors.textPrimary },
-        menuButtonWrapper: { paddingRight: 16 },
+        menuButtonWrapper: { paddingRight: Platform.OS === 'ios' ? 0 : 16 },
         loadingContainer: { 
           ...StyleSheet.absoluteFillObject, 
           justifyContent: 'center', 
@@ -127,7 +137,6 @@ export default function RootLayout() {
         <ThemeProvider value={navTheme}>
           <Stack
             screenOptions={{
-              contentStyle: styles.stackContainer,
               headerStyle: styles.headerContainer,
               headerTitleStyle: styles.headerTitleText,
               headerBackTitleStyle: styles.headerBack,
@@ -149,14 +158,14 @@ export default function RootLayout() {
               ),
             }}
           >
-            <Stack.Screen name="public-api-explorer/index" options={{ title: APP_TITLE }} />
-            <Stack.Screen name="public-api-explorer/view" options={{ title: "JSON Viewer" }} />
+            <Stack.Screen name={`${initialRoute}/index`} options={{ title: APP_TITLE }} />
+            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: Platform.OS === 'web' ? APP_TITLE : '', contentStyle: styles.stackContainer }} />
           </Stack>
         </ThemeProvider>
       </View>
 
       {backgroundAnimation && <FloatingIconGrid />}
-
+      
       <SettingsMenu />
       <ErrorFlash />
 

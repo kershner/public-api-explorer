@@ -43,6 +43,7 @@ const ChosenApiInfo: React.FC<ChosenApiInfoProps> = ({ jsonData, url }) => {
 
   const styles = StyleSheet.create({
     chosenApiContainer: { 
+      flexDirection: 'row',
       paddingBottom: 8,
       flexWrap: 'wrap',
     },

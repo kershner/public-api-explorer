@@ -1,43 +1,35 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import ToggleApiInfoButton from '@/components/JsonViewer/TopDrawer/ToggleApiInfoButton';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import MultiSelectPicker from '@/components/Filters/MultiSelectPicker';
 import React, { useState, useEffect } from 'react';
-import { ThemeColors } from '@/store/useStore';
 import { extractKeys } from '@/utils/utils';
+import { useStore } from '@/store/useStore';
 
 interface FilterControlsProps {
   jsonData: unknown;
   onFilterUpdate: (filteredData: unknown) => void;
-  colors: ThemeColors;
 }
 
-const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdate, colors }) => {
+const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdate }) => {
   const [allKeys, setAllKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
-  const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+  const colors = useStore((state) => state.colors);
 
-  // Styles, with repeated color properties removed for brevity
+  // Styles
   const styles = StyleSheet.create({
     filterLabel: { fontSize: 16, fontWeight: 'bold', marginBottom: 2, color: colors.textPrimary },
     filterContainer: { flexDirection: 'row', gap: 5, alignItems: 'center' },
-    multiSelectContainer: { flex: 1, height: 40, borderWidth: 2, borderRadius: 4, padding: 8, justifyContent: 'center', backgroundColor: colors.background, borderColor: colors.textPrimary },
-    keyFilterLabel: {fontWeight: 'bold', fontSize: 16, paddingBottom: 4, color: colors.textPrimary },
     input: { flex: 3, height: 40, borderWidth: 2, paddingLeft: 10, borderRadius: 4, color: colors.textPrimary, borderColor: colors.textPrimary, backgroundColor: colors.background },
     activeFiltersContainer: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 3, marginVertical: 6 },
     filterChip: { backgroundColor: colors.textPrimary, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 20 },
     filterChipText: { color: colors.background, fontWeight: 'bold', fontSize: 10 },
     clearButton: { backgroundColor: colors.accent, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 20, alignSelf: 'flex-start' },
     clearButtonText: { color: colors.textPrimary, fontWeight: 'bold', fontSize: 10 },
-    popoverOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' },
-    popoverContent: { maxWidth: 300, width: '100%', maxHeight: '50%', backgroundColor: colors.background, borderRadius: 8, padding: 16 },
-    closeButton: { backgroundColor: colors.textPrimary, padding: 8, borderRadius: 4, alignItems: 'center', marginTop: 16 },
-    closeButtonText: { color: colors.background, fontWeight: 'bold'},
-    optionText: { fontSize: 16, color: colors.textPrimary },
-    selectedOptionText: { fontWeight: 'bold' }
   });
 
-  // Set allKeys by extracting unique keys when jsonData changes
+  // Extract unique keys from JSON data
   useEffect(() => {
     if (jsonData) {
       const keysSet = new Set<string>();
@@ -46,7 +38,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     }
   }, [jsonData, extractKeys]);
 
-  // Debounce searchText to avoid excessive re-renders
+  // Debounce search text
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearchText(searchText.trim()), 300);
     return () => clearTimeout(handler);
@@ -86,16 +78,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
     onFilterUpdate(filteredResult);
   }, [jsonData, selectedKeys, debouncedSearchText, onFilterUpdate]);
 
-  // Toggle selection of a key in selectedKeys
-  const toggleKeySelection = (key: string) => {
-    setSelectedKeys((prevKeys) => {
-      const updatedKeys = new Set(prevKeys);
-      updatedKeys.has(key) ? updatedKeys.delete(key) : updatedKeys.add(key);
-      return updatedKeys;
-    });
-  };
-
-  // Clear all selected keys and reset search text
+  // Clear all filters
   const clearAllFilters = () => {
     setSelectedKeys(new Set());
     setSearchText("");
@@ -106,17 +89,20 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
       <View style={styles.filterContainer}>
         <ToggleApiInfoButton />
 
-        {/* Multi-select trigger */}
-        <TouchableOpacity style={styles.multiSelectContainer} onPress={() => setIsPopoverVisible(true)}>
-          <Text style={{ color: colors.textPrimary }} numberOfLines={1} ellipsizeMode="tail">
-            {selectedKeys.size > 0 ? `Selected (${selectedKeys.size})` : "Select Keys"}
-          </Text>
-        </TouchableOpacity>
+        {/* MultiSelectPicker Component */}
+        <MultiSelectPicker
+          options={allKeys}
+          selectedOptions={selectedKeys}
+          onChange={setSelectedKeys}
+          label="Filter by key"
+        />
 
         <TextInput
           style={styles.input}
           placeholder="Search..."
+          placeholderTextColor={colors.textPrimary}
           value={searchText}
+          autoCapitalize="none"
           onChangeText={setSearchText}
         />
       </View>
@@ -125,42 +111,16 @@ const FilterControls: React.FC<FilterControlsProps> = ({ jsonData, onFilterUpdat
       {selectedKeys.size > 0 && (
         <View style={styles.activeFiltersContainer}>
           {Array.from(selectedKeys).map((key) => (
-            <TouchableOpacity key={key} onPress={() => toggleKeySelection(key)} style={styles.filterChip}>
+            <TouchableOpacity key={key} onPress={() => setSelectedKeys((prev) => new Set([...prev].filter((k) => k !== key)))} style={styles.filterChip}>
               <Text style={styles.filterChipText}>{key} ✕</Text>
             </TouchableOpacity>
           ))}
-          
+
           <TouchableOpacity onPress={clearAllFilters} style={styles.clearButton}>
             <Text style={styles.clearButtonText}>Clear All Filters</Text>
           </TouchableOpacity>
-        </View>  
+        </View>
       )}
-      
-      {/* Popover Modal */}
-      <Modal transparent visible={isPopoverVisible} animationType="none">
-        <TouchableOpacity style={styles.popoverOverlay} onPress={() => setIsPopoverVisible(false)}>
-          <View style={styles.popoverContent}>
-            <Text style={styles.keyFilterLabel}>Filter by key:</Text>
-            <ScrollView>
-              {allKeys.map((key) => (
-                <TouchableOpacity key={key} onPress={() => toggleKeySelection(key)}>
-                  <Text
-                    style={[
-                      styles.optionText,
-                      selectedKeys.has(key) ? styles.selectedOptionText : styles.unselectedOptionText,
-                    ]}
-                  >
-                    {selectedKeys.has(key) ? '✓ ' : ''}{key}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setIsPopoverVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
     </View>
   );
 };

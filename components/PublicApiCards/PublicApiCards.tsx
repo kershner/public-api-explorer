@@ -1,7 +1,9 @@
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import PublicApiCard from '@/components/PublicApiCards/PublicApiCard';
+import MultiSelectPicker from '@/components/Filters/MultiSelectPicker';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import React, { useRef, useState, useMemo } from 'react';
-import { Picker } from '@react-native-picker/picker';
+import useIsRootScreen from '@/hooks/useIsRootScreen';
+import SearchFilter from '@/components/Filters/SearchFilter';
 import { publicApis } from '@/data/PublicApis';
 import { shuffleArray } from '@/utils/utils';
 import { useStore } from '@/store/useStore';
@@ -15,85 +17,69 @@ type PublicApiCardsProps = {
 const PublicApiCards: React.FC<PublicApiCardsProps> = ({ closeModal }) => {
   const scrollRef = useRef<ScrollView | null>(null);
   const colors = useStore((state) => state.colors);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [filteredApis, setFilteredApis] = useState(randomizedApiList);
+  const isRoot = useIsRootScreen();
 
-  const filteredApis = selectedCategory === "All"
-    ? randomizedApiList
-    : randomizedApiList.filter(api => api.category === selectedCategory);
+  const categoryFilteredApis =
+    selectedCategories.size === 0
+      ? filteredApis
+      : filteredApis.filter((api) => selectedCategories.has(api.category));
 
-    const styles = useMemo(
-      () =>
-        StyleSheet.create({
-          container: {
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            flex: 1,
-          },
-          pickerWrapper: {
-            flexDirection: 'row',
-            alignItems: 'center',
-          },
-          pickerLabel: {
-            color: colors.textPrimary,
-            fontWeight: 'bold',
-          },
-          pickerContainer: {
-            margin: 8,
-            justifyContent: 'center',
-            borderRadius: 4,
-            borderWidth: 2,
-            borderColor: colors.textPrimary,
-            backgroundColor: colors.background,
-            overflow: 'hidden',
-            width: 100,
-            height: 41,
-          },
-          picker: {
-            backgroundColor: colors.background,
-            color: colors.textPrimary,
-            paddingHorizontal: 12,
-            borderWidth: 0,
-            height: '100%',
-          },
-          scrollViewContainer: {
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            paddingVertical: 8
-          },
-        }),
-      [colors]
-    );
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          flex: 1,
+        },
+        filtersContainer: {
+          paddingLeft: isRoot ? 8 : 0,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 10,
+        },
+        pickerWrapper: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginVertical: 8,
+          paddingRight: 8,
+        },
+        scrollViewContainer: {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          gap: 8,
+          justifyContent: 'center',
+          paddingVertical: 8,
+          paddingHorizontal: 8,
+        },
+      }),
+    [colors]
+  );
 
   return (
-    <View 
-      style={styles.container} >
-      
-      <View style={styles.pickerWrapper}>
-      <Text style={styles.pickerLabel}>Filter by category: </Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            onValueChange={(value) => setSelectedCategory(value)}
-            style={styles.picker}
-          >
-            <Picker.Item label="All" value="All" />
-            {[...new Set(publicApis.map(api => api.category))]
-              .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically
-              .map(category => (
-                <Picker.Item key={category} label={category} value={category} />
-            ))}
-          </Picker>
+    <View style={styles.container}>
+      <View style={styles.filtersContainer}>
+        <SearchFilter
+          data={randomizedApiList}
+          onFilter={setFilteredApis}
+        />
+
+        <View style={styles.pickerWrapper}>
+          <MultiSelectPicker
+            options={[...new Set(publicApis.map((api) => api.category))].sort()}
+            selectedOptions={selectedCategories}
+            onChange={setSelectedCategories}
+            label="Filter by category"
+          />
         </View>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContainer}
-        ref={scrollRef}
-        >
-
-        {filteredApis.map((api, index) => (
+      <ScrollView contentContainerStyle={styles.scrollViewContainer} ref={scrollRef}>
+        {categoryFilteredApis.map((api, index) => (
           <PublicApiCard key={index} api={api} index={index} closeModal={closeModal} />
         ))}
       </ScrollView>

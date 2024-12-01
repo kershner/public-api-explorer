@@ -31,7 +31,9 @@ const RemoteSvg: React.FC<RemoteSvgProps> = ({ fileName, width, height }) => {
       }
 
       try {
-        const response = await fetch(cacheKey);
+        const response = await fetch(cacheKey, {
+          mode: 'no-cors',
+        });
         const data = await response.text();
 
         // Cache the fetched SVG data

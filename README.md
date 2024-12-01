@@ -1,6 +1,6 @@
 # public-api-explorer
 A web and mobile app to explore publicly available data.
-### [https://kershner.org/public-api-explorer/](https://kershner.org/public-api-explorer/)
+### [https://kershner.org/public-api-explorer/](https://www.kershner.org/public-api-explorer/)
 
 <img src="https://djfdm802jwooz.cloudfront.net/static/project_images/e2dfb431bd5d41d293a91e0d914068ae.png" alt="public-api-explorer img 1">
 <hr>

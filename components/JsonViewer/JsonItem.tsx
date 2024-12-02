@@ -1,13 +1,14 @@
 import React, { useMemo, useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import JsonItemPopoverMenu from '@/components/PopoverMenu/JsonItemPopoverMenu';
+import NestedJsonItems from '@/components/JsonViewer/NestedJsonItems';
 import RenderValue from '@/components/JsonViewer/RenderValue';
 import Tooltip from '@/components/JsonViewer/Tooltip';
 import { useStore } from '@/store/useStore';
 import { isEmpty } from '@/utils/utils';
 
 // Lazy-load NestedJsonItems to avoid circular dependency
-const NestedJsonItems = lazy(() => import('@/components/JsonViewer/NestedJsonItems'));
+// const NestedJsonItems = lazy(() => import('@/components/JsonViewer/NestedJsonItems'));
 
 interface JsonItemProps {
   label: string;

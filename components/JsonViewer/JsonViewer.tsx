@@ -91,7 +91,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
       <FilterControls
         jsonData={jsonData}
         onFilterUpdate={setFilteredJson}
-        colors={colors}
       />
 
       <FlatList

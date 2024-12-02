@@ -23,27 +23,28 @@ const RemoteSvg: React.FC<RemoteSvgProps> = ({ fileName, width, height }) => {
   useEffect(() => {
     const fetchSvg = async () => {
       const cacheKey = `${baseUrl}/${fileName}`;
-
+  
       // Check if SVG is already cached
       if (svgCache[cacheKey]) {
         setSvgData(svgCache[cacheKey]);
         return;
       }
-
+  
       try {
-        const response = await fetch(cacheKey, {
-          mode: 'no-cors',
-        });
+        const response = await fetch(cacheKey);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch SVG: ${response.statusText}`);
+        }
         const data = await response.text();
-
+  
         // Cache the fetched SVG data
         svgCache[cacheKey] = data;
         setSvgData(data);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching SVG:', error);
       }
     };
-
+  
     fetchSvg();
   }, [fileName]);
 

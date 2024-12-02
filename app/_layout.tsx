@@ -159,7 +159,7 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name={`${initialRoute}/index`} options={{ title: APP_TITLE }} />
-            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", headerTitle: Platform.OS === 'web' ? APP_TITLE : '', contentStyle: styles.stackContainer }} />
+            <Stack.Screen name={`${initialRoute}/view`} options={{ title: "JSON Viewer", contentStyle: styles.stackContainer }} />
           </Stack>
         </ThemeProvider>
       </View>

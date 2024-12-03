@@ -28,8 +28,8 @@ const NestedJsonItems: React.FC<NestedItemsProps> = ({ data, level, expandAll })
       )}
       keyExtractor={(item, index) => `${level}-${index}`}
       style={styles.nestedList}
-      initialNumToRender={expandAll ? 5 : 25}
-      maxToRenderPerBatch={expandAll ? 5 : 25}
+      initialNumToRender={expandAll ? 15 : 25}
+      maxToRenderPerBatch={expandAll ? 15 : 25}
       disableVirtualization={Platform.OS === 'web'}
       removeClippedSubviews={true}
     />

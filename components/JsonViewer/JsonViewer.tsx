@@ -111,7 +111,6 @@ const JsonViewer: React.FC<JsonViewerProps> = ({ jsonData, url = "" }) => {
         contentContainerStyle={styles.container}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
-        windowSize={5}
         disableVirtualization={Platform.OS === 'web'}
       />
 

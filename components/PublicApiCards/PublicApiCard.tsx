@@ -15,7 +15,7 @@ const PublicApiCard: React.FC<PublicApiCardProps> = ({ api, index, closeModal })
   const setLoading = useStore((state) => state.setLoading);
   const colors = useStore((state) => state.colors);
   const isRoot = useIsRootScreen();
-  const minWidth = 130;
+  const minWidth = 145;
 
   const styles = useMemo(
     () =>
